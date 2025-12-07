@@ -1,0 +1,1144 @@
+{% extends "base.html" %}
+
+{% block title %}Testimonials - {{ super() }}{% endblock %}
+
+{% block extra_css %}
+<style>
+    .testimonials-hero {
+        background: linear-gradient(rgba(71, 71, 71, 0.8), rgba(57, 56, 56, 0.8)),
+                    url('/static/images/testimonials-bg.jpg') center/cover no-repeat;
+        padding: 150px 0 100px;
+        text-align: center;
+        color: white;
+    }
+
+    .testimonials-container {
+        padding: 80px 0;
+        background: var(--white);
+    }
+
+    .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 2rem;
+        margin: 3rem 0 5rem;
+        padding: 3rem;
+        background: var(--light-gray);
+        border-radius: var(--border-radius);
+    }
+
+    .stat-item {
+        text-align: center;
+    }
+
+    .stat-number {
+        font-size: 3rem;
+        font-family: 'Playfair Display', serif;
+        color: var(--gold);
+        margin-bottom: 0.5rem;
+    }
+
+    .stat-label {
+        color: var(--gray);
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        font-size: 0.9rem;
+    }
+
+    /* Testimonial Cards */
+    .testimonial-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+        gap: 2rem;
+        margin-bottom: 3rem;
+    }
+
+    .testimonial-card {
+        background: var(--light-gray);
+        padding: 2.5rem;
+        border-radius: var(--border-radius);
+        position: relative;
+        transition: var(--transition);
+    }
+
+    .testimonial-card:hover {
+        transform: translateY(-5px);
+        box-shadow: var(--shadow);
+    }
+
+    .testimonial-card.featured {
+        background: var(--black);
+        color: var(--white);
+    }
+
+    .testimonial-card.featured .testimonial-text {
+        color: var(--white);
+    }
+
+    .testimonial-card.featured .client-name {
+        color: var(--white);
+    }
+
+    .testimonial-card.featured .client-title {
+        color: var(--gray);
+    }
+
+    .quote-icon {
+        position: absolute;
+        top: 2rem;
+        right: 2rem;
+        color: var(--gold);
+        font-size: 2rem;
+        opacity: 0.2;
+    }
+
+    .rating {
+        color: var(--gold);
+        margin-bottom: 1rem;
+    }
+
+    .testimonial-text {
+        font-size: 1.1rem;
+        line-height: 1.6;
+        color: var(--gray);
+        margin-bottom: 1.5rem;
+        font-style: italic;
+    }
+
+    .client-info {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        margin-top: 2rem;
+        padding-top: 1.5rem;
+        border-top: 1px solid rgba(0, 0, 0, 0.1);
+    }
+
+    .testimonial-card.featured .client-info {
+        border-top-color: rgba(255, 255, 255, 0.1);
+    }
+
+    .client-avatar {
+        width: 60px;
+        height: 60px;
+        border-radius: 50%;
+        background: #ddd;
+        flex-shrink: 0;
+    }
+
+    .client-details h4 {
+        margin-bottom: 0.25rem;
+    }
+
+    .client-title {
+        color: var(--gray);
+        font-size: 0.9rem;
+    }
+
+    .service-badge {
+        display: inline-block;
+        background: rgba(212, 175, 55, 0.1);
+        color: var(--gold);
+        padding: 0.25rem 0.75rem;
+        border-radius: 50px;
+        font-size: 0.8rem;
+        margin-top: 0.5rem;
+    }
+
+    /* Video Testimonials */
+    .video-section {
+        padding: 100px 0;
+        background: var(--light-gray);
+    }
+
+    .video-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 2rem;
+        margin-top: 3rem;
+    }
+
+    .video-card {
+        background: var(--white);
+        border-radius: var(--border-radius);
+        overflow: hidden;
+        box-shadow: var(--shadow);
+    }
+
+    .video-thumbnail {
+        height: 200px;
+        background: #333;
+        position: relative;
+        cursor: pointer;
+    }
+
+    .video-thumbnail:before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(0, 0, 0, 0.3);
+        transition: var(--transition);
+    }
+
+    .video-thumbnail:hover:before {
+        background: rgba(212, 175, 55, 0.3);
+    }
+
+    .play-button {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 60px;
+        height: 60px;
+        background: var(--gold);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--black);
+        font-size: 1.5rem;
+        transition: var(--transition);
+    }
+
+    .video-thumbnail:hover .play-button {
+        transform: translate(-50%, -50%) scale(1.1);
+    }
+
+    .video-info {
+        padding: 1.5rem;
+    }
+
+    .video-info h4 {
+        margin-bottom: 0.5rem;
+    }
+
+    .video-client {
+        color: var(--gray);
+        font-size: 0.9rem;
+    }
+
+    /* Review Platforms */
+    .platforms-section {
+        padding: 80px 0;
+        background: var(--white);
+    }
+
+    .platforms-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 2rem;
+        margin-top: 3rem;
+    }
+
+    .platform-card {
+        text-align: center;
+        padding: 2rem;
+        border: 1px solid rgba(0, 0, 0, 0.1);
+        border-radius: var(--border-radius);
+        transition: var(--transition);
+    }
+
+    .platform-card:hover {
+        border-color: var(--gold);
+        transform: translateY(-5px);
+    }
+
+    .platform-icon {
+        font-size: 2.5rem;
+        margin-bottom: 1rem;
+    }
+
+    .platform-icon.google { color: #4285F4; }
+    .platform-icon.yelp { color: #D32323; }
+    .platform-icon.facebook { color: #1877F2; }
+
+    .platform-rating {
+        font-size: 2rem;
+        font-weight: 600;
+        color: var(--black);
+        margin-bottom: 0.5rem;
+    }
+
+    .platform-stars {
+        color: var(--gold);
+        margin-bottom: 1rem;
+    }
+
+    .platform-link {
+        color: var(--gold);
+        text-decoration: none;
+        font-weight: 600;
+        font-size: 0.9rem;
+    }
+
+    /* Submit Review CTA */
+    .submit-review {
+        padding: 100px 0;
+        background: linear-gradient(135deg, var(--black), #1a1a1a);
+        color: var(--white);
+        text-align: center;
+    }
+
+    .submit-review h2 {
+        color: var(--white);
+        margin-bottom: 1rem;
+    }
+
+    .review-form {
+        max-width: 600px;
+        margin: 2rem auto 0;
+        background: rgba(255, 255, 255, 0.05);
+        padding: 2rem;
+        border-radius: var(--border-radius);
+    }
+
+    .star-rating {
+        display: flex;
+        justify-content: center;
+        gap: 0.5rem;
+        margin: 1rem 0 2rem;
+        font-size: 1.5rem;
+        cursor: pointer;
+    }
+
+    .star-rating i {
+        color: var(--gray);
+        transition: var(--transition);
+    }
+
+    .star-rating i:hover,
+    .star-rating i.active {
+        color: var(--gold);
+    }
+
+    /* Video Modal */
+    .video-modal {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(0, 0, 0, 0.9);
+        display: none;
+        justify-content: center;
+        align-items: center;
+        z-index: 2000;
+        padding: 2rem;
+    }
+
+    .video-modal.active {
+        display: flex;
+    }
+
+    .modal-content {
+        max-width: 90%;
+        max-height: 90%;
+        position: relative;
+        background: var(--black);
+        border-radius: var(--border-radius);
+        overflow: hidden;
+    }
+
+    .video-player {
+        width: 100%;
+        max-height: 70vh;
+        background: #000;
+    }
+
+    .close-modal {
+        position: absolute;
+        top: 1rem;
+        right: 1rem;
+        background: rgba(255, 255, 255, 0.1);
+        border: none;
+        color: white;
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        backdrop-filter: blur(10px);
+        z-index: 2;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="testimonials-hero">
+    <div class="container">
+        <h1>Client Experiences</h1>
+        <p class="section-subtitle">STORIES OF TRANSFORMATION AND TRUST</p>
+        <p style="max-width: 600px; margin: 2rem auto; color: rgba(255, 255, 255, 0.9);">
+            Discover what our clients have to say about their journey with Travaa Wellness. Real stories from real people.
+        </p>
+    </div>
+</section>
+
+<!-- Stats -->
+<section class="testimonials-container">
+    <div class="container">
+        <div class="section-header" style="text-align:center;">
+            <h2>Trusted by Thousands</h2>
+            <p>Our commitment to excellence is reflected in our numbers</p>
+        </div>
+
+        <div class="stats-grid">
+            <div class="stat-item"><div class="stat-number">4.8/5</div><div class="stat-label">Avg Rating</div></div>
+            <div class="stat-item"><div class="stat-number">20+</div><div class="stat-label">5-Star Reviews</div></div>
+            <div class="stat-item"><div class="stat-number">100+</div><div class="stat-label">Happy Clients</div></div>
+        </div>
+
+        <!-- Testimonial Grid -->
+        <div class="testimonial-grid">
+
+            <!-- 1. Divya Thawani -->
+            <div class="testimonial-card">
+                <div class="quote-icon"><i class="fas fa-quote-right"></i></div>
+                <div class="rating">{% for i in range(5) %}<i class="fas fa-star"></i>{% endfor %}</div>
+                <p class="testimonial-text">
+                    "My partner and I recently treated ourselves to a couples spa massage at Travaa Wellness, and it was nothing short of a relaxing experience! From the moment we walked through the doors, we were enveloped in a serene ambiance that set the tone for the entire session."
+                </p>
+                <div class="client-info">
+                    <h4 class="client-name">Divya Thawani</h4>
+                </div>
+            </div>
+
+            <!-- 2. Bankmart Solutions -->
+            <div class="testimonial-card">
+                <div class="quote-icon"><i class="fas fa-quote-right"></i></div>
+                <div class="rating">{% for i in range(5) %}<i class="fas fa-star"></i>{% endfor %}</div>
+                <p class="testimonial-text">
+                    "I recently visited Travaa Wellness in Kharghar and it was one of the best spa experiences I've had. Absolutely loved my time there!"
+                </p>
+                <div class="client-info">
+                    <h4 class="client-name">Bankmart Solutions</h4>
+                </div>
+            </div>
+
+            <!-- 3. Deepali (Local Guide) -->
+            <div class="testimonial-card featured">
+                <div class="quote-icon"><i class="fas fa-quote-right"></i></div>
+                <div class="rating">{% for i in range(5) %}<i class="fas fa-star"></i>{% endfor %}</div>
+                <p class="testimonial-text">
+                    "5-star bliss! Just visited Travaa Wellness in Kharghar and left feeling like royalty!"
+                </p>
+                <div class="client-info">
+                    <h4 class="client-name">Deepali Chawla</h4>
+                    <div class="client-title">Local Guide · 182 reviews · 218 photos</div>
+                    <div class="service-badge">Local Guide</div>
+                </div>
+            </div>
+
+            <!-- 4. Internship Productions -->
+            <div class="testimonial-card">
+                <div class="quote-icon"><i class="fas fa-quote-right"></i></div>
+                <div class="rating">{% for i in range(5) %}<i class="fas fa-star"></i>{% endfor %}</div>
+                <p class="testimonial-text">
+                    "Visited Travaa Wellness, Kharghar for a hot stone massage and it was fantastic. Thanks Sara, the therapist, for treating me like a queen."
+                </p>
+                <div class="client-info">
+                    <h4 class="client-name">Internship Productions</h4>
+                </div>
+            </div>
+
+            <!-- 5. PRATIK PEDNEKAR -->
+            <div class="testimonial-card">
+                <div class="quote-icon"><i class="fas fa-quote-right"></i></div>
+                <div class="rating">{% for i in range(5) %}<i class="fas fa-star"></i>{% endfor %}</div>
+                <p class="testimonial-text">
+                    "The grand opening deals are unbelievable! Such great discounts and amazing service. The ambience is stunning — calm, clean and luxurious."
+                </p>
+                <div class="client-info">
+                    <h4 class="client-name">PRATIK PEDNEKAR</h4>
+                </div>
+            </div>
+
+            <!-- 6. Nalini Singh -->
+            <div class="testimonial-card">
+                <div class="quote-icon"><i class="fas fa-quote-right"></i></div>
+                <div class="rating">{% for i in range(5) %}<i class="fas fa-star"></i>{% endfor %}</div>
+                <p class="testimonial-text">
+                    "I recently had the pleasure of enjoying a full body massage at Travaa and it was incredibly relaxing and rejuvenating. The ambiance was calming and the aroma set the tone beautifully."
+                </p>
+                <div class="client-info">
+                    <h4 class="client-name">Nalini Singh</h4>
+                </div>
+            </div>
+
+            <!-- 7. Tanisha Setpal -->
+            <div class="testimonial-card">
+                <div class="quote-icon"><i class="fas fa-quote-right"></i></div>
+                <div class="rating">{% for i in range(5) %}<i class="fas fa-star"></i>{% endfor %}</div>
+                <p class="testimonial-text">
+                    "I had such a wonderful experience at Travaa! Everyone there is so professional and kind. The place has a calming, aesthetic vibe. Definitely worth checking out!"
+                </p>
+                <div class="client-info">
+                    <h4 class="client-name">Tanisha Setpal</h4>
+                </div>
+            </div>
+
+            <!-- 8. Sangram -->
+            <div class="testimonial-card">
+                <div class="quote-icon"><i class="fas fa-quote-right"></i></div>
+                <div class="rating">{% for i in range(5) %}<i class="fas fa-star"></i>{% endfor %}</div>
+                <p class="testimonial-text">
+                    "One of the most relaxing sessions ever. Skilled therapist and very clean, soothing place."
+                </p>
+                <div class="client-info">
+                    <h4 class="client-name">Sangram</h4>
+                </div>
+            </div>
+
+            <!-- 9. Kunal Gaikwad -->
+            <div class="testimonial-card">
+                <div class="quote-icon"><i class="fas fa-quote-right"></i></div>
+                <div class="rating">{% for i in range(5) %}<i class="fas fa-star"></i>{% endfor %}</div>
+                <p class="testimonial-text">
+                    "It was a very good experience. The ambience is great and the staff is very polite. Highly recommend visiting!"
+                </p>
+                <div class="client-info">
+                    <h4 class="client-name">Kunal Gaikwad</h4>
+                </div>
+            </div>
+
+            <!-- 10. Ikshwaku Joshi (Local Guide) -->
+            <div class="testimonial-card featured">
+                <div class="quote-icon"><i class="fas fa-quote-right"></i></div>
+                <div class="rating">{% for i in range(5) %}<i class="fas fa-star"></i>{% endfor %}</div>
+                <p class="testimonial-text">
+                    "An absolute oasis of tranquility and professionalism!"
+                </p>
+                <div class="client-info">
+                    <h4 class="client-name">Ikshwaku Joshi</h4>
+                    <div class="client-title">Local Guide · 66 reviews · 4569 photos</div>
+                    <div class="service-badge">Local Guide</div>
+                </div>
+            </div>
+
+        </div>
+
+        <div style="text-align:center; margin-top:3rem;">
+            <a href="{{ url_for('booking') }}" class="btn btn-primary">
+                <i class="fas fa-calendar-alt"></i> Experience It Yourself
+            </a>
+        </div>
+    </div>
+</section>
+
+
+<!-- Review Platforms -->
+<section class="platforms-section">
+    <div class="container">
+        <div class="section-header" style="text-align: center;">
+            <h2>Read Our Reviews</h2>
+            <p>See what clients are saying on popular review platforms</p>
+        </div>
+
+        <div class="platforms-grid">
+            <div class="platform-card">
+                <div class="platform-icon google">
+                    <i class="fab fa-google"></i>
+                </div>
+                <div class="platform-rating">4.8</div>
+                <div class="platform-stars">
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                </div>
+                <p style="color: var(--gray); margin-bottom: 1rem;">Based on 23 reviews</p>
+                <a href="https://www.google.com/search?q=travaa+spa+navi+mumbai&oq=travaa+spa+navi+mumbai&gs_lcrp=EgZjaHJvbWUqBggAEEUYOzIGCAAQRRg7MgYIARBFGEAyCggCEAAYgAQYogQyCggDEAAYgAQYogQyCggEEAAYgAQYogQyBwgFEAAY7wUyCggGEAAYgAQYogTSAQgxNTQ5ajBqN6gCALACAA&sourceid=chrome&ie=UTF-8#lrd=0x3be7c344431cdd2f:0x42a46286ec2b6e40,1,,,," class="platform-link">Read Google Reviews →</a>
+            </div>
+
+        </div>
+    </div>
+</section>
+
+<!-- Submit Review CTA -->
+<section class="submit-review" style="
+    background: linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 100%);
+    padding: 100px 20px;
+    color: var(--white);
+    text-align: center;
+">
+    <div class="container" style="max-width: 800px;">
+        <h2 style="
+            font-size: 3rem;
+            margin-bottom: 1.5rem;
+            color: var(--white);
+            background: linear-gradient(135deg, #ffffff 0%, var(--gold) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        ">
+            Share Your Experience
+        </h2>
+        
+        <p style="
+            font-size: 1.2rem;
+            margin: 0 auto 3rem;
+            color: rgba(255, 255, 255, 0.9);
+            max-width: 600px;
+            line-height: 1.6;
+        ">
+            We value your feedback. Share your Travaa experience and help others discover luxury wellness.
+        </p>
+
+        <div class="review-form" style="
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 3rem;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+        ">
+            <form id="review-form">
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-bottom: 1.5rem;">
+                    <div class="form-group" style="margin: 0;">
+                        <input type="text" 
+                               class="form-control" 
+                               id="review-name" 
+                               placeholder="Your Name" 
+                               required 
+                               style="
+                                    background: rgba(255, 255, 255, 0.1);
+                                    border: 1px solid rgba(255, 255, 255, 0.2);
+                                    color: white;
+                                    padding: 15px 20px;
+                                    border-radius: 10px;
+                                    width: 100%;
+                                    font-size: 1rem;
+                                    transition: all 0.3s ease;
+                               ">
+                    </div>
+                    <div class="form-group" style="margin: 0;">
+                        <input type="tel" 
+                               class="form-control" 
+                               id="review-phone" 
+                               placeholder="Your WhatsApp Number" 
+                               required 
+                               style="
+                                    background: rgba(255, 255, 255, 0.1);
+                                    border: 1px solid rgba(255, 255, 255, 0.2);
+                                    color: white;
+                                    padding: 15px 20px;
+                                    border-radius: 10px;
+                                    width: 100%;
+                                    font-size: 1rem;
+                                    transition: all 0.3s ease;
+                               ">
+                    </div>
+                </div>
+
+                <div class="form-group" style="margin-bottom: 1.5rem;">
+                    <select class="form-control" 
+                            id="review-service" 
+                            required 
+                            style="
+                                background: rgba(255, 255, 255, 0.1);
+                                border: 1px solid rgba(255, 255, 255, 0.2);
+                                color: white;
+                                padding: 15px 20px;
+                                border-radius: 10px;
+                                width: 100%;
+                                font-size: 1rem;
+                                transition: all 0.3s ease;
+                            ">
+                        <option value="" disabled selected>Service Category</option>
+                        <option value="Body Care">Body Care</option>
+                        <option value="Spa & Wellness">Spa & Wellness</option>
+                        <option value="Nail Artistry">Nail Artistry</option>
+                        <option value="Skin Care">Skin Care</option>
+                        <option value="Other">Other</option>
+                    </select>
+                </div>
+
+                <div style="
+                    display: flex;
+                    justify-content: center;
+                    gap: 10px;
+                    margin-bottom: 2rem;
+                ">
+                    <div class="star-rating" id="star-rating" style="
+                        display: flex;
+                        gap: 10px;
+                        font-size: 2rem;
+                    ">
+                        <i class="far fa-star" data-value="1" style="
+                            color: rgba(255, 255, 255, 0.3);
+                            cursor: pointer;
+                            transition: all 0.3s ease;
+                        "></i>
+                        <i class="far fa-star" data-value="2" style="
+                            color: rgba(255, 255, 255, 0.3);
+                            cursor: pointer;
+                            transition: all 0.3s ease;
+                        "></i>
+                        <i class="far fa-star" data-value="3" style="
+                            color: rgba(255, 255, 255, 0.3);
+                            cursor: pointer;
+                            transition: all 0.3s ease;
+                        "></i>
+                        <i class="far fa-star" data-value="4" style="
+                            color: rgba(255, 255, 255, 0.3);
+                            cursor: pointer;
+                            transition: all 0.3s ease;
+                        "></i>
+                        <i class="far fa-star" data-value="5" style="
+                            color: rgba(255, 255, 255, 0.3);
+                            cursor: pointer;
+                            transition: all 0.3s ease;
+                        "></i>
+                    </div>
+                </div>
+                <input type="hidden" id="rating-value" name="rating" value="0">
+
+                <div class="form-group" style="margin-bottom: 2rem;">
+                    <textarea class="form-control" 
+                              id="review-message" 
+                              rows="4" 
+                              placeholder="Share your experience in detail..." 
+                              required 
+                              style="
+                                    background: rgba(255, 255, 255, 0.1);
+                                    border: 1px solid rgba(255, 255, 255, 0.2);
+                                    color: white;
+                                    padding: 15px 20px;
+                                    border-radius: 10px;
+                                    width: 100%;
+                                    font-size: 1rem;
+                                    min-height: 120px;
+                                    resize: vertical;
+                                    transition: all 0.3s ease;
+                              "></textarea>
+                </div>
+
+                <button type="button" 
+                        id="submit-review-btn" 
+                        class="btn" 
+                        style="
+                            background: #25D366;
+                            color: white;
+                            padding: 18px 40px;
+                            border-radius: 30px;
+                            font-size: 1.1rem;
+                            font-weight: 600;
+                            border: none;
+                            cursor: pointer;
+                            width: 100%;
+                            transition: all 0.3s ease;
+                            position: relative;
+                            overflow: hidden;
+                        ">
+                    <i class="fab fa-whatsapp" style="margin-right: 10px; font-size: 1.3rem;text-align: center;"></i>
+                    Send Review
+                </button>
+                
+                <p style="
+                    color: rgba(255, 255, 255, 0.6);
+                    margin-top: 1rem;
+                    font-size: 0.9rem;
+                ">
+                    Your review will be sent directly to our WhatsApp business number
+                </p>
+            </form>
+        </div>
+    </div>
+</section>
+
+<script>
+    // Star Rating System
+    const stars = document.querySelectorAll('#star-rating i');
+    const ratingValue = document.getElementById('rating-value');
+    
+    stars.forEach(star => {
+        star.addEventListener('mouseover', function() {
+            const value = parseInt(this.getAttribute('data-value'));
+            highlightStars(value);
+        });
+        
+        star.addEventListener('click', function() {
+            const value = parseInt(this.getAttribute('data-value'));
+            ratingValue.value = value;
+            highlightStars(value);
+        });
+    });
+    
+    document.getElementById('star-rating').addEventListener('mouseleave', function() {
+        const currentValue = parseInt(ratingValue.value) || 0;
+        highlightStars(currentValue);
+    });
+    
+    function highlightStars(value) {
+        stars.forEach(star => {
+            const starValue = parseInt(star.getAttribute('data-value'));
+            if (starValue <= value) {
+                star.classList.remove('far');
+                star.classList.add('fas');
+                star.style.color = '#FFD700';
+            } else {
+                star.classList.remove('fas');
+                star.classList.add('far');
+                star.style.color = 'rgba(255, 255, 255, 0.3)';
+            }
+        });
+    }
+    
+    // WhatsApp Review Submission
+    document.getElementById('submit-review-btn').addEventListener('click', function() {
+        const name = document.getElementById('review-name').value.trim();
+        const phone = document.getElementById('review-phone').value.trim();
+        const service = document.getElementById('review-service').value;
+        const rating = document.getElementById('rating-value').value;
+        const message = document.getElementById('review-message').value.trim();
+        
+        // Validation
+        if (!name) {
+            alert('Please enter your name');
+            return;
+        }
+        
+        if (!phone) {
+            alert('Please enter your WhatsApp number');
+            return;
+        }
+        
+        if (!service) {
+            alert('Please select a service category');
+            return;
+        }
+        
+        if (rating === '0') {
+            alert('Please select a rating');
+            return;
+        }
+        
+        if (!message) {
+            alert('Please share your experience');
+            return;
+        }
+        
+        // Format WhatsApp number (remove any non-digit characters)
+        const formattedPhone = phone.replace(/\D/g, '');
+        
+        // Create review message
+        const reviewMessage = `🌟 *NEW REVIEW FOR TRAAVA WELLNESS* 🌟
+        
+👤 *Name:* ${name}
+📱 *Phone:* ${phone}
+⭐ *Rating:* ${rating}/5
+💆 *Service:* ${service}
+📝 *Review:*
+${message}
+
+_Thank you for sharing your experience with Travaa Wellness!_`;
+        
+        // Encode message for URL
+        const encodedMessage = encodeURIComponent(reviewMessage);
+        
+        // WhatsApp Business number (replace with actual number)
+        const whatsappNumber = '{{ config.WHATSAPP_NUMBER }}'; // From your config
+        
+        // Create WhatsApp URL
+        const whatsappURL = `https://wa.me/${whatsappNumber}?text=${encodedMessage}`;
+        
+        // Open WhatsApp in new tab
+        window.open(whatsappURL, '_blank');
+        
+        // Reset form
+        resetForm();
+        
+        // Show success message
+        showSuccessMessage();
+    });
+    
+    function resetForm() {
+        document.getElementById('review-form').reset();
+        ratingValue.value = '0';
+        highlightStars(0);
+        
+        // Reset custom styles for form elements
+        const inputs = document.querySelectorAll('input, select, textarea');
+        inputs.forEach(input => {
+            input.style.borderColor = 'rgba(255, 255, 255, 0.2)';
+        });
+    }
+    
+    function showSuccessMessage() {
+        const button = document.getElementById('submit-review-btn');
+        const originalHTML = button.innerHTML;
+        
+        button.innerHTML = '<i class="fas fa-check-circle"></i> Review Sent Successfully!';
+        button.style.background = 'linear-gradient(135deg, #4CAF50 0%, #2E7D32 100%)';
+        
+        setTimeout(() => {
+            button.innerHTML = originalHTML;
+            button.style.background = 'linear-gradient(135deg, #25D366 0%, #128C7E 100%)';
+        }, 3000);
+    }
+    
+    // Add hover effects for form inputs
+    const formInputs = document.querySelectorAll('input, select, textarea');
+    formInputs.forEach(input => {
+        input.addEventListener('focus', function() {
+            this.style.borderColor = 'var(--gold)';
+            this.style.boxShadow = '0 0 0 2px rgba(212, 165, 116, 0.2)';
+        });
+        
+        input.addEventListener('blur', function() {
+            this.style.borderColor = 'rgba(255, 255, 255, 0.2)';
+            this.style.boxShadow = 'none';
+        });
+    });
+    
+    // Add animation to submit button
+    const submitBtn = document.getElementById('submit-review-btn');
+    submitBtn.addEventListener('mouseenter', function() {
+        this.style.transform = 'translateY(-3px)';
+        this.style.boxShadow = '0 10px 20px rgba(37, 211, 102, 0.3)';
+    });
+    
+    submitBtn.addEventListener('mouseleave', function() {
+        this.style.transform = 'translateY(0)';
+        this.style.boxShadow = 'none';
+    });
+</script>
+
+<style>
+    /* Animation for form appearance */
+    .submit-review {
+        animation: fadeInUp 1s ease-out;
+    }
+    
+    .review-form {
+        animation: slideUp 1s ease-out 0.3s both;
+    }
+    
+    @keyframes fadeInUp {
+        from {
+            opacity: 0;
+            transform: translateY(30px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+    
+    @keyframes slideUp {
+        from {
+            opacity: 0;
+            transform: translateY(40px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+    
+    /* Placeholder styling */
+    ::placeholder {
+        color: rgba(255, 255, 255, 0.5) !important;
+    }
+    
+    /* Select dropdown styling */
+    select option {
+        background: #1a1a1a;
+        color: white;
+    }
+    
+    /* Responsive design */
+    @media (max-width: 768px) {
+        .submit-review {
+            padding: 60px 20px;
+        }
+        
+        .review-form {
+            padding: 2rem;
+        }
+        
+        .review-form form > div {
+            grid-template-columns: 1fr;
+            gap: 1rem;
+        }
+        
+        #star-rating {
+            font-size: 1.5rem;
+        }
+        
+        h2 {
+            font-size: 2.5rem !important;
+        }
+    }
+</style>
+
+<!-- WhatsApp Icon CSS -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+<!-- Video Modal -->
+<div class="video-modal">
+    <div class="modal-content">
+        <div class="video-player">
+            <!-- Video would be embedded here -->
+            <div style="width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; color: white;">
+                <i class="fas fa-play-circle fa-5x"></i>
+            </div>
+        </div>
+        <button class="close-modal">
+            <i class="fas fa-times"></i>
+        </button>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Star rating system
+        const stars = document.querySelectorAll('#star-rating i');
+        const ratingInput = document.getElementById('rating-value');
+        
+        stars.forEach(star => {
+            star.addEventListener('click', function() {
+                const rating = this.dataset.value;
+                ratingInput.value = rating;
+                
+                stars.forEach(s => {
+                    if (s.dataset.value <= rating) {
+                        s.classList.remove('far');
+                        s.classList.add('fas', 'active');
+                    } else {
+                        s.classList.remove('fas', 'active');
+                        s.classList.add('far');
+                    }
+                });
+            });
+            
+            star.addEventListener('mouseover', function() {
+                const hoverRating = this.dataset.value;
+                
+                stars.forEach(s => {
+                    if (s.dataset.value <= hoverRating) {
+                        s.classList.remove('far');
+                        s.classList.add('fas');
+                    } else {
+                        s.classList.remove('fas');
+                        s.classList.add('far');
+                    }
+                });
+            });
+            
+            star.addEventListener('mouseout', function() {
+                const currentRating = ratingInput.value;
+                
+                stars.forEach(s => {
+                    if (s.dataset.value <= currentRating) {
+                        s.classList.remove('far');
+                        s.classList.add('fas', 'active');
+                    } else {
+                        s.classList.remove('fas', 'active');
+                        s.classList.add('far');
+                    }
+                });
+            });
+        });
+        
+        // Review form submission
+        const reviewForm = document.getElementById('review-form');
+        reviewForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // Validate rating
+            if (ratingInput.value === '0') {
+                alert('Please select a rating');
+                return;
+            }
+            
+            // In a real implementation, this would submit to your backend
+            // For demo, we'll show a success message
+            showSuccessMessage('Thank you for your review! It will be published after moderation.');
+            this.reset();
+            
+            // Reset stars
+            stars.forEach(s => {
+                s.classList.remove('fas', 'active');
+                s.classList.add('far');
+            });
+            ratingInput.value = '0';
+        });
+        
+        function showSuccessMessage(message) {
+            const alertEl = document.createElement('div');
+            alertEl.style.position = 'fixed';
+            alertEl.style.top = '100px';
+            alertEl.style.right = '2rem';
+            alertEl.style.background = 'var(--gold)';
+            alertEl.style.color = 'var(--black)';
+            alertEl.style.padding = '1rem 2rem';
+            alertEl.style.borderRadius = 'var(--border-radius)';
+            alertEl.style.boxShadow = 'var(--shadow)';
+            alertEl.style.zIndex = '1000';
+            alertEl.style.animation = 'slideIn 0.3s ease';
+            alertEl.textContent = message;
+            
+            document.body.appendChild(alertEl);
+            
+            setTimeout(() => {
+                alertEl.remove();
+            }, 5000);
+        }
+        
+        // Video modal
+        const videoThumbnails = document.querySelectorAll('.video-thumbnail');
+        const videoModal = document.querySelector('.video-modal');
+        const closeModal = document.querySelector('.close-modal');
+        
+        videoThumbnails.forEach(thumbnail => {
+            thumbnail.addEventListener('click', function() {
+                videoModal.classList.add('active');
+                document.body.style.overflow = 'hidden';
+            });
+        });
+        
+        closeModal.addEventListener('click', function() {
+            videoModal.classList.remove('active');
+            document.body.style.overflow = '';
+        });
+        
+        videoModal.addEventListener('click', function(e) {
+            if (e.target === videoModal) {
+                videoModal.classList.remove('active');
+                document.body.style.overflow = '';
+            }
+        });
+        
+        // Filter testimonials by service (optional feature)
+        const serviceBadges = document.querySelectorAll('.service-badge');
+        serviceBadges.forEach(badge => {
+            badge.addEventListener('click', function(e) {
+                e.preventDefault();
+                const service = this.textContent;
+                
+                // Filter testimonials by service
+                const testimonialCards = document.querySelectorAll('.testimonial-card');
+                testimonialCards.forEach(card => {
+                    const cardBadge = card.querySelector('.service-badge');
+                    if (!service || (cardBadge && cardBadge.textContent === service)) {
+                        card.style.display = 'block';
+                    } else {
+                        card.style.display = 'none';
+                    }
+                });
+            });
+        });
+    });
+</script>
+{% endblock %}

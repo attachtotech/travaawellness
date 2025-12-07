@@ -1,0 +1,715 @@
+{% extends "base.html" %}
+
+{% block title %}Contact Us - {{ super() }}{% endblock %}
+
+{% block extra_css %}
+<style>
+    .contact-hero {
+        background: linear-gradient(rgba(54, 54, 54, 0.8), rgba(54, 54, 54, 0.8)),
+                    url('/static/images/contact-bg.jpg') center/cover no-repeat;
+        padding: 150px 0 100px;
+        text-align: center;
+        color: white;
+    }
+
+    .contact-container {
+        padding: 80px 0;
+        background: var(--white);
+    }
+
+    .contact-layout {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 4rem;
+    }
+
+    @media (max-width: 992px) {
+        .contact-layout {
+            grid-template-columns: 1fr;
+        }
+    }
+
+    .contact-info {
+        display: flex;
+        flex-direction: column;
+        gap: 2rem;
+    }
+
+    .contact-item {
+        display: flex;
+        align-items: flex-start;
+        gap: 1.5rem;
+    }
+
+    .contact-icon {
+        width: 60px;
+        height: 60px;
+        background: var(--light-gray);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--gold);
+        font-size: 1.5rem;
+        flex-shrink: 0;
+    }
+
+    .contact-details h4 {
+        margin-bottom: 0.5rem;
+    }
+
+    .contact-details p {
+        color: var(--gray);
+        margin-bottom: 0.25rem;
+    }
+
+    .contact-hours {
+        background: var(--light-gray);
+        padding: 2rem;
+        border-radius: var(--border-radius);
+        margin-top: 1rem;
+    }
+
+    .hours-list {
+        list-style: none;
+        margin-top: 1rem;
+    }
+
+    .hours-list li {
+        display: flex;
+        justify-content: space-between;
+        padding: 0.5rem 0;
+        border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+    }
+
+    .hours-list li:last-child {
+        border-bottom: none;
+    }
+
+    .contact-form {
+        background: var(--light-gray);
+        padding: 3rem;
+        border-radius: var(--border-radius);
+        box-shadow: var(--shadow);
+    }
+
+    .contact-form h2 {
+        margin-bottom: 1.5rem;
+    }
+
+    .form-group {
+        margin-bottom: 1.5rem;
+    }
+
+    .form-row {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 1rem;
+    }
+
+    @media (max-width: 768px) {
+        .form-row {
+            grid-template-columns: 1fr;
+        }
+    }
+
+    /* Map Section */
+    .map-section {
+        height: 500px;
+        background: #ddd;
+        position: relative;
+        overflow: hidden;
+        border-top: 1px solid #ccc;
+        border-bottom: 1px solid #ccc;
+    }
+
+    .map-container {
+        width: 100%;
+        height: 100%;
+        position: relative;
+    }
+
+    .map-iframe {
+        width: 100%;
+        height: 100%;
+        border: 0;
+    }
+
+    /* FAQ Section */
+    .faq-section {
+        padding: 100px 0;
+        background: var(--light-gray);
+    }
+
+    .faq-container {
+        max-width: 800px;
+        margin: 0 auto;
+    }
+
+    .faq-item {
+        background: var(--white);
+        border-radius: var(--border-radius);
+        margin-bottom: 1rem;
+        overflow: hidden;
+        box-shadow: var(--shadow);
+    }
+
+    .faq-question {
+        padding: 1.5rem;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        cursor: pointer;
+        font-weight: 600;
+        transition: var(--transition);
+    }
+
+    .faq-question:hover {
+        background: rgba(0, 0, 0, 0.02);
+    }
+
+    .faq-question.active {
+        color: var(--gold);
+    }
+
+    .faq-icon {
+        transition: transform 0.3s ease;
+    }
+
+    .faq-question.active .faq-icon {
+        transform: rotate(45deg);
+    }
+
+    .faq-answer {
+        padding: 0 1.5rem;
+        max-height: 0;
+        overflow: hidden;
+        transition: max-height 0.3s ease, padding 0.3s ease;
+    }
+
+    .faq-answer.active {
+        padding: 0 1.5rem 1.5rem;
+        max-height: 500px;
+    }
+
+    /* CTA Section */
+    .contact-cta {
+        padding: 100px 0;
+        background: linear-gradient(rgba(0, 0, 0, 0.9), rgba(0, 0, 0, 0.9)),
+                    url('/static/images/cta-contact.jpg') center/cover no-repeat;
+        color: var(--white);
+        text-align: center;
+    }
+
+    .contact-cta h2 {
+        color: var(--white);
+        font-size: 3rem;
+        margin-bottom: 1.5rem;
+    }
+
+    .cta-buttons {
+        display: flex;
+        gap: 1rem;
+        justify-content: center;
+        margin-top: 2rem;
+        flex-wrap: wrap;
+    }
+
+    .flash-messages {
+        position: fixed;
+        top: 100px;
+        right: 2rem;
+        z-index: 1000;
+    }
+
+    .flash-message {
+        background: var(--gold);
+        color: var(--black);
+        padding: 1rem 2rem;
+        border-radius: var(--border-radius);
+        margin-bottom: 1rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        box-shadow: var(--shadow);
+        animation: slideIn 0.3s ease;
+    }
+
+    @keyframes slideIn {
+        from { transform: translateX(100%); opacity: 0; }
+        to { transform: translateX(0); opacity: 1; }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+
+<!-- Hero Section -->
+<section class="contact-hero">
+    <div class="container">
+        <h1>Get in Touch</h1>
+        <p class="section-subtitle">YOUR JOURNEY TO WELLNESS STARTS HERE</p>
+        <p style="max-width: 600px; margin: 2rem auto; color: rgba(255, 255, 255, 0.9);">
+            Contact Travaa Wellness — Navi Mumbai’s finest luxury spa experience. We're here to help you book appointments, ask questions, and begin your wellness journey.
+        </p>
+    </div>
+</section>
+
+<!-- Contact Info & Form -->
+<section class="contact-container">
+    <div class="container">
+        <div class="contact-layout">
+
+            <!-- Contact Information -->
+            <div class="contact-info">
+                <div>
+                    <h2>Visit Travaa Wellness</h2>
+                    <p style="color: var(--gray); margin: 1rem 0 2rem;">
+                        Discover calmness, luxury, and rejuvenation at Navi Mumbai’s premier wellness spa located in Kharghar.
+                    </p>
+                </div>
+
+                <div class="contact-item">
+                    <div class="contact-icon">
+                        <i class="fas fa-map-marker-alt"></i>
+                    </div>
+                    <div class="contact-details">
+                        <h4>Our Location</h4>
+                        <p>Office No. 1 to 5, First Floor</p>
+                        <p>SKYLARK CHS, Plot No. 8-B, Sector 06</p>
+                        <p>Kharghar, Navi Mumbai – 410210</p>
+                        <a href="#map" class="read-more" style="display: inline-block; margin-top: 0.5rem;">Get Directions</a>
+                    </div>
+                </div>
+
+                <div class="contact-item">
+                    <div class="contact-icon">
+                        <i class="fas fa-phone"></i>
+                    </div>
+                    <div class="contact-details">
+                        <h4>Call or WhatsApp</h4>
+                        <p>+91 70390 08000</p>
+                    </div>
+                </div>
+
+                <div class="contact-item">
+                    <div class="contact-icon">
+                        <i class="fas fa-envelope"></i>
+                    </div>
+                    <div class="contact-details">
+                        <h4>Email Us</h4>
+                        <p >travaawellness@gmail.com</p>
+                    </div>
+                </div>
+
+                <div class="contact-hours">
+                    <h4>Opening Hours</h4>
+                    <ul class="hours-list">
+                        <li>
+                            <span>Monday – Sunday</span>
+                            <span>10:00 AM – 10:00 PM</span>
+                        </li>
+                        <li>
+                            <span>Public Holidays</span>
+                            <span>Open</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Contact Form -->
+            <div class="contact-form">
+                <h2>Send Us a Message</h2>
+                <p style="color: var(--gray); margin-bottom: 2rem;">
+                    Our team will respond within 24 hours. For urgent bookings, WhatsApp us directly.
+                </p>
+
+                <form id="contact-form">
+    <div class="form-row">
+        <div class="form-group">
+            <label for="name">Full Name *</label>
+            <input type="text" id="name" name="name" class="form-control" required 
+                   placeholder="Enter your name">
+        </div>
+
+        <div class="form-group">
+            <label for="email">Email Address *</label>
+            <input type="email" id="email" name="email" class="form-control" required 
+                   placeholder="your.email@example.com">
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label for="subject">Subject *</label>
+        <input type="text" id="subject" name="subject" class="form-control" required 
+               placeholder="Booking, inquiry, consultation...">
+    </div>
+
+    <div class="form-group">
+        <label for="message">Your Message *</label>
+        <textarea id="message" name="message" class="form-control" rows="6" required 
+                  placeholder="Tell us how we can help you..."></textarea>
+    </div>
+
+    <button type="submit" class="btn btn-primary" style="width: 100%; padding: 1rem;">
+        <i class="fas fa-paper-plane"></i> Send Message
+    </button>
+</form>
+
+            </div>
+
+        </div>
+    </div>
+</section>
+
+<section 
+    style="
+        width: 100%;
+        padding: 60px 20px;
+        background: #0e0e0e; 
+        color: #fff;
+        text-align: center;
+        border-radius: var(--border-radius);
+        margin-top: 3rem;
+    ">
+
+    <h3 
+        style="
+            font-size: 1.8rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            letter-spacing: 1px;
+        ">
+        Stay Connected
+    </h3>
+
+    <p 
+        style="
+            color: rgba(255,255,255,0.7);
+            font-size: 1rem;
+            max-width: 420px;
+            margin: 0 auto 2rem;
+            line-height: 1.6;
+        ">
+        Follow Travaa Wellness for offers, updates, spa tips, and behind-the-scenes content.
+    </p>
+
+    <div 
+        style="
+            display: flex;
+            justify-content: center;
+            gap: 1.2rem;
+            margin-top: 10px;
+        ">
+
+        <!-- Instagram -->
+        <a href="https://instagram.com/travaa_wellness" target="_blank"
+            style="
+                width: 48px;
+                height: 48px;
+                border-radius: 50%;
+                background: #1a1a1a;
+                border: 1px solid rgba(255,255,255,0.1);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                color: #fff;
+                font-size: 1.2rem;
+                transition: all 0.3s ease;
+            "
+            onmouseover="this.style.background='#d4af37'; this.style.color='#000'"
+            onmouseout="this.style.background='#1a1a1a'; this.style.color='#fff'">
+            <i class="fab fa-instagram"></i>
+        </a>
+
+        <!-- Facebook -->
+        <a href="https://facebook.com/travaa_wellness" target="_blank"
+            style="
+                width: 48px;
+                height: 48px;
+                border-radius: 50%;
+                background: #1a1a1a;
+                border: 1px solid rgba(255,255,255,0.1);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                color: #fff;
+                font-size: 1.1rem;
+                transition: all 0.3s ease;
+            "
+            onmouseover="this.style.background='#d4af37'; this.style.color='#000'"
+            onmouseout="this.style.background='#1a1a1a'; this.style.color='#fff'">
+            <i class="fab fa-facebook-f"></i>
+        </a>
+
+        <!-- WhatsApp (optional but looks great in dark theme) -->
+        <a href="https://wa.me/917039008000" target="_blank"
+            style="
+                width: 48px;
+                height: 48px;
+                border-radius: 50%;
+                background: #1a1a1a;
+                border: 1px solid rgba(255,255,255,0.1);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                color: #fff;
+                font-size: 1.2rem;
+                transition: all 0.3s ease;
+            "
+            onmouseover="this.style.background='#25D366'; this.style.color='#000'"
+            onmouseout="this.style.background='#1a1a1a'; this.style.color='#fff'">
+            <i class="fab fa-whatsapp"></i>
+        </a>
+
+    </div>
+
+</section>
+<br>
+<!-- MAP SECTION - CLEAN PREMIUM VERSION -->
+<section id="map" style="width:100%; padding:0; margin:0;">
+    <div style="
+        display:flex; 
+        width:100%; 
+        height:500px; 
+        border-radius:20px; 
+        overflow:hidden;
+        background:var(--light-gray);
+        box-shadow:0 8px 25px rgba(0,0,0,0.08);
+    ">
+
+        <!-- INFO BOX (20%) -->
+        <div style="
+            width:22%;
+            height:100%;
+            background:#ffffff;
+            padding:2.5rem 2rem;
+            display:flex;
+            flex-direction:column;
+            justify-content:center;
+            border-right:1px solid rgba(0,0,0,0.08);
+        ">
+            <h3 style="
+                margin-bottom:1rem; 
+                color:#000; 
+                font-size:1.6rem; 
+                font-weight:600;
+            ">
+                Travaa Wellness
+            </h3>
+
+            <p style="
+                color:#555; 
+                margin-bottom:1.5rem; 
+                line-height:1.6; 
+                font-size:0.95rem;
+            ">
+                Office No. 1–5, First Floor,<br>
+                SKYLARK CHS, Sector 06,<br>
+                Kharghar, Navi Mumbai – 410210
+            </p>
+
+            <a href="https://maps.google.com/?q=Travaa+Wellness+Kharghar"
+               target="_blank"
+               style="
+                    padding:0.9rem 1.5rem;
+                    background:var(--gold);
+                    color:#000;
+                    text-decoration:none;
+                    border-radius:50px;
+                    text-align:center;
+                    font-weight:600;
+                    font-size:0.95rem;
+                    transition:0.3s ease;
+               "
+               onmouseover="this.style.transform='translateY(-3px)'"
+               onmouseout="this.style.transform='translateY(0)'">
+                Open in Google Maps
+            </a>
+        </div>
+
+        <!-- MAP (78%) -->
+        <div style="width:78%; height:100%;">
+            <iframe
+                style="border:0; width:100%; height:100%;"
+                loading="lazy"
+                allowfullscreen
+                referrerpolicy="no-referrer-when-downgrade"
+                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3888.63038689035!2d73.08375547511074!3d19.040569953766584!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3be7c216a1e13c05%3A0x71e30c1a3dac8f70!2sTravaa%20Wellness!5e0!3m2!1sen!2sin!4v1707202054889!5m2!1sen!2sin">
+            </iframe>
+        </div>
+
+    </div>
+
+    <!-- MOBILE RESPONSIVE -->
+    <style>
+        @media (max-width: 900px) {
+            #map > div {
+                flex-direction: column;
+                height: auto !important;
+            }
+
+            #map > div > div:first-child {
+                width: 100% !important;
+                height: auto !important;
+                padding: 2rem !important;
+                text-align: center;
+                border-right:none !important;
+                border-bottom:1px solid rgba(0,0,0,0.08);
+            }
+
+            #map > div > div:last-child {
+                width: 100% !important;
+                height: 350px !important;
+            }
+        }
+    </style>
+</section>
+
+
+<!-- FAQ Section -->
+<section class="faq-section">
+    <div class="container">
+        <div class="section-header">
+            <h2>Frequently Asked Questions</h2>
+            <p>Find answers to common questions about our services and policies.</p>
+        </div>
+
+        <div class="faq-container">
+            <div class="faq-item">
+                <div class="faq-question">
+                    <span>What should I bring to my appointment?</span>
+                    <i class="fas fa-plus faq-icon"></i>
+                </div>
+                <div class="faq-answer">
+                    <p>Please bring a valid ID and any medical information relevant to your treatment. We provide all necessary robes, slippers, and amenities. You may want to bring comfortable clothing to change into after your treatment.</p>
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question">
+                    <span>How early should I arrive for my appointment?</span>
+                    <i class="fas fa-plus faq-icon"></i>
+                </div>
+                <div class="faq-answer">
+                    <p>We recommend arriving 15 minutes before your scheduled appointment time. This allows you to complete any necessary paperwork, change, and begin your relaxation experience without feeling rushed.</p>
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question">
+                    <span>What is your cancellation policy?</span>
+                    <i class="fas fa-plus faq-icon"></i>
+                </div>
+                <div class="faq-answer">
+                    <p>We require 24 hours notice for cancellations or rescheduling. Cancellations made with less than 24 hours notice may be subject to a 50% fee. No-shows will be charged the full amount of the scheduled service.</p>
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question">
+                    <span>Do you offer gift certificates?</span>
+                    <i class="fas fa-plus faq-icon"></i>
+                </div>
+                <div class="faq-answer">
+                    <p>Yes, we offer beautifully packaged gift certificates that can be purchased for any amount or specific services. They can be purchased online or at our reception desk and never expire.</p>
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question">
+                    <span>Are your products cruelty-free and sustainable?</span>
+                    <i class="fas fa-plus faq-icon"></i>
+                </div>
+                <div class="faq-answer">
+                    <p>Absolutely. We are committed to using only cruelty-free, vegan, and sustainably sourced products. Our suppliers are carefully selected based on their ethical practices and environmental consciousness.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- CTA Section -->
+<section class="contact-cta">
+    <div class="container">
+        <h2>Ready to Begin Your Wellness Journey?</h2>
+        <p style="max-width: 600px; margin: 0 auto; color: rgba(255, 255, 255, 0.9);">
+            Book your appointment today and experience the Travaa difference. Our team is ready to create a personalized wellness plan just for you.
+        </p>
+        <div class="cta-buttons">
+            <a href="{{ url_for('booking') }}" class="btn btn-primary" style="padding: 1rem 3rem;">
+                <i class="fas fa-calendar-alt"></i> Book Appointment
+            </a>
+            <a href="https://wa.me/917039008000" class="btn btn-secondary" style="padding: 1rem 3rem;">
+                <i class="fab fa-whatsapp"></i> WhatsApp Us
+            </a>
+        </div>
+    </div>
+</section>
+
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // FAQ Toggle
+        const faqQuestions = document.querySelectorAll('.faq-question');
+
+        faqQuestions.forEach(question => {
+            question.addEventListener('click', function() {
+                const answer = this.nextElementSibling;
+                const icon = this.querySelector('.faq-icon');
+
+                this.classList.toggle('active');
+                answer.classList.toggle('active');
+
+                if (this.classList.contains('active')) {
+                    icon.classList.remove('fa-plus');
+                    icon.classList.add('fa-times');
+                } else {
+                    icon.classList.remove('fa-times');
+                    icon.classList.add('fa-plus');
+                }
+
+                faqQuestions.forEach(otherQuestion => {
+                    if (otherQuestion !== this && otherQuestion.classList.contains('active')) {
+                        otherQuestion.classList.remove('active');
+                        otherQuestion.nextElementSibling.classList.remove('active');
+                        otherQuestion.querySelector('.faq-icon').classList.remove('fa-times');
+                        otherQuestion.querySelector('.faq-icon').classList.add('fa-plus');
+                    }
+                });
+            });
+        });
+document.getElementById("contact-form").addEventListener("submit", function(e) {
+    e.preventDefault();
+
+    let name = document.getElementById("name").value.trim();
+    let email = document.getElementById("email").value.trim();
+    let subject = document.getElementById("subject").value.trim();
+    let message = document.getElementById("message").value.trim();
+
+    if (!name || !email || !subject || !message) {
+        alert("Please fill all required fields.");
+        return;
+    }
+
+    let whatsappNumber = "917039008000"; // India number without + sign
+
+    let whatsappMessage = 
+`🌿 *New Inquiry – Travaa Wellness* 🌿
+
+👤 *Name:* ${name}
+📧 *Email:* ${email}
+📌 *Subject:* ${subject}
+💬 *Message:* ${message}
+
+Sent from Travaa Wellness Website`;
+
+    let url = "https://wa.me/" + whatsappNumber + "?text=" + encodeURIComponent(whatsappMessage);
+
+    window.open(url, "_blank");
+});
+ });
+</script>
+{% endblock %}

@@ -1,0 +1,402 @@
+{% extends "base.html" %}
+
+{% block title %}Book Appointment - {{ super() }}{% endblock %}
+
+{% block extra_css %}
+<style>
+    .booking-hero {
+        background: linear-gradient(rgba(66, 66, 66, 0.8), rgba(77, 77, 77, 0.8)),
+                    url('/static/images/booking-bg.jpg') center/cover no-repeat;
+        padding: 150px 0 100px;
+        text-align: center;
+        color: white;
+    }
+    
+    .booking-steps {
+        display: flex;
+        justify-content: center;
+        gap: 2rem;
+        margin: 3rem 0;
+        flex-wrap: wrap;
+    }
+    
+    .step {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 0.5rem;
+    }
+    
+    .step-number {
+        width: 40px;
+        height: 40px;
+        border: 2px solid var(--gold);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 600;
+        color: var(--gold);
+    }
+    
+    .step.active .step-number {
+        background: var(--gold);
+        color: var(--black);
+    }
+    
+    .step-text {
+        font-size: 0.875rem;
+        color: var(--gray);
+    }
+    
+    .step.active .step-text {
+        color: var(--gold);
+        font-weight: 500;
+    }
+    
+    /* WhatsApp specific styles */
+    .whatsapp-redirect {
+        display: none;
+        text-align: center;
+        padding: 40px;
+        background: linear-gradient(135deg, #25D366 0%, #128C7E 100%);
+        border-radius: 12px;
+        color: white;
+        margin-top: 30px;
+        animation: fadeIn 0.5s ease;
+    }
+    
+    .whatsapp-redirect.show {
+        display: block;
+    }
+    
+    .whatsapp-icon {
+        font-size: 4rem;
+        margin-bottom: 20px;
+        animation: bounce 2s infinite;
+    }
+    
+    @keyframes bounce {
+        0%, 20%, 50%, 80%, 100% {transform: translateY(0);}
+        40% {transform: translateY(-10px);}
+        60% {transform: translateY(-5px);}
+    }
+    
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(20px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+    
+    .whatsapp-btn {
+        background: white;
+        color: #25D366;
+        border: none;
+        padding: 15px 40px;
+        border-radius: 30px;
+        font-weight: 600;
+        font-size: 1.1rem;
+        margin-top: 20px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+    }
+    
+    .whatsapp-btn:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<section class="booking-hero">
+    <div class="container">
+        <h1>Book Your Luxury Experience</h1>
+        <p class="section-subtitle">Reserve Your Moment of Tranquility</p>
+        
+        <div class="booking-steps">
+            <div class="step active">
+                <div class="step-number">1</div>
+                <div class="step-text">Select Service</div>
+            </div>
+            <div class="step">
+                <div class="step-number">2</div>
+                <div class="step-text">Confirm Details</div>
+            </div>
+            <div class="step">
+                <div class="step-number">3</div>
+                <div class="step-text">WhatsApp Confirmation</div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="booking-section">
+    <div class="container">
+        <div class="section-header">
+            <h2>Appointment Details</h2>
+            <p class="section-subtitle">Fill in your preferences for a personalized experience</p>
+        </div>
+        
+        <form id="booking-form" class="booking-form" onsubmit="submitToWhatsApp(event)">
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="name">Full Name *</label>
+                    <input type="text" id="name" name="name" class="form-control" required 
+                           placeholder="Enter your full name">
+                </div>
+                
+                <div class="form-group">
+                    <label for="email">Email Address *</label>
+                    <input type="email" id="email" name="email" class="form-control" required 
+                           placeholder="your.email@example.com">
+                </div>
+            </div>
+            
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="phone">Phone Number *</label>
+                    <input type="tel" id="phone" name="phone" class="form-control" required 
+                           placeholder="+1 (555) 123-4567">
+                </div>
+                
+                
+            </div>
+            
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="category">Service Category *</label>
+                    <select id="category" name="category" class="form-control" required>
+                        <option value="">Select Category</option>
+                        <option value="Body">Body</option>
+                        <option value="Spa">Spa</option>
+                        <option value="Nails">Nails</option>
+                        <option value="Skin">Skin</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="service">Select Service *</label>
+                    <select id="service" name="service" class="form-control" required>
+                        <option value="">Select a Service</option>
+                        <!-- Options will be populated by JavaScript -->
+                    </select>
+                </div>
+            </div>
+            
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="date">Preferred Date *</label>
+                    <input type="date" id="booking-date" name="date" class="form-control" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="time">Preferred Time *</label>
+                    <select id="time" name="time" class="form-control" required>
+                        <option value="">Select Time</option>
+                        <option value="10:00">10:00 AM</option>
+                        <option value="11:00">11:00 AM</option>
+                        <option value="12:00">12:00 PM</option>
+                        <option value="14:00">01:00 PM</option>
+                        <option value="14:00">02:00 PM</option>
+                        <option value="15:00">03:00 PM</option>
+                        <option value="16:00">04:00 PM</option>
+                        <option value="17:00">05:00 PM</option>
+                        <option value="17:00">06:00 PM</option>
+                        <option value="17:00">07:00 PM</option>
+                        <option value="17:00">08:00 PM</option>
+                        <option value="17:00">09:00 PM</option>
+                        <option value="17:00">10:00 PM</option>
+
+                    </select>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label for="notes">Special Requests or Notes</label>
+                <textarea id="notes" name="notes" class="form-control" rows="4" 
+                          placeholder="Any special requirements, allergies, or preferences..."></textarea>
+            </div>
+            
+            <div class="form-group">
+                <p class="privacy-note">
+                    <i class="fas fa-lock"></i> Your information is secure and will only be used for appointment coordination.
+                </p>
+            </div>
+            
+            <button type="submit" class="btn btn-primary" style="width: 100%; padding: 1.25rem;">
+                <i class="fab fa-whatsapp"></i> Continue to WhatsApp Confirmation
+            </button>
+        </form>
+        
+        <!-- WhatsApp Redirect Section -->
+        <div id="whatsapp-redirect" class="whatsapp-redirect">
+            <div class="whatsapp-icon">
+                <i class="fab fa-whatsapp"></i>
+            </div>
+            <h3>Ready to Confirm Your Booking!</h3>
+            <p style="color: white;">Click the button below to send your appointment details to our WhatsApp concierge. <br>We'll confirm your booking and answer any questions you may have.</p>
+            
+            <button id="open-whatsapp" class="whatsapp-btn">
+                <i class="fab fa-whatsapp"></i> Open WhatsApp
+            </button>
+            
+            <p style="margin-top: 20px; font-size: 0.9rem; opacity: 0.9;color: white;">
+                <i class="fas fa-clock"></i> Usually responds within a day.
+            </p>
+        </div>
+    </div>
+</section>
+
+<section class="cta-section" style="padding: 60px 0; text-align: center; background: var(--light-gray);">
+    <div class="container">
+        <h3>Need Assistance?</h3>
+        <p>Our luxury concierge team is available to help you choose the perfect experience.</p>
+        <div style="margin-top: 2rem;">
+            <a href="https://wa.me/917039008000" class="btn btn-primary" style="margin-right: 1rem;">
+                <i class="fas fa-phone"></i> Call Us
+            </a>
+            <a href="{{ url_for('contact') }}" class="btn">
+                <i class="fas fa-envelope"></i> Send Message
+            </a>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    // Initialize services data for the booking form
+    window.servicesData = {{ services|tojson|safe }};
+    
+    // Your WhatsApp Business number (replace with actual number)
+    const whatsappNumber = "15551234567"; // Example: +1 (555) 123-4567
+    
+    document.addEventListener('DOMContentLoaded', function() {
+        // Initialize service selector
+        const categorySelect = document.getElementById('category');
+        const serviceSelect = document.getElementById('service');
+        
+        if (categorySelect && serviceSelect) {
+            categorySelect.addEventListener('change', function() {
+                const category = this.value;
+                serviceSelect.innerHTML = '<option value="">Select a Service</option>';
+                
+                if (category && window.servicesData[category]) {
+                    window.servicesData[category].forEach(service => {
+                        const option = document.createElement('option');
+                        option.value = service;
+                        option.textContent = service;
+                        serviceSelect.appendChild(option);
+                    });
+                }
+            });
+        }
+        
+        // Initialize date picker
+        const dateInput = document.getElementById('booking-date');
+        if (dateInput) {
+            const today = new Date();
+            const maxDate = new Date();
+            maxDate.setMonth(today.getMonth() + 3);
+            
+            // Format dates to YYYY-MM-DD
+            const formatDate = (date) => {
+                return date.toISOString().split('T')[0];
+            };
+            
+            dateInput.min = formatDate(today);
+            dateInput.max = formatDate(maxDate);
+            
+            // Set default to tomorrow
+            const tomorrow = new Date(today);
+            tomorrow.setDate(tomorrow.getDate() + 1);
+            dateInput.value = formatDate(tomorrow);
+        }
+        
+        // Setup WhatsApp button
+        const whatsappButton = document.getElementById('open-whatsapp');
+        if (whatsappButton) {
+            whatsappButton.addEventListener('click', function() {
+                const formData = JSON.parse(localStorage.getItem('bookingData') || '{}');
+                
+                // Format the message for WhatsApp
+                const message = `*NEW APPOINTMENT REQUEST*%0A%0A` +
+                               `*Name:* ${formData.name || ''}%0A` +
+                               `*Phone:* ${formData.phone || ''}%0A` +
+                               `*Email:* ${formData.email || ''}%0A` +
+                               `*Service:* ${formData.service || ''}%0A` +
+                               `*Date:* ${formData.date || ''}%0A` +
+                               `*Time:* ${formData.time || ''}%0A` +
+                               `*Notes:* ${formData.notes || 'None'}%0A%0A` +
+                               `_Sent via Travaa Wellness Website_`;
+                
+                // Open WhatsApp with pre-filled message
+                const whatsappURL = `https://wa.me/${whatsappNumber.replace(/\D/g, '')}?text=${message}`;
+                window.open(whatsappURL, '_blank');
+            });
+        }
+    });
+    
+    function submitToWhatsApp(event) {
+        event.preventDefault();
+        
+        // Collect form data
+        const formData = {
+            name: document.getElementById('name').value,
+            email: document.getElementById('email').value,
+            phone: document.getElementById('phone').value,
+            category: document.getElementById('category').value,
+            service: document.getElementById('service').value,
+            date: document.getElementById('booking-date').value,
+            time: document.getElementById('time').value,
+            notes: document.getElementById('notes').value
+        };
+        
+        // Validate required fields
+        const requiredFields = ['name', 'email', 'phone', 'category', 'service', 'date', 'time'];
+        const missingFields = requiredFields.filter(field => !formData[field]);
+        
+        if (missingFields.length > 0) {
+            alert('Please fill in all required fields.');
+            return false;
+        }
+        
+        // Store data for WhatsApp
+        localStorage.setItem('bookingData', JSON.stringify(formData));
+        
+        // Show WhatsApp redirect section
+        document.getElementById('whatsapp-redirect').classList.add('show');
+        
+        // Scroll to WhatsApp section
+        document.getElementById('whatsapp-redirect').scrollIntoView({
+            behavior: 'smooth',
+            block: 'center'
+        });
+        
+        return false;
+    }
+    
+    // Optional: Add phone number formatting
+    document.getElementById('phone')?.addEventListener('input', function(e) {
+        let value = e.target.value.replace(/\D/g, '');
+        
+        if (value.length > 0) {
+            value = '+' + value;
+            if (value.length > 4) {
+                value = value.substring(0, 4) + ' ' + value.substring(4);
+            }
+            if (value.length > 8) {
+                value = value.substring(0, 8) + ' ' + value.substring(8);
+            }
+            if (value.length > 13) {
+                value = value.substring(0, 13);
+            }
+        }
+        
+        e.target.value = value;
+    });
+</script>
+{% endblock %}
