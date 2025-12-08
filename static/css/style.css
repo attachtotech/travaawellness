@@ -15,6 +15,7 @@
     --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     --shadow: 0 10px 40px rgba(0, 0, 0, 0.05);
     --border-radius: 12px;
+    --btn-danger:#500060;
 }
 
 html {
@@ -108,7 +109,7 @@ p {
 .logo-subtitle {
     font-family: 'Cormorant Garamond', serif;
     font-size: 0.875rem;
-    color: var(--gold);
+    color: #500060;
     letter-spacing: 2px;
 }
 
@@ -128,7 +129,7 @@ p {
 }
 
 .nav-links a:hover {
-    color: var(--gold);
+    color: #500060;
 }
 
 .nav-links a::after {
@@ -138,7 +139,7 @@ p {
     left: 0;
     width: 0;
     height: 1px;
-    background: var(--gold);
+    background: #500060;
     transition: var(--transition);
 }
 
@@ -645,7 +646,7 @@ background: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)), url('/static/imag
 }
 
 .read-more:hover {
-    color: var(--gold);
+    color: #500060;
     gap: 1rem;
 }
 

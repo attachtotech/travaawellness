@@ -166,7 +166,7 @@
     }
 
     .slider-dot.active {
-        background: var(--gold);
+        background: #500060;
         transform: scale(1.2);
     }
 
@@ -268,7 +268,7 @@
         width: 90px;
         height: 90px;
         margin: 0 auto 1.5rem;
-        background: linear-gradient(135deg, var(--gold), #e6c07e);
+        background: linear-gradient(135deg, #500060);
         border-radius: 50%;
         display: flex;
         align-items: center;
@@ -281,7 +281,7 @@
 
     .highlight-card:hover .highlight-icon {
         transform: rotateY(180deg) scale(1.1);
-        background: linear-gradient(135deg, #1a1a1a, #2d2d2d);
+        background: linear-gradient(135deg,var(--gold));
     }
 
     /* Featured Services */
@@ -397,9 +397,9 @@
     /* CTA Section */
     .cta-section {
         padding: 120px 0;
-        background: linear-gradient(rgba(0, 0, 0, 0.9), rgba(0, 0, 0, 0.9)),
+        background: linear-gradient(rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.9)),
                     url('/static/images/cta-bg.jpg') center/cover no-repeat;
-        color: var(--white);
+        color: var(--black);
         text-align: center;
         opacity: 0;
         transform: translateY(30px);
@@ -412,7 +412,7 @@
     }
 
     .cta-section h2 {
-        color: var(--white);
+        color: var(--black);
         font-size: 3.5rem;
         margin-bottom: 1.5rem;
     }
@@ -651,7 +651,7 @@
             <h1>Rediscover Your Radiance at Travaa</h1>
             <p>Where premium beauty treatments meet tranquil elegance. Experience bespoke wellness in our sanctuary of sophistication.</p>
             <div class="hero-btns">
-                <a href="{{ url_for('booking') }}" class="btn btn-primary pulse-hover">
+                <a href="{{ url_for('booking') }}" class="btn btn-primary pulse-hover" style="color: white;background-color: #500060;">
                     <i class="fas fa-calendar-check"></i> Book Appointment
                 </a>
                 <a href="{{ url_for('services') }}" class="btn btn-secondary">
@@ -687,7 +687,7 @@
 <section class="featured-services">
     <div class="container">
         <div class="section-header animate-on-scroll">
-            <div class="section-subtitle">OUR SIGNATURE TREATMENTS</div>
+            <div class="section-subtitle" style="color: #500060;">OUR SIGNATURE TREATMENTS</div>
             <h2>Luxury Experiences Tailored for You</h2>
             <p>Each treatment is carefully crafted to provide the ultimate wellness experience, combining ancient techniques with modern luxury.</p>
         </div>
@@ -736,7 +736,7 @@
 <section class="gallery">
     <div class="container">
         <div class="section-header animate-on-scroll">
-            <div class="section-subtitle">OUR PREMIUM WORK</div>
+            <div class="section-subtitle" style="color: #500060;">OUR PREMIUM WORK</div>
             <h2>Gallery of Elegance</h2>
             <p>A glimpse into the luxury experiences and impeccable artistry that define Travaa Wellness.</p>
         </div>
@@ -779,7 +779,7 @@
 <section class="testimonials">
     <div class="container">
         <div class="section-header animate-on-scroll">
-            <div class="section-subtitle">CLIENT EXPERIENCES</div>
+            <div class="section-subtitle" style="color: #500060;">CLIENT EXPERIENCES</div>
             <h2>What Our Clients Say</h2>
             <p>Join our community of satisfied clients who have experienced the Travaa difference.</p>
         </div>
@@ -958,13 +958,13 @@ document.addEventListener("DOMContentLoaded", function () {
                 display: inline-block;
                 margin-bottom: 20px;
                 padding: 8px 20px;
-                background: rgba(212, 165, 116, 0.1);
-                border: 1px solid rgba(212, 165, 116, 0.3);
+                background: white;
+                border: 1px solid white;
                 border-radius: 20px;
                 animation: fadeInUp 1s ease;
             ">
                 <span style="
-                    color: #d4a574;
+                    color: #500060;
                     font-size: 14px;
                     letter-spacing: 3px;
                     font-weight: 500;
@@ -1033,7 +1033,7 @@ document.addEventListener("DOMContentLoaded", function () {
                     display: inline-flex;
                     align-items: center;
                     gap: 12px;
-                    background: linear-gradient(135deg, #E1306C 0%, #833AB4 50%, #d4a574 100%);
+                    background: linear-gradient(135deg, #E1306C 0%, #500060 50%, #d4a574 100%);
                     background-size: 200% 200%;
                     color: white;
                     padding: 18px 40px;
@@ -1123,16 +1123,16 @@ document.addEventListener("DOMContentLoaded", function () {
 <!-- CTA Section -->
 <section class="cta-section animate-on-scroll">
     <div class="container">
-        <div class="section-subtitle">BEGIN YOUR WELLNESS JOURNEY</div>
-        <h2>Ready to Experience Luxury Wellness?</h2>
-        <p style="max-width: 600px; margin: 0 auto 2rem; color: rgba(255, 255, 255, 0.9);">
+        <div class="section-subtitle" style="color: #500060;">BEGIN YOUR WELLNESS JOURNEY</div>
+        <h2 style="color: #0a0a0a;">Ready to Experience Luxury Wellness?</h2>
+        <p style="max-width: 600px; margin: 0 auto 2rem; color: rgba(0, 0, 0, 0.9);">
             Book your appointment today and discover why Travaa is the preferred choice for luxury wellness.
         </p>
         <div class="cta-btns">
             <a href="{{ url_for('booking') }}" class="btn btn-primary">
                 <i class="fas fa-calendar-alt"></i> Book Now
             </a>
-            <a href="tel:+917039008000" class="btn btn-secondary">
+            <a href="tel:+917039008000" class="btn btn-primary" style="color: #500060;background-color:#E1306C;">
                 <i class="fas fa-phone"></i> Call Now
             </a>
         </div>
