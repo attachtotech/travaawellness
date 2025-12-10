@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, url_for, flash
+from flask import Flask, render_template, request, redirect, send_from_directory, url_for, flash
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
 import urllib.parse
@@ -90,11 +90,84 @@ with app.app_context():
 
 # Service Data
 SERVICES_DATA = {
-    'Body': ['Luxury Bodycut & Styling', 'Premium Body Coloring', 'Keratin Treatment', 'Scalp Therapy', 'Bridal Body Design'],
-    'Spa': ['Signature Full Body Massage', 'Aromatherapy Session', 'Hot Stone Therapy', 'Couples Spa Experience', 'Detox Body Wrap'],
-    'Nails': ['Luxury Manicure', 'Premium Pedicure', 'Nail Art Design', 'Gel Extensions', 'Spa Hand Treatment'],
-    'Skin': ['Facial Rejuvenation', 'Microdermabrasion', 'Chemical Peel', 'LED Light Therapy', 'Anti-Aging Treatment']
+    "Spa": [
+        "Aroma Massage",
+        "Swedish Massage",
+        "Deep Tissue Massage",
+        "Balinese Massage",
+        "Thai Dry Massage",
+        "Four Hand Massage",
+        "Signature Massage",
+        "Potly Massage",
+        "Hot Stone Massage",
+        "Foot Massage",
+        "Back Massage",
+        "Head Massage",
+        "Head, Shoulder & Back Massage",
+        "Hot Stone Foot Massage",
+        "Herbal Massage Potli",
+        "Foot Massage + Scrub",
+        "Balinese Foot Ritual"
+    ],
+    
+    "Body": [
+        "Body Scrub",
+        "Body Polishing & Wrap",
+        "Body Scrub + Body Polishing + Body Wrap",
+        "Bubble Jacuzzi",
+        "Salt Bath (Single / Couple)",
+        "Bath Bomb Jacuzzi",
+        "Ice Bath Therapy"
+    ],
+
+    "Skin": [
+        "Facial",
+        "Facial Premium"
+    ],
+
+    "Nails": [
+        "Cut File",
+        "Normal Nail Polish",
+        "Classic Manicure",
+        "Classic Pedicure",
+        "Aroma Pedicure",
+        "Spa Pedicure",
+        "Signature Pedicure",
+        # Nail Extension Services
+        "Gel Polish on Natural Nail",
+        "Gel Polish Remover",
+        "Extension Remover",
+        "Overlay",
+        "Refill",
+        "Temporary Extension",
+        "Soft Gel Extension",
+        "Gel Extension",
+        "Acrylic Extension",
+        "Baby Boomer Extension",
+        "Gum Gel Extension",
+        "Per Finger Extension",
+        # Nail Art Services
+        "Sticker Nail Art",
+        "Water Diggler Art",
+        "Glitter Art",
+        "French Art",
+        "Chrome Art",
+        "Cat Eye Art",
+        "Ombre Art",
+        "Line Art",
+        "Foil Art",
+        "Shuttle Glass Art",
+        "Marble Art",
+        "Swell Art",
+        "2D Sweater Art",
+        "3D Nail Art",
+        "Jewellery Nail Art",
+        "Pigment Art",
+        "Spider Gel Art",
+        "Animal Print Art"
+    ]
 }
+
 
 # Sample Blog Posts Data
 SAMPLE_BLOG_POSTS = [
@@ -140,43 +213,173 @@ SAMPLE_BLOG_POSTS = [
 SAMPLE_TESTIMONIALS = [
     {
         'id': 1,
-        'client_name': 'Sophia Laurent',
-        'client_title': 'Regular Client',
-        'content': 'Travaa Wellness has transformed my self-care routine. The attention to detail and luxury experience is unmatched in the city.',
+        'client_name': 'Divya Thawani',
+        'client_title': 'Google Reviewer',
+        'content': 'My partner and I recently treated ourselves to a couples spa massage at Travaa Wellness, and it was nothing short of a relaxing experience! The serene ambiance made the whole session feel luxurious and deeply soothing.',
         'rating': 5,
         'service_category': 'Spa',
-        'created_at': datetime(2024, 12, 1),
+        'created_at': datetime(2024, 12, 15),  # 1 month ago
         'is_featured': True
     },
     {
         'id': 2,
-        'client_name': 'Alexander Chen',
-        'client_title': 'First-time Visitor',
-        'content': 'The nail art designs are exquisite! The artists are true masters of their craft. Highly recommended for special occasions.',
+        'client_name': 'Bankmart Solutions',
+        'client_title': 'Corporate Client',
+        'content': 'Absolutely loved my experience at Travaa Wellness! One of the best spa sessions—luxury ambience, excellent therapists, and top-tier hospitality.',
         'rating': 5,
-        'service_category': 'Nails',
-        'created_at': datetime(2024, 11, 20),
+        'service_category': 'Spa',
+        'created_at': datetime(2024, 11, 10),  # 2 months ago
         'is_featured': True
     },
     {
         'id': 3,
-        'client_name': 'Isabella Rossi',
-        'client_title': 'VIP Member',
-        'content': 'As someone who visits luxury spas worldwide, Travaa stands out with their exceptional service and tranquil ambiance.',
+        'client_name': 'Deepali Chawla',
+        'client_title': 'Local Guide',
+        'content': '5-star bliss! I visited Travaa Wellness and left feeling like royalty. The service, ambiance, and attention to detail were outstanding.',
         'rating': 5,
-        'service_category': 'Body',
-        'created_at': datetime(2024, 11, 15),
+        'service_category': 'Spa',
+        'created_at': datetime(2025, 1, 10),  # 2 weeks ago
         'is_featured': True
     },
     {
         'id': 4,
-        'client_name': 'Michael Roberts',
-        'client_title': 'Corporate Client',
-        'content': 'Our team wellness sessions at Travaa have significantly improved workplace morale and productivity.',
+        'client_name': 'Internship Productions',
+        'client_title': 'Google Reviewer',
+        'content': 'Visited Travaa Wellness for a hot stone massage and it was fantastic. Thanks to Sara for treating me like a queen. The spa is beautifully designed and super clean.',
         'rating': 5,
-        'service_category': 'Corporate',
-        'created_at': datetime(2024, 11, 10),
+        'service_category': 'Massage',
+        'created_at': datetime(2024, 11, 15),
         'is_featured': True
+    },
+    {
+        'id': 5,
+        'client_name': 'Pratik Pednekar',
+        'client_title': 'Google Reviewer',
+        'content': 'The grand opening deals were unbelievable! Amazing service, stunning ambience, and a truly luxurious experience. Highly recommended before the offers end.',
+        'rating': 5,
+        'service_category': 'Spa',
+        'created_at': datetime(2024, 10, 15),
+        'is_featured': False
+    },
+    {
+        'id': 6,
+        'client_name': 'Nalini Singh',
+        'client_title': 'Google Reviewer',
+        'content': 'Had a full body massage and it was incredibly relaxing. The dim lighting, pleasant aroma, and skilled therapist made the experience exceptional.',
+        'rating': 5,
+        'service_category': 'Massage',
+        'created_at': datetime(2024, 11, 20),
+        'is_featured': False
+    },
+    {
+        'id': 7,
+        'client_name': 'Tanisha Setpal',
+        'client_title': 'Google Reviewer',
+        'content': 'Wonderful experience! Very professional and kind staff. The place has a calming, aesthetic vibe and is extremely well maintained.',
+        'rating': 5,
+        'service_category': 'Spa',
+        'created_at': datetime(2024, 11, 18),
+        'is_featured': False
+    },
+    {
+        'id': 8,
+        'client_name': 'Sangram',
+        'client_title': 'Google Reviewer',
+        'content': 'One of the most relaxing sessions ever. The therapist was skilled and the ambience was soothing and luxurious.',
+        'rating': 5,
+        'service_category': 'Massage',
+        'created_at': datetime(2025, 1, 5),
+        'is_featured': False
+    },
+    {
+        'id': 9,
+        'client_name': 'Kunal Gaikwad',
+        'client_title': 'Google Reviewer',
+        'content': 'Very good experience! Excellent ambience and polite staff. A must-visit for a relaxing wellness day.',
+        'rating': 5,
+        'service_category': 'Spa',
+        'created_at': datetime(2025, 1, 5),
+        'is_featured': False
+    },
+    {
+        'id': 10,
+        'client_name': 'Aryan Cute',
+        'client_title': 'Google Reviewer',
+        'content': 'Ambience is very good, therapist is very good, and overall experience was excellent. Receptionist was also very polite.',
+        'rating': 5,
+        'service_category': 'Spa',
+        'created_at': datetime(2024, 11, 15),
+        'is_featured': False
+    },
+    {
+        'id': 11,
+        'client_name': 'Ranjita Roy',
+        'client_title': 'Google Reviewer',
+        'content': 'Very good experience. Thank you so much Alino! I will visit again soon.',
+        'rating': 5,
+        'service_category': 'Spa',
+        'created_at': datetime(2024, 11, 10),
+        'is_featured': False
+    },
+    {
+        'id': 12,
+        'client_name': 'Dhanashree Gaikwad',
+        'client_title': 'Google Reviewer',
+        'content': 'Loved the place! Had a great experience here.',
+        'rating': 5,
+        'service_category': 'Spa',
+        'created_at': datetime(2024, 11, 10),
+        'is_featured': False
+    },
+    {
+        'id': 13,
+        'client_name': 'Gaurav Pawar',
+        'client_title': 'Google Reviewer',
+        'content': 'Nice experience, beautiful ambiance and very good service.',
+        'rating': 5,
+        'service_category': 'Spa',
+        'created_at': datetime(2024, 12, 10),
+        'is_featured': False
+    },
+    {
+        'id': 14,
+        'client_name': 'Ikshwaku Joshi',
+        'client_title': 'Local Guide',
+        'content': 'An absolute oasis of tranquility and professionalism!',
+        'rating': 5,
+        'service_category': 'Spa',
+        'created_at': datetime(2024, 11, 10),
+        'is_featured': False
+    },
+    {
+        'id': 15,
+        'client_name': 'Mubin Sultan',
+        'client_title': 'Google Reviewer',
+        'content': 'The service was so good!',
+        'rating': 5,
+        'service_category': 'Spa',
+        'created_at': datetime(2024, 11, 5),
+        'is_featured': False
+    },
+    {
+        'id': 16,
+        'client_name': 'Sarvesh Lohar',
+        'client_title': 'Google Reviewer',
+        'content': 'Good ambience.',
+        'rating': 5,
+        'service_category': 'Spa',
+        'created_at': datetime(2024, 11, 5),
+        'is_featured': False
+    },
+    {
+        'id': 17,
+        'client_name': 'OM Khochare',
+        'client_title': 'Google Reviewer',
+        'content': 'Great place!',
+        'rating': 5,
+        'service_category': 'Spa',
+        'created_at': datetime(2024, 11, 5),
+        'is_featured': False
     }
 ]
 
@@ -243,6 +446,49 @@ def testimonials_page():
     return render_template('testimonials.html', 
                          testimonials=testimonials,
                          safe_strftime=safe_strftime)
+
+@app.route('/franchise', methods=['GET', 'POST'])
+def franchise():
+    if request.method == 'POST':
+        name = request.form.get('name')
+        email = request.form.get('email')
+        phone = request.form.get('phone')
+        country = request.form.get('country')
+        state = request.form.get('state')
+        source = request.form.get('source')
+        about = request.form.get('about')
+
+        # Prepare WhatsApp message
+        message = f"""
+📢 *New Franchise Inquiry - Travaa Wellness*  
+
+👤 Name: {name}  
+📧 Email: {email}  
+📞 Phone: {phone}  
+
+🌍 Country: {country}  
+🏙 State: {state if state else 'Not Provided'}  
+
+🔎 Heard About Us From: {source if source else 'Not Provided'}  
+
+📝 About Applicant:  
+{about if about else 'Not Provided'}  
+
+Please contact them within 24 hours.
+        """
+
+        # Encode message for URL
+        encoded_message = urllib.parse.quote(message)
+
+        # WhatsApp number from config
+        whatsapp_number = app.config.get("WHATSAPP_NUMBER")
+
+        # Redirect to WhatsApp chat
+        whatsapp_url = f"https://wa.me/+917039008000?text={encoded_message}"
+        return redirect(whatsapp_url)
+
+    return render_template('franchise.html')
+
 
 from flask import Flask, render_template, abort
 from datetime import datetime
@@ -568,6 +814,21 @@ def init_sample_data():
         <p>Error: {e}</p>
         <p><a href="/">Go to Homepage</a></p>
         """
+    
+@app.route('/download/pricelist')
+def download_pricelist():
+    file_dir = os.path.join(app.root_path, 'static', 'files')
+    filename = 'Travaa-Wellness-PriceList.pdf'
+
+    # Security check: ensure file exists
+    if not os.path.exists(os.path.join(file_dir, filename)):
+        abort(404)
+
+    return send_from_directory(
+        directory=file_dir,
+        path=filename,
+        as_attachment=True
+    )
 
 # Error handlers
 @app.errorhandler(404)

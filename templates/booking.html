@@ -4,13 +4,212 @@
 
 {% block extra_css %}
 <style>
-    .booking-hero {
-        background: linear-gradient(rgba(66, 66, 66, 0.8), rgba(77, 77, 77, 0.8)),
-                    url('/static/images/booking-bg.jpg') center/cover no-repeat;
-        padding: 150px 0 100px;
-        text-align: center;
-        color: white;
+    .booking-steps {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+}
+
+.booking-card {
+    background: #ffffff;
+    border-radius: 18px;
+    padding: 1.8rem;
+    box-shadow: 0 14px 35px rgba(0,0,0,0.08);
+    border: 1px solid rgba(80,0,96,0.08);
+}
+
+.booking-step-title {
+    font-size: 1.4rem;
+    font-weight: 600;
+    color: #500060;
+    margin-bottom: 1rem;
+}
+
+.booking-step-help {
+    font-size: 0.95rem;
+    color: #666;
+    margin-bottom: 1.2rem;
+}
+
+.form-row {
+    display: flex;
+    gap: 1.5rem;
+    flex-wrap: wrap;
+}
+
+.form-group {
+    flex: 1;
+    min-width: 220px;
+}
+
+.rooms-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 1rem;
+    margin-top: 1rem;
+}
+
+.room-tile {
+    background: #faf7fb;
+    border-radius: 14px;
+    padding: 1rem;
+    border: 1px solid rgba(80,0,96,0.12);
+    cursor: pointer;
+    transition: 0.25s ease;
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+}
+
+.room-name {
+    font-weight: 600;
+    color: #500060;
+}
+
+.room-meta {
+    font-size: 0.85rem;
+    color: #777;
+}
+
+.room-status {
+    margin-top: 0.4rem;
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: #2e7d32;
+}
+
+.room-tile:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+    background: #f3e6f7;
+}
+
+/* Selected room */
+.room-tile.selected {
+    border-color: #500060;
+    background: #500060;
+    color: #fff;
+}
+
+.room-tile.selected .room-name,
+.room-tile.selected .room-meta {
+    color: #fff;
+}
+.room-tile.selected .room-status {
+    color: #d4f3d4;
+}
+
+/* Booked (not clickable) */
+.room-tile.booked {
+    background: #f0f0f0;
+    border-style: dashed;
+    border-color: #bbb;
+    cursor: not-allowed;
+}
+.room-tile.booked .room-status {
+    color: #b71c1c;
+}
+.room-tile.booked .room-name,
+.room-tile.booked .room-meta {
+    color: #999;
+}
+
+.room-warning {
+    margin-top: 1rem;
+    color: #b71c1c;
+    font-size: 0.9rem;
+}
+
+/* Mobile */
+@media (max-width: 768px) {
+    .booking-card {
+        padding: 1.3rem;
     }
+}
+
+.booking-hero {
+    position: relative;
+    height: 70vh;
+    width: 100%;
+    overflow: hidden;
+    background: linear-gradient(135deg, #1a0f1f, #3d1747);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Floating particles canvas */
+#spaParticles {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+
+/* Buddha glow circle */
+.buddha-glow {
+    position: absolute;
+    width: 420px;
+    height: 420px;
+    background: radial-gradient(circle, rgba(224,180,116,0.45), rgba(0,0,0,0));
+    border-radius: 50%;
+    animation: pulseGlow 6s ease-in-out infinite;
+    z-index: 1;
+}
+
+/* Text overlay */
+.hero-overlay {
+    position: relative;
+    z-index: 2;
+    text-align: center;
+    color: white;
+}
+
+.hero-title {
+    font-size: 3.2rem;
+    font-weight: 300;
+    margin-bottom: 10px;
+    opacity: 0;
+    animation: fadeUp 1.4s ease forwards;
+}
+
+.hero-subtitle {
+    font-size: 1.4rem;
+    opacity: 0;
+    animation: fadeUp 1.8s ease forwards;
+}
+
+.hero-divider {
+    width: 80px;
+    height: 2px;
+    background: #d4a574;
+    margin: 20px auto;
+    opacity: 0;
+    animation: fadeUp 2.2s ease forwards;
+}
+
+.hero-small-text {
+    font-size: 1rem;
+    color: rgba(255,255,255,0.75);
+    opacity: 0;
+    animation: fadeUp 2.6s ease forwards;
+}
+
+/* Smooth animations */
+@keyframes fadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes pulseGlow {
+    0%, 100% { transform: scale(1); opacity: 0.5; }
+    50% { transform: scale(1.15); opacity: 1; }
+}
+
+
+
     
     .booking-steps {
         display: flex;
@@ -107,148 +306,231 @@
         transform: translateY(-3px);
         box-shadow: 0 10px 20px rgba(0,0,0,0.2);
     }
+    /* Default hidden state */
+.scroll-animate {
+    opacity: 0;
+    transform: translateY(40px);
+    transition: all 0.9s ease;
+}
+
+/* Visible after scroll */
+.scroll-animate.show {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* Optional variants */
+.fade-in {
+    opacity: 0;
+    transform: translateY(20px);
+    transition: 1s ease;
+}
+.fade-in.show {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.slide-up {
+    opacity: 0;
+    transform: translateY(50px);
+    transition: 1s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.slide-up.show {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.scale-in {
+    opacity: 0;
+    transform: scale(0.85);
+    transition: 1s ease;
+}
+.scale-in.show {
+    opacity: 1;
+    transform: scale(1);
+}
+
 </style>
 {% endblock %}
 
 {% block content %}
 <section class="booking-hero">
-    <div class="container">
-        <h1>Book Your Luxury Experience</h1>
-        <p class="section-subtitle">Reserve Your Moment of Tranquility</p>
-        
-        <div class="booking-steps">
-            <div class="step active">
-                <div class="step-number">1</div>
-                <div class="step-text">Select Service</div>
-            </div>
-            <div class="step">
-                <div class="step-number">2</div>
-                <div class="step-text">Confirm Details</div>
-            </div>
-            <div class="step">
-                <div class="step-number">3</div>
-                <div class="step-text">WhatsApp Confirmation</div>
-            </div>
-        </div>
-    </div>
-</section>
+    <canvas id="spaParticles"></canvas>
 
-<section class="booking-section">
-    <div class="container">
-        <div class="section-header">
-            <h2>Appointment Details</h2>
-            <p class="section-subtitle" style="color: #500060;">Fill in your preferences for a personalized experience</p>
-        </div>
-        
-        <form id="booking-form" class="booking-form" onsubmit="submitToWhatsApp(event)">
-            <div class="form-row">
-                <div class="form-group">
-                    <label for="name">Full Name *</label>
-                    <input type="text" id="name" name="name" class="form-control" required 
-                           placeholder="Enter your full name">
-                </div>
-                
-                <div class="form-group">
-                    <label for="email">Email Address *</label>
-                    <input type="email" id="email" name="email" class="form-control" required 
-                           placeholder="your.email@example.com">
-                </div>
-            </div>
-            
-            <div class="form-row">
-                <div class="form-group">
-                    <label for="phone">Phone Number *</label>
-                    <input type="tel" id="phone" name="phone" class="form-control" required 
-                           placeholder="+1 (555) 123-4567">
-                </div>
-                
-                
-            </div>
-            
-            <div class="form-row">
-                <div class="form-group">
-                    <label for="category">Service Category *</label>
-                    <select id="category" name="category" class="form-control" required>
-                        <option value="">Select Category</option>
-                        <option value="Body">Body</option>
-                        <option value="Spa">Spa</option>
-                        <option value="Nails">Nails</option>
-                        <option value="Skin">Skin</option>
-                    </select>
-                </div>
-                
-                <div class="form-group">
-                    <label for="service">Select Service *</label>
-                    <select id="service" name="service" class="form-control" required>
-                        <option value="">Select a Service</option>
-                        <!-- Options will be populated by JavaScript -->
-                    </select>
-                </div>
-            </div>
-            
-            <div class="form-row">
-                <div class="form-group">
-                    <label for="date">Preferred Date *</label>
-                    <input type="date" id="booking-date" name="date" class="form-control" required>
-                </div>
-                
-                <div class="form-group">
-                    <label for="time">Preferred Time *</label>
-                    <select id="time" name="time" class="form-control" required>
-                        <option value="">Select Time</option>
-                        <option value="10:00">10:00 AM</option>
-                        <option value="11:00">11:00 AM</option>
-                        <option value="12:00">12:00 PM</option>
-                        <option value="14:00">01:00 PM</option>
-                        <option value="14:00">02:00 PM</option>
-                        <option value="15:00">03:00 PM</option>
-                        <option value="16:00">04:00 PM</option>
-                        <option value="17:00">05:00 PM</option>
-                        <option value="17:00">06:00 PM</option>
-                        <option value="17:00">07:00 PM</option>
-                        <option value="17:00">08:00 PM</option>
-                        <option value="17:00">09:00 PM</option>
-                        <option value="17:00">10:00 PM</option>
+    <div class="hero-overlay">
+        <div class="buddha-glow"></div>
 
-                    </select>
-                </div>
-            </div>
-            
-            <div class="form-group">
-                <label for="notes">Special Requests or Notes</label>
-                <textarea id="notes" name="notes" class="form-control" rows="4" 
-                          placeholder="Any special requirements, allergies, or preferences..."></textarea>
-            </div>
-            
-            <div class="form-group">
-                <p class="privacy-note">
-                    <i class="fas fa-lock"></i> Your information is secure and will only be used for appointment coordination.
-                </p>
-            </div>
-            
-            <button type="submit" class="btn btn-primary" style="width: 100%; padding: 1.25rem;color: white;background-color: #500060;">
-                <i class="fab fa-whatsapp"></i> Continue to WhatsApp Confirmation
-            </button>
-        </form>
-        
-        <!-- WhatsApp Redirect Section -->
-        <div id="whatsapp-redirect" class="whatsapp-redirect">
-            <div class="whatsapp-icon">
-                <i class="fab fa-whatsapp"></i>
-            </div>
-            <h3>Ready to Confirm Your Booking!</h3>
-            <p style="color: white;">Click the button below to send your appointment details to our WhatsApp concierge. <br>We'll confirm your booking and answer any questions you may have.</p>
-            
-            <button id="open-whatsapp" class="whatsapp-btn">
-                <i class="fab fa-whatsapp"></i> Open WhatsApp
-            </button>
-            
-            <p style="margin-top: 20px; font-size: 0.9rem; opacity: 0.9;color: white;">
-                <i class="fas fa-clock"></i> Usually responds within a day.
+        <div class="hero-content">
+            <h1 class="hero-title">Begin Your Journey to Serenity</h1>
+            <p class="hero-subtitle">Book a Tranquil Spa Experience</p>
+
+            <div class="hero-divider"></div>
+
+            <p class="hero-small-text">
+                Calm your mind • Restore your energy • Embrace pure wellness
             </p>
         </div>
     </div>
 </section>
+
+
+<section class="booking-section">
+    <div class="container">
+        <div class="section-header">
+            <h2>Book Your Experience</h2>
+            <p class="section-subtitle" style="color: #500060;">Select your service, time & room like a premium show booking</p>
+        </div>
+
+        <div class="booking-steps">
+            <!-- STEP 1: GUEST DETAILS -->
+            <div class="booking-card">
+                <h3 class="booking-step-title">Step 1 · Guest Details</h3>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="name">Full Name *</label>
+                        <input type="text" id="name" name="name" class="form-control" required 
+                            placeholder="Enter your full name">
+                    </div>
+                    <div class="form-group">
+                        <label for="phone">Phone Number *</label>
+                        <input type="tel" id="phone" name="phone" class="form-control" required 
+                            placeholder="+91 70390 08000">
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="email">Email Address *</label>
+                        <input type="email" id="email" name="email" class="form-control" required 
+                            placeholder="your.email@example.com">
+                    </div>
+                    <div class="form-group">
+                        <label for="notes">Special Requests / Notes</label>
+                        <textarea id="notes" name="notes" class="form-control" rows="1"
+                            placeholder="Any preferences, allergies, or special occasion?"></textarea>
+                    </div>
+                </div>
+            </div>
+
+            <!-- STEP 2: SERVICE + DATE/TIME -->
+            <div class="booking-card">
+                <h3 class="booking-step-title">Step 2 · Service & Schedule</h3>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="category">Service Category *</label>
+                        <select id="category" name="category" class="form-control" required>
+                            <option value="">Select Category</option>
+                            <option value="Body">Body</option>
+                            <option value="Spa">Spa</option>
+                            <option value="Nails">Nails</option>
+                            <option value="Skin">Skin</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="service">Select Service *</label>
+                        <select id="service" name="service" class="form-control" required>
+                            <option value="">Select a Service</option>
+                            <!-- Can be populated by your existing JS if you already have mapping -->
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="booking-date">Preferred Date *</label>
+                        <input type="date" id="booking-date" name="date" class="form-control" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="time">Preferred Time *</label>
+                        <select id="time" name="time" class="form-control" required>
+                            <option value="">Select Time</option>
+                            <option value="10:00 AM">10:00 AM</option>
+                            <option value="11:00 AM">11:00 AM</option>
+                            <option value="12:00 PM">12:00 PM</option>
+                            <option value="01:00 PM">01:00 PM</option>
+                            <option value="02:00 PM">02:00 PM</option>
+                            <option value="03:00 PM">03:00 PM</option>
+                            <option value="04:00 PM">04:00 PM</option>
+                            <option value="05:00 PM">05:00 PM</option>
+                            <option value="06:00 PM">06:00 PM</option>
+                            <option value="07:00 PM">07:00 PM</option>
+                            <option value="08:00 PM">08:00 PM</option>
+                            <option value="09:00 PM">09:00 PM</option>
+                            <option value="10:00 PM">10:00 PM</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <!-- STEP 3: ROOM SELECTION (BOOKMYSHOW STYLE) -->
+            <div class="booking-card">
+                <h3 class="booking-step-title">Step 3 · Choose Your Room</h3>
+                <p class="booking-step-help">
+                    Select one of our seven themed rooms. Once a room is booked for your chosen date & time, it will be shown as booked and cannot be selected again.
+                </p>
+
+                <div class="rooms-grid" id="rooms-grid">
+                    <!-- Rooms (7) -->
+                    <div class="room-tile" data-room-id="LOTUS">
+                        <div class="room-name">1</div>
+                        <div class="room-meta">Calm · Classic</div>
+                        <div class="room-status">Available</div>
+                    </div>
+                    <div class="room-tile" data-room-id="ZEN">
+                        <div class="room-name">2</div>
+                        <div class="room-meta">Minimal · Peaceful</div>
+                        <div class="room-status">Available</div>
+                    </div>
+                    <div class="room-tile" data-room-id="AURORA">
+                        <div class="room-name">3</div>
+                        <div class="room-meta">Soft Lights · Warmth</div>
+                        <div class="room-status">Available</div>
+                    </div>
+                    <div class="room-tile" data-room-id="BLOSSOM">
+                        <div class="room-name">4</div>
+                        <div class="room-meta">Floral · Cozy</div>
+                        <div class="room-status">Available</div>
+                    </div>
+                    <div class="room-tile" data-room-id="SERENITY">
+                        <div class="room-name">5</div>
+                        <div class="room-meta">Deep Relaxation</div>
+                        <div class="room-status">Available</div>
+                    </div>
+                    <div class="room-tile" data-room-id="NIRVANA">
+                        <div class="room-name">6</div>
+                        <div class="room-meta">Luxury · Modern</div>
+                        <div class="room-status">Available</div>
+                    </div>
+                    <div class="room-tile" data-room-id="COUPLE">
+                        <div class="room-name">7</div>
+                        <div class="room-meta">Perfect for Two</div>
+                        <div class="room-status">Available</div>
+                    </div>
+                </div>
+
+                <p id="room-warning" class="room-warning" style="display:none;">
+                    All rooms are booked for this date & time. Please choose a different time or date.
+                </p>
+
+                <input type="hidden" id="selected-room" name="selected_room">
+            </div>
+
+            <!-- PRIVACY + CTA -->
+            <div class="booking-card booking-footer-card">
+                <p class="privacy-note">
+                    <i class="fas fa-lock"></i> Your information is secure and used only for booking confirmation.
+                </p>
+
+                <button id="confirm-booking-btn" class="btn btn-primary" style="width: 100%; padding: 1.25rem; color: white; background-color: #500060;">
+                    <i class="fab fa-whatsapp"></i> Confirm Booking on WhatsApp
+                </button>
+            </div>
+        </div>
+    </div>
+</section>
+
 
 <section class="cta-section" style="padding: 60px 0; text-align: center; background: var(--light-gray);">
     <div class="container">
@@ -268,22 +550,24 @@
 
 {% block extra_js %}
 <script>
-    // Initialize services data for the booking form
+    // Services from backend (Flask -> Jinja)
     window.servicesData = {{ services|tojson|safe }};
-    
-    // Your WhatsApp Business number (replace with actual number)
-    const whatsappNumber = "15551234567"; // Example: +1 (555) 123-4567
-    
+
+    // Your WhatsApp number (no +, just countrycode+number)
+    const WA_NUMBER = "917039008000"; // +91 7039008000
+
     document.addEventListener('DOMContentLoaded', function() {
-        // Initialize service selector
+        // ---------------------------
+        // 1) SERVICE DROPDOWN LOGIC
+        // ---------------------------
         const categorySelect = document.getElementById('category');
         const serviceSelect = document.getElementById('service');
-        
-        if (categorySelect && serviceSelect) {
+
+        if (categorySelect && serviceSelect && window.servicesData) {
             categorySelect.addEventListener('change', function() {
                 const category = this.value;
                 serviceSelect.innerHTML = '<option value="">Select a Service</option>';
-                
+
                 if (category && window.servicesData[category]) {
                     window.servicesData[category].forEach(service => {
                         const option = document.createElement('option');
@@ -294,109 +578,267 @@
                 }
             });
         }
-        
-        // Initialize date picker
+
+        // ---------------------------
+        // 2) DATE LIMITS (TODAY → +3 MONTHS, DEFAULT TOMORROW)
+        // ---------------------------
         const dateInput = document.getElementById('booking-date');
         if (dateInput) {
             const today = new Date();
             const maxDate = new Date();
             maxDate.setMonth(today.getMonth() + 3);
-            
-            // Format dates to YYYY-MM-DD
-            const formatDate = (date) => {
-                return date.toISOString().split('T')[0];
-            };
-            
+
+            const formatDate = (date) => date.toISOString().split('T')[0];
+
             dateInput.min = formatDate(today);
             dateInput.max = formatDate(maxDate);
-            
-            // Set default to tomorrow
+
             const tomorrow = new Date(today);
             tomorrow.setDate(tomorrow.getDate() + 1);
             dateInput.value = formatDate(tomorrow);
         }
-        
-        // Setup WhatsApp button
-        const whatsappButton = document.getElementById('open-whatsapp');
-        if (whatsappButton) {
-            whatsappButton.addEventListener('click', function() {
-                const formData = JSON.parse(localStorage.getItem('bookingData') || '{}');
-                
-                // Format the message for WhatsApp
-                const message = `*NEW APPOINTMENT REQUEST*%0A%0A` +
-                               `*Name:* ${formData.name || ''}%0A` +
-                               `*Phone:* ${formData.phone || ''}%0A` +
-                               `*Email:* ${formData.email || ''}%0A` +
-                               `*Service:* ${formData.service || ''}%0A` +
-                               `*Date:* ${formData.date || ''}%0A` +
-                               `*Time:* ${formData.time || ''}%0A` +
-                               `*Notes:* ${formData.notes || 'None'}%0A%0A` +
-                               `_Sent via Travaa Wellness Website_`;
-                
-                // Open WhatsApp with pre-filled message
-                const whatsappURL = `https://wa.me/${whatsappNumber.replace(/\D/g, '')}?text=${message}`;
+
+        // ---------------------------
+        // 3) PHONE FORMATTING (+91 XXX XXX XXXX)
+        // ---------------------------
+        const phoneInput = document.getElementById('phone');
+        if (phoneInput) {
+            phoneInput.addEventListener('input', function(e) {
+                let value = e.target.value.replace(/\D/g, '');
+
+                if (value.length > 0) {
+                    value = '+' + value;
+                    if (value.length > 3) {
+                        value = value.substring(0, 3) + ' ' + value.substring(3);
+                    }
+                    if (value.length > 7) {
+                        value = value.substring(0, 7) + ' ' + value.substring(7);
+                    }
+                    if (value.length > 12) {
+                        value = value.substring(0, 12);
+                    }
+                }
+
+                e.target.value = value;
+            });
+        }
+
+        // ---------------------------
+        // 4) BOOKMYSHOW-STYLE ROOM LOGIC
+        // ---------------------------
+        const roomsGrid = document.getElementById("rooms-grid");
+        const roomTiles = Array.from(document.querySelectorAll(".room-tile"));
+        const selectedRoomInput = document.getElementById("selected-room");
+        const bookingTime = document.getElementById("time");
+        const roomWarning = document.getElementById("room-warning");
+        const confirmBtn = document.getElementById("confirm-booking-btn");
+
+        function getBookings() {
+            try {
+                return JSON.parse(localStorage.getItem("travaa_room_bookings") || "[]");
+            } catch (e) {
+                return [];
+            }
+        }
+
+        function saveBookings(bookings) {
+            localStorage.setItem("travaa_room_bookings", JSON.stringify(bookings));
+        }
+
+        function isRoomBooked(date, time, roomId) {
+            const bookings = getBookings();
+            return bookings.some(
+                b => b.date === date && b.time === time && b.roomId === roomId
+            );
+        }
+
+        function getBookedRoomsForSlot(date, time) {
+            const bookings = getBookings();
+            return bookings
+                .filter(b => b.date === date && b.time === time)
+                .map(b => b.roomId);
+        }
+
+        function refreshRoomsUI() {
+            const dateVal = dateInput ? dateInput.value : '';
+            const timeVal = bookingTime ? bookingTime.value : '';
+
+            // Reset selection
+            if (selectedRoomInput) selectedRoomInput.value = "";
+            roomTiles.forEach(tile => {
+                tile.classList.remove("selected", "booked");
+                const status = tile.querySelector(".room-status");
+                if (status) status.textContent = "Available";
+            });
+            if (roomWarning) roomWarning.style.display = "none";
+
+            if (!dateVal || !timeVal) return;
+
+            const bookedRooms = getBookedRoomsForSlot(dateVal, timeVal);
+
+            roomTiles.forEach(tile => {
+                const roomId = tile.getAttribute("data-room-id");
+                if (bookedRooms.includes(roomId)) {
+                    tile.classList.add("booked");
+                    const statusEl = tile.querySelector(".room-status");
+                    if (statusEl) statusEl.textContent = "Booked";
+                }
+            });
+
+            if (bookedRooms.length === roomTiles.length && roomWarning) {
+                roomWarning.style.display = "block";
+            }
+        }
+
+        roomTiles.forEach(tile => {
+            tile.addEventListener("click", () => {
+                const dateVal = dateInput ? dateInput.value : '';
+                const timeVal = bookingTime ? bookingTime.value : '';
+
+                if (!dateVal || !timeVal) {
+                    alert("Please select date and time first.");
+                    return;
+                }
+                if (tile.classList.contains("booked")) return;
+
+                roomTiles.forEach(t => t.classList.remove("selected"));
+                tile.classList.add("selected");
+                if (selectedRoomInput) {
+                    selectedRoomInput.value = tile.getAttribute("data-room-id");
+                }
+            });
+        });
+
+        if (dateInput) dateInput.addEventListener("change", refreshRoomsUI);
+        if (bookingTime) bookingTime.addEventListener("change", refreshRoomsUI);
+
+        // ---------------------------
+        // 5) WHATSAPP CONFIRM BUTTON
+        // ---------------------------
+        if (confirmBtn) {
+            confirmBtn.addEventListener("click", function () {
+                const name = document.getElementById("name")?.value.trim() || "";
+                const phone = document.getElementById("phone")?.value.trim() || "";
+                const email = document.getElementById("email")?.value.trim() || "";
+                const category = document.getElementById("category")?.value || "";
+                const service = document.getElementById("service")?.value || "";
+                const dateVal = dateInput ? dateInput.value : "";
+                const timeVal = bookingTime ? bookingTime.value : "";
+                const notes = document.getElementById("notes")?.value.trim() || "";
+                const roomId = selectedRoomInput ? selectedRoomInput.value : "";
+
+                if (!name || !phone || !email || !category || !service || !dateVal || !timeVal || !roomId) {
+                    alert("Please fill all required fields and select a room.");
+                    return;
+                }
+
+                if (isRoomBooked(dateVal, timeVal, roomId)) {
+                    alert("This room is already booked for the selected date & time. Please choose another room or time.");
+                    refreshRoomsUI();
+                    return;
+                }
+
+                // Save booking in localStorage (no admin, no changes later)
+                const bookings = getBookings();
+                bookings.push({
+                    date: dateVal,
+                    time: timeVal,
+                    roomId: roomId,
+                    name: name,
+                    service: service
+                });
+                saveBookings(bookings);
+                refreshRoomsUI();
+
+                // Get room name for message
+                const selectedRoomTile = roomTiles.find(t => t.getAttribute("data-room-id") === roomId);
+                const roomName = selectedRoomTile
+                    ? selectedRoomTile.querySelector(".room-name").textContent
+                    : roomId;
+
+                let msg = `*NEW BOOKING REQUEST - TRAVAA WELLNESS*%0A%0A`;
+                msg += `*Name:* ${name}%0A`;
+                msg += `*Phone:* ${phone}%0A`;
+                msg += `*Email:* ${email}%0A`;
+                msg += `*Category:* ${category}%0A`;
+                msg += `*Service:* ${service}%0A`;
+                msg += `*Date:* ${dateVal}%0A`;
+                msg += `*Time:* ${timeVal}%0A`;
+                msg += `*Room:* ${roomName}%0A`;
+                if (notes) {
+                    msg += `%0A*Notes:* ${notes}%0A`;
+                }
+                msg += `%0A_Sent via Travaa Wellness website (room-based booking)._`;
+
+                const whatsappURL = `https://wa.me/${WA_NUMBER}?text=${msg}`;
                 window.open(whatsappURL, '_blank');
             });
         }
-    });
-    
-    function submitToWhatsApp(event) {
-        event.preventDefault();
-        
-        // Collect form data
-        const formData = {
-            name: document.getElementById('name').value,
-            email: document.getElementById('email').value,
-            phone: document.getElementById('phone').value,
-            category: document.getElementById('category').value,
-            service: document.getElementById('service').value,
-            date: document.getElementById('booking-date').value,
-            time: document.getElementById('time').value,
-            notes: document.getElementById('notes').value
-        };
-        
-        // Validate required fields
-        const requiredFields = ['name', 'email', 'phone', 'category', 'service', 'date', 'time'];
-        const missingFields = requiredFields.filter(field => !formData[field]);
-        
-        if (missingFields.length > 0) {
-            alert('Please fill in all required fields.');
-            return false;
-        }
-        
-        // Store data for WhatsApp
-        localStorage.setItem('bookingData', JSON.stringify(formData));
-        
-        // Show WhatsApp redirect section
-        document.getElementById('whatsapp-redirect').classList.add('show');
-        
-        // Scroll to WhatsApp section
-        document.getElementById('whatsapp-redirect').scrollIntoView({
-            behavior: 'smooth',
-            block: 'center'
-        });
-        
-        return false;
-    }
-    
-    // Optional: Add phone number formatting
-    document.getElementById('phone')?.addEventListener('input', function(e) {
-        let value = e.target.value.replace(/\D/g, '');
-        
-        if (value.length > 0) {
-            value = '+' + value;
-            if (value.length > 4) {
-                value = value.substring(0, 4) + ' ' + value.substring(4);
-            }
-            if (value.length > 8) {
-                value = value.substring(0, 8) + ' ' + value.substring(8);
-            }
-            if (value.length > 13) {
-                value = value.substring(0, 13);
-            }
-        }
-        
-        e.target.value = value;
+
+        // Initial render of rooms
+        refreshRoomsUI();
     });
 </script>
+<script>
+const canvas = document.getElementById("spaParticles");
+const ctx = canvas.getContext("2d");
+
+function resize() {
+    canvas.width = window.innerWidth;
+    canvas.height = document.querySelector(".booking-hero").offsetHeight;
+}
+resize();
+window.addEventListener("resize", resize);
+
+const particles = [];
+for (let i = 0; i < 50; i++) {
+    particles.push({
+        x: Math.random() * canvas.width,
+        y: Math.random() * canvas.height,
+        s: Math.random() * 2 + 0.5,
+        a: Math.random() * 0.6 + 0.1
+    });
+}
+
+function animateParticles() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    particles.forEach(p => {
+        ctx.beginPath();
+        ctx.fillStyle = `rgba(255,255,255,${p.a})`;
+        ctx.arc(p.x, p.y, p.s, 0, Math.PI * 2);
+        ctx.fill();
+
+        p.y -= 0.3;
+        if (p.y < 0) p.y = canvas.height;
+    });
+
+    requestAnimationFrame(animateParticles);
+}
+animateParticles();
+</script>
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+
+    const elements = document.querySelectorAll(
+        ".booking-section, .booking-hero, .form-row, .form-group, .btn, .section-header"
+    );
+
+    elements.forEach(el => {
+        el.classList.add("scroll-animate");  // Add animation class automatically
+    });
+
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add("show"); // Trigger animation
+            }
+        });
+    }, { threshold: 0.15 });
+
+    elements.forEach(el => observer.observe(el));
+});
+</script>
+
+
 {% endblock %}

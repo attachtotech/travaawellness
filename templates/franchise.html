@@ -1,0 +1,195 @@
+{% extends "base.html" %}
+{% block title %}Franchise Opportunities | Travaa Wellness{% endblock %}
+
+{% block content %}
+
+<style>
+    :root {
+        --primary: #500060;
+        --white: #ffffff;
+        --dark: #000000;
+        --light-border: rgba(255, 255, 255, 0.25);
+        --input-bg: #0d0d0d;
+        --heading-font: 'Playfair Display', serif;
+        --body-font: 'Inter', sans-serif;
+    }
+
+    body {
+        background: var(--dark);
+        color: var(--white);
+        font-family: var(--body-font);
+    }
+
+    .franchise-container {
+        display: flex;
+        min-height: 100vh;
+        width: 100%;
+    }
+
+    .franchise-left {
+        width: 50%;
+        background-image: url('/static/images/franchise.jpg'); /* replace later */
+        background-size: cover;
+        background-position: center;
+        filter: grayscale(100%);
+    }
+
+    .franchise-right {
+        width: 50%;
+        padding: 80px 60px;
+    }
+
+    .franchise-right h1 {
+        font-family: var(--heading-font);
+        font-size: 48px;
+        margin-bottom: 20px;
+    }
+
+    .franchise-right p {
+        font-size: 18px;
+        line-height: 1.6;
+    }
+
+    .franchise-form input,
+    .franchise-form select,
+    .franchise-form textarea {
+        width: 100%;
+        background: var(--input-bg);
+        border: 1px solid var(--light-border);
+        padding: 14px;
+        margin-bottom: 22px;
+        border-radius: 6px;
+        color: var(--white);
+        font-size: 16px;
+    }
+
+    .btn-purple {
+        background: var(--primary);
+        padding: 14px 32px;
+        border-radius: 50px;
+        border: none;
+        color: var(--white);
+        cursor: pointer;
+        font-size: 18px;
+        transition: 0.3s ease;
+    }
+
+    .btn-purple:hover {
+        opacity: 0.85;
+    }
+
+    /* GYM Collaboration Section */
+    .collab-section {
+        margin-top: 120px;
+        padding: 80px 60px;
+        border-top: 1px solid rgba(255,255,255,0.1);
+    }
+
+    .collab-flex {
+        display: flex;
+        gap: 40px;
+        align-items: center;
+    }
+
+    .collab-left {
+        width: 50%;
+    }
+
+    .collab-left img {
+        width: 100%;
+        border-radius: 12px;
+        object-fit: cover;
+    }
+
+    .collab-right {
+        width: 50%;
+    }
+
+    .collab-right h2 {
+        font-family: var(--heading-font);
+        font-size: 42px;
+        margin-bottom: 20px;
+    }
+
+    .collab-right p {
+        font-size: 18px;
+        line-height: 1.6;
+        margin-bottom: 30px;
+    }
+
+    @media (max-width: 850px) {
+        .franchise-container,
+        .collab-flex {
+            flex-direction: column;
+        }
+
+        .franchise-left,
+        .franchise-right,
+        .collab-left,
+        .collab-right {
+            width: 100%;
+        }
+    }
+</style>
+<br><br>
+<!-- Franchise Main Section -->
+<section class="franchise-container">
+    <div class="franchise-left"></div>
+
+    <div class="franchise-right">
+        <h1>Franchise Opportunities</h1>
+        <p>
+            Join the Travaa Wellness & Spa brand and be part of a luxury movement redefining beauty, wellness, and holistic care.
+            Fill the form to speak with our franchise development team.
+        </p>
+
+        <form class="franchise-form" method="POST" action="{{ url_for('franchise') }}">
+    <input type="text" name="name" placeholder="Your Name" required>
+    <input type="email" name="email" placeholder="Your Email Address" required>
+    <input type="text" name="phone" placeholder="Your Contact Number" required>
+
+    <select name="country" required>
+        <option value="">Select Country</option>
+        <option value="India">India</option>
+        <option value="UAE">UAE</option>
+        <option value="Singapore">Singapore</option>
+    </select>
+
+    <input type="text" name="state" placeholder="Enter State">
+
+    <input type="text" name="source" placeholder="How did you hear about us?">
+
+    <textarea name="about" placeholder="Tell us about yourself & your business interest"></textarea>
+
+    <button class="btn-purple" type="submit">Let's Talk</button>
+</form>
+
+    </div>
+</section>
+
+<!-- GYM & Fitness Collaboration Section -->
+<section class="collab-section">
+    <div class="collab-flex">
+        
+        <div class="collab-right">
+            <h2>Gym & Fitness Collaboration</h2>
+            <p>
+                Travaa Wellness partners with premium gyms, fitness studios, yoga centers, and luxury health clubs
+                to deliver exclusive wellness treatments, recovery therapies, and co-branded experiences.
+            </p>
+
+            <p>
+                If you own or manage a fitness facility and want to elevate your member value,
+                collaborate with Travaa for a unique wellness offering.
+            </p>
+
+            <a href="{{ url_for('contact') }}" class="btn-purple">Partner With Us</a>
+        </div>
+        <div class="collab-left">
+            <img src="/static/images/gym.jpg" alt="Gym Collaboration"> <!-- replace later -->
+        </div>
+
+    </div>
+</section>
+
+{% endblock %}

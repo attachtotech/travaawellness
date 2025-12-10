@@ -79,7 +79,7 @@ p {
     top: 0;
     left: 0;
     right: 0;
-    background: rgba(255, 255, 255, 0.95);
+    background: var(--white);
     backdrop-filter: blur(10px);
     padding: 1.5rem 0;
     z-index: 1000;
@@ -893,4 +893,26 @@ background: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)), url('/static/imag
 
 ::-webkit-scrollbar-thumb:hover {
     background: #b8941f;
+}
+.footer-download {
+    text-align: center;
+    margin-top: 20px;
+}
+
+.footer-download-link {
+    display: inline-block;
+    padding: 10px 20px;
+    color: #d4a574;
+    border: 1px solid #d4a574;
+    border-radius: 30px;
+    text-decoration: none;
+    font-weight: 500;
+    transition: 0.3s ease;
+    letter-spacing: 0.5px;
+}
+
+.footer-download-link:hover {
+    background: #d4a574;
+    color: #000;
+    transform: translateY(-3px);
 }

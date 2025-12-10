@@ -4,225 +4,196 @@
 
 {% block extra_css %}
 <style>
-    /* Hero Slider - Centered Content */
-    .hero-slider {
-        min-height: 100vh;
-        position: relative;
-        overflow: hidden;
-        color: var(--white);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-    }
+/* ===========================
+   HERO SLIDER BASE
+=========================== */
+.hero-slider {
+    min-height: 100vh;
+    height: 90vh;
+    position: relative;
+    overflow: hidden;
+    color: var(--white);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
 
-    .slider-container {
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        z-index: 1;
-    }
+.slider-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+}
 
-    .slider-slide {
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        opacity: 0;
-        transition: opacity 1.5s ease-in-out;
-        background-size: cover;
-        background-position: center;
-        background-repeat: no-repeat;
-    }
+.slider-slide {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    opacity: 0;
+    transition: opacity 1.2s ease-in-out;
+}
 
-    .slider-slide.active {
-        opacity: 1;
-    }
+.slider-slide.active {
+    opacity: 1;
+}
 
-    .slider-overlay {
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background: linear-gradient(rgba(56, 56, 56, 0.85), rgba(59, 58, 58, 0.85));
-    }
+/* ===========================
+   TEXT BLOCK FOR SLIDES
+=========================== */
+.hero-text-block {
+    position: absolute;
+    bottom: 18%;
+    left: 7%;
+    max-width: 500px;
+    opacity: 0; /* animation will make it visible */
+}
 
-    /* Centered Hero Content */
-    .hero-content {
-        position: relative;
-        z-index: 2;
-        opacity: 0;
-        transform: translateY(30px);
-        transition: all 0.8s ease-out;
-        text-align: center;
-        max-width: 800px;
-        margin: 0 auto;
-        padding: 120px 20px 80px;
-    }
+.hero-text-block h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: 52px;
+    font-weight: 600;
+    margin-bottom: 10px;
+    color: white;
+    text-shadow: 0px 4px 25px rgba(0,0,0,0.4);
+}
 
-    .hero-content.active {
-        opacity: 1;
-        transform: translateY(0);
-    }
+.hero-text-block p {
+    font-size: 20px;
+    color: #f2f2f2;
+    opacity: 0.9;
+    text-shadow: 0px 4px 25px rgba(0,0,0,0.4);
+}
 
-    .hero h1 {
-        font-size: 5rem;
-        margin-bottom: 1.5rem;
-        color: var(--white);
-        line-height: 1.1;
-        opacity: 0;
-        transform: translateY(20px);
-        animation: fadeInUp 0.8s ease forwards;
-        animation-delay: 0.3s;
-    }
+/* Right Alignment for Slide 2 */
+.hero-text-block.right-align {
+    left: auto;
+    right: 7%;
+    text-align: right;
+}
 
-    .hero-subtitle {
-        font-family: 'Cormorant Garamond', serif;
-        font-size: 1.5rem;
-        color: var(--gold);
-        margin-bottom: 0.5rem;
-        letter-spacing: 3px;
-        opacity: 0;
-        transform: translateY(20px);
-        animation: fadeInUp 0.8s ease forwards;
-        animation-delay: 0.2s;
-    }
+/* ===========================
+   SLIDER TEXT ANIMATIONS
+=========================== */
+@keyframes fadeFromLeft {
+    0% { opacity: 0; transform: translateX(-40px); }
+    100% { opacity: 1; transform: translateX(0); }
+}
 
-    .hero p {
-        font-size: 1.25rem;
-        color: rgba(255, 255, 255, 0.9);
-        margin-bottom: 3rem;
-        max-width: 600px;
-        font-weight: 300;
-        margin-left: auto;
-        margin-right: auto;
-        opacity: 0;
-        transform: translateY(20px);
-        animation: fadeInUp 0.8s ease forwards;
-        animation-delay: 0.4s;
-    }
+@keyframes fadeFromRight {
+    0% { opacity: 0; transform: translateX(40px); }
+    100% { opacity: 1; transform: translateX(0); }
+}
 
-    .hero-btns {
-        display: flex;
-        gap: 1rem;
-        flex-wrap: wrap;
-        justify-content: center;
-        opacity: 0;
-        transform: translateY(20px);
-        animation: fadeInUp 0.8s ease forwards;
-        animation-delay: 0.5s;
-    }
+@keyframes fadeUp {
+    0% { opacity: 0; transform: translateY(20px); }
+    100% { opacity: 1; transform: translateY(0); }
+}
 
-    /* Slider Controls */
-    .slider-controls {
-        position: absolute;
-        bottom: 40px;
-        right: 40px;
-        z-index: 3;
-        display: flex;
-        gap: 10px;
-    }
+/* Apply directional animations ONLY through slider (NOT scroll) */
+.slider-slide.active .animate-left {
+    animation: fadeFromLeft 1s ease-out forwards;
+}
 
-    .slider-nav {
-        background: rgba(255, 255, 255, 0.1);
-        border: 1px solid rgba(255, 255, 255, 0.3);
-        color: white;
-        width: 50px;
-        height: 50px;
-        border-radius: 50%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        cursor: pointer;
-        transition: all 0.3s ease;
-        backdrop-filter: blur(10px);
-    }
+.slider-slide.active .animate-right {
+    animation: fadeFromRight 1s ease-out forwards;
+}
 
-    .slider-nav:hover {
-        background: var(--gold);
-        transform: scale(1.1);
-    }
+.slider-slide.active h1 {
+    animation: fadeUp 1.2s ease-out forwards;
+    animation-delay: 0.25s;
+}
 
-    .slider-dots {
-        position: absolute;
-        bottom: 40px;
-        left: 50%;
-        transform: translateX(-50%);
-        display: flex;
-        gap: 10px;
-        z-index: 3;
-    }
+.slider-slide.active p {
+    animation: fadeUp 1.4s ease-out forwards;
+    animation-delay: 0.45s;
+}
 
-    .slider-dot {
-        width: 12px;
-        height: 12px;
-        border-radius: 50%;
-        background: rgba(255, 255, 255, 0.3);
-        cursor: pointer;
-        transition: all 0.3s ease;
-    }
+/* ===========================
+   SLIDER CONTROLS + DOTS
+=========================== */
+.slider-controls {
+    position: absolute;
+    bottom: 30px;
+    right: 40px;
+    display: flex;
+    gap: 12px;
+    z-index: 10;
+}
 
-    .slider-dot.active {
-        background: #500060;
-        transform: scale(1.2);
-    }
+.slider-nav {
+    background: rgba(255,255,255,0.85);
+    border: none;
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 18px;
+}
 
-    /* Scroll Animations for all sections */
-    .animate-on-scroll {
-        opacity: 0;
-        transform: translateY(50px);
-        transition: all 0.8s ease-out;
-    }
+.slider-nav:hover {
+    background: #500060;
+    color: white;
+}
 
-    .animate-on-scroll.visible {
-        opacity: 1;
-        transform: translateY(0);
-    }
+.slider-dots {
+    position: absolute;
+    bottom: 30px;
+    left: 40px;
+    display: flex;
+    gap: 8px;
+}
 
-    .animate-left {
-        opacity: 0;
-        transform: translateX(-50px);
-        transition: all 0.8s ease-out;
-    }
+.slider-dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.4);
+    cursor: pointer;
+}
 
-    .animate-left.visible {
-        opacity: 1;
-        transform: translateX(0);
-    }
+.slider-dot.active {
+    background: #500060;
+}
 
-    .animate-right {
-        opacity: 0;
-        transform: translateX(50px);
-        transition: all 0.8s ease-out;
-    }
+/* ===========================
+   CLEAN SCROLL ANIMATIONS
+   (NO LEFT/RIGHT HERE)
+=========================== */
+.animate-on-scroll {
+    opacity: 0;
+    transform: translateY(50px);
+    transition: all 0.8s ease-out;
+}
 
-    .animate-right.visible {
-        opacity: 1;
-        transform: translateX(0);
-    }
+.animate-on-scroll.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
 
-    .animate-scale {
-        opacity: 0;
-        transform: scale(0.9);
-        transition: all 0.8s ease-out;
-    }
+.animate-scale {
+    opacity: 0;
+    transform: scale(0.9);
+    transition: all 0.8s ease-out;
+}
 
-    .animate-scale.visible {
-        opacity: 1;
-        transform: scale(1);
-    }
+.animate-scale.visible {
+    opacity: 1;
+    transform: scale(1);
+}
 
-    .animate-fade {
-        opacity: 0;
-        transition: opacity 0.8s ease-out;
-    }
+.animate-fade {
+    opacity: 0;
+    transition: opacity 0.8s ease-out;
+}
 
-    .animate-fade.visible {
-        opacity: 1;
-    }
+.animate-fade.visible {
+    opacity: 1;
+}
 
     /* Enhanced Cards with animations */
     .highlight-card {
@@ -264,20 +235,23 @@
         box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
     }
 
-    .highlight-icon {
-        width: 90px;
-        height: 90px;
-        margin: 0 auto 1.5rem;
-        background: linear-gradient(135deg, #500060);
-        border-radius: 50%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 2.2rem;
-        color: white;
-        transition: all 0.4s ease;
-        box-shadow: 0 10px 20px rgba(212, 165, 116, 0.3);
-    }
+  .highlight-icon {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    overflow: hidden; /* forces image to stay inside the circle */
+    margin: 0 auto 20px;
+    box-shadow: 0px 6px 20px rgba(0,0,0,0.15);
+    background: #ffffff; /* or transparent if you want */
+}
+
+.highlight-icon img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;  /* fully fills the circle */
+}
+
+
 
     .highlight-card:hover .highlight-icon {
         transform: rotateY(180deg) scale(1.1);
@@ -393,6 +367,51 @@
         margin: 0 0.5rem;
         font-size: 0.9rem;
     }
+
+/* Review Fade Container (floating overlay) */
+#review-fade-container {
+    position: fixed;
+    top: 150px; /* adjust vertically */
+    width: 100%;
+    pointer-events: none;
+    z-index: 9999;
+}
+
+/* Review Box */
+#review-fade-card {
+    position: absolute;
+    width: 240px;
+    padding: 16px 20px;
+    background: #ffffff; /* solid white box */
+    border-radius: 12px;
+
+    box-shadow: 0 6px 25px rgba(0,0,0,0.25);
+    font-family: 'Inter', sans-serif;
+
+    opacity: 0;
+}
+
+/* Author text */
+#review-fade-card span {
+    display: block;
+    margin-top: 6px;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+/* FADE animation only (no movement) */
+@keyframes fadeCycle {
+    0%   { opacity: 0; }
+    20%  { opacity: 1; }
+    80%  { opacity: 1; }
+    100% { opacity: 0; }
+}
+
+.fade-animate {
+    animation: fadeCycle 5s ease-in-out;
+}
+
+
 
     /* CTA Section */
     .cta-section {
@@ -630,57 +649,385 @@
             max-width: 300px;
         }
     }
+
+    /* ================================
+   JACUZZI PREMIUM HOT SALE SECTION
+================================ */
+.jacuzzi-section {
+    position: relative;
+    height: 80vh;
+    width: 100%;
+    margin: 80px 0;
+    border-radius: 20px;
+    overflow: hidden;
+}
+
+.jacuzzi-video-container {
+    position: relative;
+    height: 100%;
+    width: 100%;
+}
+
+.jacuzzi-video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* Gold–Purple Gradient Overlay */
+.jacuzzi-overlay {
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: linear-gradient(
+        120deg,
+        rgba(80,0,96,0.7),
+        rgba(0,0,0,0.4),
+        rgba(182,122,62,0.3)
+    );
+    z-index: 2;
+}
+
+/* Hot Selling Badge */
+.jacuzzi-badge {
+    position: absolute;
+    top: 30px;
+    right: 30px;
+
+    background: linear-gradient(135deg, #b67a3e, #e0b886);
+    padding: 10px 22px;
+    border-radius: 30px;
+
+    font-size: 14px;
+    letter-spacing: 2px;
+    font-weight: 600;
+    color: white;
+
+    z-index: 5;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.25);
+}
+
+/* Content */
+.jacuzzi-content {
+    position: absolute;
+    bottom: 14%;
+    left: 7%;
+    z-index: 5;
+    max-width: 550px;
+}
+
+.jacuzzi-content h2 {
+    font-family: "Playfair Display", serif;
+    font-size: 52px;
+    color: white;
+    margin-bottom: 12px;
+    text-shadow: 0 4px 20px rgba(0,0,0,0.4);
+}
+
+.jacuzzi-content p {
+    font-size: 19px;
+    line-height: 1.6;
+    color: rgba(255,255,255,0.9);
+    max-width: 580px;
+    text-shadow: 0 3px 15px rgba(0,0,0,0.4);
+}
+
+/* CTA Button */
+.jacuzzi-btn {
+    display: inline-block;
+    margin-top: 25px;
+
+    padding: 14px 32px;
+    font-size: 16px;
+    letter-spacing: 1px;
+
+    color: white;
+    background: #500060;
+    border-radius: 30px;
+    text-decoration: none;
+
+    box-shadow: 0 8px 25px rgba(0,0,0,0.25);
+    transition: 0.3s ease;
+}
+
+.jacuzzi-btn:hover {
+    background: #b67a3e;
+    transform: translateY(-3px);
+    box-shadow: 0 12px 35px rgba(0,0,0,0.35);
+}
+
+/* Mobile Responsive */
+@media (max-width: 768px) {
+    .jacuzzi-section {
+        height: 65vh;
+    }
+
+    .jacuzzi-content h2 {
+        font-size: 34px;
+    }
+
+    .jacuzzi-content {
+        left: 5%;
+        bottom: 12%;
+    }
+
+    .jacuzzi-badge {
+        top: 20px;
+        right: 20px;
+        font-size: 12px;
+        padding: 7px 16px;
+    }
+}
+.offer-month-section {
+    padding: 100px 20px;
+    background: linear-gradient(135deg, #f7e9f8 0%, #fff 100%);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    overflow: hidden;
+}
+
+/* Decorative glowing circles */
+.offer-month-section::before,
+.offer-month-section::after {
+    content: "";
+    position: absolute;
+    width: 350px;
+    height: 350px;
+    background: rgba(212, 165, 116, 0.12);
+    border-radius: 50%;
+    filter: blur(40px);
+    animation: floatGlow 10s ease-in-out infinite;
+}
+.offer-month-section::before {
+    top: -80px;
+    right: -80px;
+}
+.offer-month-section::after {
+    bottom: -100px;
+    left: -100px;
+}
+
+@keyframes floatGlow {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.2); }
+}
+
+.offer-container {
+    max-width: 1300px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 50px;
+    align-items: center;
+    position: relative;
+    z-index: 2;
+}
+
+.offer-image-wrapper {
+    overflow: hidden;
+    border-radius: 22px;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+    animation: fadeSlideLeft 1s ease forwards;
+    opacity: 0;
+}
+.offer-image {
+    width: 100%;
+    height: auto;
+    display: block;
+    transition: transform .6s ease;
+}
+.offer-image-wrapper:hover .offer-image {
+    transform: scale(1.05);
+}
+
+@keyframes fadeSlideLeft {
+    from { opacity: 0; transform: translateX(-40px); }
+    to   { opacity: 1; transform: translateX(0); }
+}
+
+.offer-content {
+    animation: fadeSlideRight 1s ease forwards;
+    opacity: 0;
+}
+
+@keyframes fadeSlideRight {
+    from { opacity: 0; transform: translateX(40px); }
+    to   { opacity: 1; transform: translateX(0); }
+}
+
+.offer-heading {
+    font-size: 2.8rem;
+    color: #500060;
+    margin-bottom: 10px;
+    font-weight: 600;
+}
+
+.offer-subheading {
+    font-size: 1.6rem;
+    color: #9440a0;
+    margin-bottom: 20px;
+    font-weight: 500;
+    letter-spacing: 0.5px;
+}
+
+.offer-price {
+    background: #500060;
+    padding: 18px 25px;
+    border-radius: 12px;
+    display: inline-block;
+    margin-bottom: 25px;
+    color: white;
+    text-align: center;
+}
+.price-text {
+    font-size: 2rem;
+    font-weight: bold;
+    display: block;
+}
+.price-tag {
+    font-size: 1rem;
+    opacity: 0.85;
+}
+
+.offer-desc {
+    font-size: 1.1rem;
+    color: #333;
+    max-width: 90%;
+    margin-bottom: 20px;
+}
+
+.offer-list {
+    list-style: none;
+    margin: 20px 0;
+    padding: 0;
+}
+.offer-list li {
+    margin-bottom: 10px;
+    font-size: 1rem;
+    position: relative;
+    padding-left: 22px;
+    color: #500060;
+}
+.offer-list li::before {
+    content: "•";
+    position: absolute;
+    left: 0;
+    top: 0;
+    font-size: 1.4rem;
+    color: #d4a574;
+}
+
+.offer-btn {
+    display: inline-block;
+    padding: 15px 40px;
+    background: linear-gradient(135deg, #500060, #9b358a);
+    color: white;
+    font-size: 1.1rem;
+    border-radius: 30px;
+    text-decoration: none;
+    font-weight: 600;
+    transition: 0.3s ease;
+    box-shadow: 0 10px 20px rgba(80, 0, 96, 0.2);
+}
+.offer-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 18px 30px rgba(80, 0, 96, 0.3);
+}
+
+/* Mobile Responsive */
+@media (max-width: 900px) {
+    .offer-container {
+        grid-template-columns: 1fr;
+        text-align: center;
+    }
+    .offer-desc {
+        margin: auto;
+    }
+}
+
 </style>
 {% endblock %}
 
 {% block content %}
-<!-- Hero Slider Section -->
 <section class="hero-slider">
-    <!-- Slider Backgrounds -->
-    <div class="slider-container">
-        <div class="slider-slide active" style="background-image: url('/static/images/hero.jpg');"></div>
-        <div class="slider-slide" style="background-image: url('/static/images/hero1.jpg');"></div>
-        <div class="slider-slide" style="background-image: url('/static/images/hero3.jpg');"></div>
-        <div class="slider-overlay"></div>
-    </div>
 
-    <!-- Centered Slider Content -->
-    <div class="container">
-        <div class="hero-content active">
-            <div class="hero-subtitle">EXPERIENCE LUXURY WELLNESS</div>
-            <h1>Rediscover Your Radiance at Travaa</h1>
-            <p>Where premium beauty treatments meet tranquil elegance. Experience bespoke wellness in our sanctuary of sophistication.</p>
-            <div class="hero-btns">
-                <a href="{{ url_for('booking') }}" class="btn btn-primary pulse-hover" style="color: white;background-color: #500060;">
-                    <i class="fas fa-calendar-check"></i> Book Appointment
-                </a>
-                <a href="{{ url_for('services') }}" class="btn btn-secondary">
-                    <i class="fas fa-spa"></i> Explore Services
-                </a>
+    <div class="slider-container">
+
+        <!-- SLIDE 1 (fade from left) -->
+        <div class="slider-slide active" style="background-image: url('/static/images/hero.jpg');">
+            <div class="hero-text-block animate-left">
+                <h1>Luxury Wellness Redefined</h1>
+                <p>Where tranquility meets elegance…</p>
             </div>
         </div>
+
+        <!-- SLIDE 2 (fade from right) -->
+       <!-- SLIDE 2 -->
+<div class="slider-slide" style="background-image: url('/static/images/hero1.jpg');">
+    <div class="hero-text-block animate-right right-align">
+        <h1>Experience Pure Indulgence</h1>
+        <p>Holistic therapies crafted for inner balance.</p>
+    </div>
+</div>
+
+
+        <!-- SLIDE 3 (fade from left again) -->
+        <div class="slider-slide" style="background-image: url('/static/images/hero3.jpg');">
+            <div class="hero-text-block animate-left">
+                <h1>Polishing up your look, one nail at a time </h1>
+                <p>Making your hands look fabulous, every time.</p>
+            </div>
+        </div>
+
     </div>
 
-    <!-- Slider Controls -->
+    <!-- Controls -->
     <div class="slider-controls">
-        <button class="slider-nav prev-slide">
-            <i class="fas fa-chevron-left"></i>
-        </button>
-        <button class="slider-nav next-slide">
-            <i class="fas fa-chevron-right"></i>
-        </button>
+        <button class="slider-nav prev-slide"><i class="fas fa-chevron-left"></i></button>
+        <button class="slider-nav next-slide"><i class="fas fa-chevron-right"></i></button>
     </div>
 
-    <!-- Slider Dots -->
+    <!-- Dots -->
     <div class="slider-dots">
         <span class="slider-dot active" data-slide="0"></span>
         <span class="slider-dot" data-slide="1"></span>
         <span class="slider-dot" data-slide="2"></span>
     </div>
 
-    <!-- Floating Elements -->
-    <div class="floating-element floating-1"></div>
-    <div class="floating-element floating-2"></div>
+</section>
+
+<!-- Jacuzzi Premium Section -->
+<section class="jacuzzi-section animate-on-scroll">
+    <div class="jacuzzi-video-container">
+        <video autoplay muted loop playsinline class="jacuzzi-video">
+            <source src="/static/videos/jacuzzi.mp4" type="video/mp4">
+        </video>
+
+        <!-- Overlay Gradient -->
+        <div class="jacuzzi-overlay"></div>
+
+        <!-- Hot Selling Badge -->
+        <div class="jacuzzi-badge animate-fade">
+            HOT SELLING EXPERIENCE
+        </div>
+
+        <!-- Text Content -->
+        <div class="jacuzzi-content animate-left">
+            <h2>Jacuzzi Luxury Therapy</h2>
+            <p>
+                Melt your stress away in our premium jacuzzi suite—  
+                a rejuvenating hydrotherapy experience that relaxes, detoxifies,  
+                and restores harmony to your body.
+            </p>
+
+            <div class="jacuzzi-cta animate-up">
+                <a href="{{ url_for('booking') }}" class="jacuzzi-btn">
+                    Book Jacuzzi Session
+                </a>
+            </div>
+        </div>
+    </div>
 </section>
 
 <!-- Featured Services -->
@@ -695,8 +1042,9 @@
         <div class="service-highlights">
             <div class="highlight-card animate-on-scroll" data-delay="0.1">
                 <div class="highlight-icon">
-                    <i class="fas fa-spa"></i>
-                </div>
+    <img src="/static/images/icons/spa.png" alt="Spa Icon">
+</div>
+
                 <h3>Signature Spa</h3>
                 <p>Indulge in our exclusive full-body treatments designed to rejuvenate your senses and restore balance.</p>
                 <a href="{{ url_for('services') }}#spa" class="read-more">Discover More</a>
@@ -704,8 +1052,9 @@
 
             <div class="highlight-card animate-on-scroll" data-delay="0.2">
                 <div class="highlight-icon">
-                    <i class="fas fa-paint-brush"></i>
-                </div>
+    <img src="/static/images/icons/nails.png" alt="Nail Art Icon">
+</div>
+
                 <h3>Nail Artistry</h3>
                 <p>Experience premium nail care with intricate designs that reflect your unique style and personality.</p>
                 <a href="{{ url_for('services') }}#nails" class="read-more">View Gallery</a>
@@ -713,8 +1062,9 @@
 
             <div class="highlight-card animate-on-scroll" data-delay="0.3">
                 <div class="highlight-icon">
-                    <i class="fas fa-cut"></i>
-                </div>
+    <img src="/static/images/icons/body.png" alt="Body Icon">
+</div>
+
                 <h3>Body Excellence</h3>
                 <p>Transform your look with our luxury Body treatments and styling services from master Body artists.</p>
                 <a href="{{ url_for('services') }}#Body" class="read-more">Book Service</a>
@@ -722,8 +1072,9 @@
 
             <div class="highlight-card animate-on-scroll" data-delay="0.4">
                 <div class="highlight-icon">
-                    <i class="fas fa-gem"></i>
-                </div>
+    <img src="/static/images/icons/skin.png" alt="Skin Icon">
+</div>
+
                 <h3>Skin Rejuvenation</h3>
                 <p>Advanced skincare treatments using premium products for radiant, healthy-looking skin.</p>
                 <a href="{{ url_for('services') }}#skin" class="read-more">Learn More</a>
@@ -774,7 +1125,42 @@
         </div>
     </div>
 </section>
+<section class="offer-month-section">
+    <div class="offer-container">
+        
+        <!-- Left Image -->
+        <div class="offer-image-wrapper">
+            <img src="/static/images/offer1499.jpg" alt="Offer of the Month" class="offer-image" />
+        </div>
 
+        <!-- Right Content -->
+        <div class="offer-content">
+            <h2 class="offer-heading">Offer of the Month</h2>
+            <h3 class="offer-subheading">Luxury Spa Introductory Offer</h3>
+
+            <div class="offer-price">
+                <span class="price-text">Only @ ₹1499</span>
+                <span class="price-tag">1-Hour Premium Massage</span>
+            </div>
+
+            <p class="offer-desc">
+                Experience deep relaxation with our signature one-hour massage designed for first-time guests.
+                Immerse yourself in luxury, calmness, and world-class therapy from Travaa Wellness.
+            </p>
+
+            <ul class="offer-list">
+                <li>Swedish, Thai, Deep Tissue, Aroma</li>
+                <li>Couple & Jacuzzi Add-On Options</li>
+                <li>Perfect for Stress Relief & Rejuvenation</li>
+                <li>Limited-Time Exclusive Offer</li>
+            </ul>
+
+            <a href="{{ url_for('booking') }}" class="offer-btn">
+                Book Now & Save
+            </a>
+        </div>
+    </div>
+</section>
 <<!-- Testimonials -->
 <section class="testimonials">
     <div class="container">
@@ -920,159 +1306,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
 
-<!-- Instagram Section with Elegant Black Background -->
-<section style="
-    background: linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 100%);
-    padding: 100px 20px;
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, sans-serif;
-    position: relative;
-    overflow: hidden;
-" class="animate-fade">
-    <!-- Animated Background Elements -->
-    <div style="
-        position: absolute;
-        top: -100px;
-        right: -100px;
-        width: 300px;
-        height: 300px;
-        background: radial-gradient(circle, rgba(212, 165, 116, 0.1) 0%, transparent 70%);
-        animation: pulseGlow 8s ease-in-out infinite;
-        border-radius: 50%;
-    "></div>
-    
-    <div style="
-        position: absolute;
-        bottom: -150px;
-        left: -150px;
-        width: 400px;
-        height: 400px;
-        background: radial-gradient(circle, rgba(129, 52, 175, 0.05) 0%, transparent 70%);
-        animation: float 12s ease-in-out infinite;
-        border-radius: 50%;
-    "></div>
-
-    <div style="max-width: 1200px; margin: 0 auto; position: relative; z-index: 2;">
-        <!-- Animated Header -->
-        <div style="text-align: center; margin-bottom: 60px;" class="animate-on-scroll">
-            <div style="
-                display: inline-block;
-                margin-bottom: 20px;
-                padding: 8px 20px;
-                background: white;
-                border: 1px solid white;
-                border-radius: 20px;
-                animation: fadeInUp 1s ease;
-            ">
-                <span style="
-                    color: #500060;
-                    font-size: 14px;
-                    letter-spacing: 3px;
-                    font-weight: 500;
-                ">SOCIAL ELEGANCE</span>
-            </div>
-            
-            <h2 style="
-                font-size: 3.2rem;
-                font-weight: 300;
-                color: white;
-                margin-bottom: 20px;
-                letter-spacing: -0.5px;
-                animation: fadeInUp 1s ease 0.2s both;
-                background: linear-gradient(135deg, #ffffff 0%, #d4a574 100%);
-                -webkit-background-clip: text;
-                -webkit-text-fill-color: transparent;
-                background-clip: text;
-            ">Glimpses of Serenity</h2>
-            
-            <p style="
-                color: rgba(255, 255, 255, 0.7);
-                font-size: 1.2rem;
-                max-width: 600px;
-                margin: 0 auto;
-                line-height: 1.6;
-                animation: fadeInUp 1s ease 0.4s both;
-            ">Immerse yourself in our world of beauty, wellness, and tranquil moments</p>
-        </div>
-
-        <!-- Instagram iFrame Container with Glassmorphism Effect -->
-        <div style="
-            background: rgba(255, 255, 255, 0.03);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 20px;
-            padding: 40px;
-            box-shadow: 
-                0 20px 40px rgba(0, 0, 0, 0.3),
-                0 1px 0 rgba(255, 255, 255, 0.1) inset;
-            animation: slideUp 1s ease 0.6s both;
-            transition: all 0.4s ease;
-        " class="animate-scale" onmouseover="this.style.transform='translateY(-10px)'; this.style.boxShadow='0 30px 60px rgba(0, 0, 0, 0.4), 0 1px 0 rgba(255, 255, 255, 0.1) inset';"
-           onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 20px 40px rgba(0, 0, 0, 0.3), 0 1px 0 rgba(255, 255, 255, 0.1) inset';">
-            
-            <!-- Instagram iFrame -->
-            <iframe 
-                src="https://widgets.sociablekit.com/instagram-feed/iframe/25630598?layout=grid&posts=3&columns=3&spacing=15&background=transparent&color_scheme=dark"
-                style="
-                    width: 100%;
-                    height: 380px;
-                    border: none;
-                    border-radius: 12px;
-                    background: transparent;
-                "
-                frameborder="0"
-                scrolling="no"
-                title="Instagram Feed"
-            ></iframe>
-        </div>
-
-        <!-- Animated CTA Button -->
-        <div style="text-align: center; margin-top: 60px; animation: fadeIn 1s ease 1s both;" class="animate-on-scroll" data-delay="0.8">
-            <a href="https://instagram.com/travaa_wellness" 
-               target="_blank"
-               style="
-                    display: inline-flex;
-                    align-items: center;
-                    gap: 12px;
-                    background: linear-gradient(135deg, #E1306C 0%, #500060 50%, #d4a574 100%);
-                    background-size: 200% 200%;
-                    color: white;
-                    padding: 18px 40px;
-                    border-radius: 30px;
-                    text-decoration: none;
-                    font-weight: 500;
-                    font-size: 1.1rem;
-                    letter-spacing: 1px;
-                    transition: all 0.4s ease;
-                    position: relative;
-                    overflow: hidden;
-                    border: 1px solid rgba(255, 255, 255, 0.2);
-               "
-               onmouseover="this.style.backgroundPosition='100% 100%'; this.style.transform='translateY(-3px) scale(1.05)';"
-               onmouseout="this.style.backgroundPosition='0% 0%'; this.style.transform='translateY(0) scale(1)';">
-               
-                <!-- Button Shine Effect -->
-                <div style="
-                    position: absolute;
-                    top: -50%;
-                    left: -50%;
-                    width: 200%;
-                    height: 200%;
-                    background: linear-gradient(45deg, transparent 30%, rgba(255,255,255,0.1) 50%, transparent 70%);
-                    animation: shine 3s infinite;
-                "></div>
-                
-                <i class="fab fa-instagram" style="font-size: 1.3rem;"></i> 
-                <span style="position: relative; z-index: 2;">Follow @travaa_wellness</span>
-            </a>
-            
-            <p style="
-                color: rgba(255, 255, 255, 0.5);
-                margin-top: 20px;
-                font-size: 0.9rem;
-                letter-spacing: 1px;
-            ">Join our community of 10K+ wellness enthusiasts</p>
-        </div>
-    </div>
 
     <!-- Inline Animation Styles -->
     <style>
@@ -1120,6 +1353,68 @@ document.addEventListener("DOMContentLoaded", function () {
     </style>
 </section>
 
+<!-- Floating Review (single card, moves left → right) -->
+<div id="review-fade-container">
+    <div id="review-fade-card"></div>
+</div>
+
+
+<script>
+    const reviews = [
+        {% for r in testimonials %}
+            {
+                content: `{{ r.content | replace('\n', ' ') }}`,
+                author: "{{ r.client_name }}"
+            },
+        {% endfor %}
+    ];
+
+    let index = 0;
+    let side = "left"; // left first
+
+    function showReview() {
+        const card = document.getElementById("review-fade-card");
+
+        const r = reviews[index];
+
+        // Alternate text color purple → gold → purple...
+        const textColor = index % 2 === 0 ? "#500060" : "#b67a3e";
+        card.style.color = textColor;
+
+        // Move card to left or right
+        if (side === "left") {
+            card.style.left = "20px";
+            card.style.right = "auto";
+            side = "right"; // next one will appear on the right
+        } else {
+            card.style.right = "20px";
+            card.style.left = "auto";
+            side = "left"; // next one will appear on the left
+        }
+
+        // Update content
+        card.innerHTML = `
+            <p>“${r.content}”</p>
+            <span>– ${r.author}</span>
+        `;
+
+        // Restart animation
+        card.classList.remove("fade-animate");
+        void card.offsetWidth;
+        card.classList.add("fade-animate");
+
+        // Next review
+        index = (index + 1) % reviews.length;
+    }
+
+    // First review
+    showReview();
+
+    // Faster timing: every 5 seconds
+    setInterval(showReview, 5000);
+</script>
+
+
 <!-- CTA Section -->
 <section class="cta-section animate-on-scroll">
     <div class="container">
@@ -1139,246 +1434,200 @@ document.addEventListener("DOMContentLoaded", function () {
     </div>
 </section>
 
+
+
 <!-- Font Awesome -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 {% endblock %}
 
 {% block extra_js %}
 <script>
-    // Hero Slider
-    class HeroSlider {
-        constructor() {
-            this.slides = document.querySelectorAll('.slider-slide');
-            this.dots = document.querySelectorAll('.slider-dot');
-            this.currentSlide = 0;
-            this.totalSlides = this.slides.length;
-            this.autoSlideInterval = null;
-            
-            this.init();
-        }
-        
-        init() {
-            // Navigation buttons
-            document.querySelector('.prev-slide').addEventListener('click', () => this.prevSlide());
-            document.querySelector('.next-slide').addEventListener('click', () => this.nextSlide());
-            
-            // Dot navigation
-            this.dots.forEach(dot => {
-                dot.addEventListener('click', (e) => {
-                    const slideIndex = parseInt(e.target.dataset.slide);
-                    this.goToSlide(slideIndex);
-                });
-            });
-            
-            // Auto slide
-            this.startAutoSlide();
-            
-            // Pause on hover
-            document.querySelector('.hero-slider').addEventListener('mouseenter', () => {
-                this.stopAutoSlide();
-            });
-            
-            document.querySelector('.hero-slider').addEventListener('mouseleave', () => {
-                this.startAutoSlide();
-            });
-        }
-        
-        showSlide(index) {
-            // Hide all slides
-            this.slides.forEach(slide => slide.classList.remove('active'));
-            this.dots.forEach(dot => dot.classList.remove('active'));
-            
-            // Show current slide
-            this.slides[index].classList.add('active');
-            this.dots[index].classList.add('active');
-            
-            // Update current slide
-            this.currentSlide = index;
-            
-            // Animate hero content
-            const heroContent = document.querySelector('.hero-content');
-            heroContent.classList.remove('active');
-            setTimeout(() => {
-                heroContent.classList.add('active');
-            }, 100);
-        }
-        
-        nextSlide() {
-            this.currentSlide = (this.currentSlide + 1) % this.totalSlides;
-            this.showSlide(this.currentSlide);
-        }
-        
-        prevSlide() {
-            this.currentSlide = (this.currentSlide - 1 + this.totalSlides) % this.totalSlides;
-            this.showSlide(this.currentSlide);
-        }
-        
-        goToSlide(index) {
-            this.currentSlide = index;
-            this.showSlide(this.currentSlide);
-        }
-        
-        startAutoSlide() {
-            this.autoSlideInterval = setInterval(() => {
-                this.nextSlide();
-            }, 5000);
-        }
-        
-        stopAutoSlide() {
-            if (this.autoSlideInterval) {
-                clearInterval(this.autoSlideInterval);
-            }
-        }
+/* ------------------------------
+   FIXED + MERGED HERO SLIDER
+-------------------------------- */
+class HeroSlider {
+    constructor() {
+        this.slides = document.querySelectorAll(".slider-slide");
+        this.dots = document.querySelectorAll(".slider-dot");
+        this.current = 0;
+        this.total = this.slides.length;
+        this.timer = null;
+
+        this.init();
     }
-    
-    // Scroll Animations Manager
-    class ScrollAnimations {
-        constructor() {
-            this.animatedElements = document.querySelectorAll('.animate-on-scroll, .animate-left, .animate-right, .animate-scale, .animate-fade, .section-header, .highlight-card, .gallery-item, .gallery-item2, .gallery-item3, .testimonial-card, .blog-card, .cta-section');
-            this.init();
-        }
-        
-        init() {
-            // Initial check
-            this.checkElements();
-            
-            // Check on scroll with throttling
-            let ticking = false;
-            window.addEventListener('scroll', () => {
-                if (!ticking) {
-                    window.requestAnimationFrame(() => {
-                        this.checkElements();
-                        ticking = false;
-                    });
-                    ticking = true;
-                }
-            });
-            
-            // Check on resize
-            window.addEventListener('resize', () => this.checkElements());
-            
-            // Check on load
-            window.addEventListener('load', () => this.checkElements());
-        }
-        
-        checkElements() {
-            const windowHeight = window.innerHeight;
-            const triggerBottom = windowHeight * 0.8;
-            
-            this.animatedElements.forEach(element => {
-                const elementTop = element.getBoundingClientRect().top;
-                const elementBottom = element.getBoundingClientRect().bottom;
-                const delay = element.dataset.delay || 0;
-                
-                if (elementTop < triggerBottom && elementBottom > 0) {
-                    setTimeout(() => {
-                        element.classList.add('visible');
-                    }, delay * 1000);
-                }
-            });
-        }
-    }
-    
-    // Hover effects
-    class HoverEffects {
-        constructor() {
-            this.pulseButtons = document.querySelectorAll('.pulse-hover');
-            this.init();
-        }
-        
-        init() {
-            this.pulseButtons.forEach(button => {
-                button.addEventListener('mouseenter', () => {
-                    button.style.animation = 'pulse 0.5s ease';
-                });
-                
-                button.addEventListener('mouseleave', () => {
-                    button.style.animation = '';
-                });
-                
-                // Remove animation after it completes
-                button.addEventListener('animationend', () => {
-                    button.style.animation = '';
-                });
-            });
-        }
-    }
-    
-    // Smooth scroll for anchor links
-    function initSmoothScroll() {
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function (e) {
-                if (this.getAttribute('href') === '#') return;
-                
-                e.preventDefault();
-                const targetId = this.getAttribute('href');
-                if (targetId) {
-                    const target = document.querySelector(targetId);
-                    if (target) {
-                        target.scrollIntoView({
-                            behavior: 'smooth',
-                            block: 'start'
-                        });
-                    }
-                }
+
+    init() {
+        // Buttons
+        document.querySelector(".prev-slide").addEventListener("click", () => this.prev());
+        document.querySelector(".next-slide").addEventListener("click", () => this.next());
+
+        // Dots
+        this.dots.forEach(dot => {
+            dot.addEventListener("click", e => {
+                const index = Number(e.target.dataset.slide);
+                this.go(index);
             });
         });
+
+        // Auto-slide
+        this.startAuto();
+
+        // Pause on hover
+        document.querySelector(".hero-slider").addEventListener("mouseenter", () => this.stopAuto());
+        document.querySelector(".hero-slider").addEventListener("mouseleave", () => this.startAuto());
+
+        // Initial slide
+        this.show(0);
     }
-    
-    // Initialize Instagram iframe opacity
-    function initInstagramIframe() {
-        const iframe = document.querySelector('iframe');
-        if (iframe) {
-            iframe.onload = function() {
-                iframe.style.opacity = '0';
-                iframe.style.transition = 'opacity 0.8s ease';
-                setTimeout(() => {
-                    iframe.style.opacity = '1';
-                }, 100);
-            };
+
+    /* MAIN DISPLAY FUNCTION */
+    show(index) {
+        // Remove active
+        this.slides.forEach(slide => slide.classList.remove("active"));
+        this.dots.forEach(dot => dot.classList.remove("active"));
+
+        // Add active
+        const slide = this.slides[index];
+        slide.classList.add("active");
+        this.dots[index].classList.add("active");
+
+        // Reset animations INSIDE the slide
+        const textBlock = slide.querySelector(".hero-text-block");
+        if (textBlock) {
+            textBlock.style.animation = "none";
+            void textBlock.offsetWidth;
+            textBlock.style.animation = "";
         }
+
+        this.current = index;
     }
-    
-    // Initialize everything when DOM is loaded
-    document.addEventListener('DOMContentLoaded', () => {
-        // Initialize slider
-        const slider = new HeroSlider();
-        
-        // Initialize scroll animations
-        const animations = new ScrollAnimations();
-        
-        // Initialize hover effects
-        const hoverEffects = new HoverEffects();
-        
-        // Initialize smooth scroll
-        initSmoothScroll();
-        
-        // Initialize Instagram iframe
-        initInstagramIframe();
-        
-        // Add pulse animation style
-        const style = document.createElement('style');
-        style.textContent = `
-            @keyframes pulse {
-                0% { transform: scale(1); }
-                50% { transform: scale(1.05); }
-                100% { transform: scale(1); }
+
+    next() {
+        const index = (this.current + 1) % this.total;
+        this.show(index);
+    }
+
+    prev() {
+        const index = (this.current - 1 + this.total) % this.total;
+        this.show(index);
+    }
+
+    go(index) {
+        this.show(index);
+    }
+
+    startAuto() {
+        this.stopAuto();
+        this.timer = setInterval(() => this.next(), 5000);
+    }
+
+    stopAuto() {
+        if (this.timer) clearInterval(this.timer);
+    }
+}
+
+/* ------------------------------
+   SCROLL ANIMATIONS
+-------------------------------- */
+class ScrollAnimations {
+    constructor() {
+        this.elements = document.querySelectorAll(
+            ".animate-on-scroll, .animate-scale, .animate-fade, .section-header, .highlight-card, .gallery-item, .gallery-item2, .gallery-item3, .testimonial-card, .blog-card, .cta-section"
+        );
+
+        this.init();
+    }
+
+    init() {
+        this.check();
+        window.addEventListener("scroll", () => this.check());
+        window.addEventListener("resize", () => this.check());
+        window.addEventListener("load", () => this.check());
+    }
+
+    check() {
+        const trigger = window.innerHeight * 0.8;
+
+        this.elements.forEach(el => {
+            const top = el.getBoundingClientRect().top;
+            const bottom = el.getBoundingClientRect().bottom;
+            const delay = el.dataset.delay || 0;
+
+            if (top < trigger && bottom > 0) {
+                setTimeout(() => {
+                    el.classList.add("visible");
+                }, delay * 1000);
             }
-            
-            .btn-primary.pulse-hover:hover {
-                animation: pulse 0.5s ease;
-            }
-            
-            /* Add transition for all animated elements */
-            .animate-on-scroll, .animate-left, .animate-right, 
-            .animate-scale, .animate-fade, .section-header, 
-            .highlight-card, .gallery-item, .gallery-item2, 
-            .gallery-item3, .testimonial-card, .blog-card, 
-            .cta-section {
-                will-change: transform, opacity;
-            }
-        `;
-        document.head.appendChild(style);
+        });
+    }
+}
+
+/* ------------------------------
+   HOVER EFFECTS
+-------------------------------- */
+class HoverEffects {
+    constructor() {
+        this.buttons = document.querySelectorAll(".pulse-hover");
+        this.init();
+    }
+
+    init() {
+        this.buttons.forEach(btn => {
+            btn.addEventListener("mouseenter", () => btn.style.animation = "pulse 0.5s ease");
+            btn.addEventListener("mouseleave", () => btn.style.animation = "");
+            btn.addEventListener("animationend", () => btn.style.animation = "");
+        });
+    }
+}
+
+/* ------------------------------
+   SMOOTH SCROLL
+-------------------------------- */
+function initSmoothScroll() {
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener("click", function(e) {
+            if (this.getAttribute("href") === "#") return;
+            e.preventDefault();
+            const target = document.querySelector(this.getAttribute("href"));
+            if (target) target.scrollIntoView({ behavior: "smooth", block: "start" });
+        });
     });
+}
+
+/* ------------------------------
+   INSTAGRAM IFRAME FADE-IN
+-------------------------------- */
+function initInstagramIframe() {
+    const iframe = document.querySelector("iframe");
+    if (!iframe) return;
+    iframe.onload = () => {
+        iframe.style.opacity = "0";
+        iframe.style.transition = "opacity 0.8s ease";
+        setTimeout(() => iframe.style.opacity = "1", 100);
+    };
+}
+
+/* ------------------------------
+   INITIALIZE EVERYTHING
+-------------------------------- */
+document.addEventListener("DOMContentLoaded", () => {
+    new HeroSlider();
+    new ScrollAnimations();
+    new HoverEffects();
+    initSmoothScroll();
+    initInstagramIframe();
+
+    // Inject pulse animation
+    const style = document.createElement("style");
+    style.textContent = `
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+    `;
+    document.head.appendChild(style);
+});
 </script>
+
 {% endblock %}

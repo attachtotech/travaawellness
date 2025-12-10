@@ -4,6 +4,126 @@
 
 {% block extra_css %}
 <style>
+    /* ------------------------------------------- */
+/*  NEW GALLERY HERO – CLEAN & CINEMATIC       */
+/* ------------------------------------------- */
+
+.creative-hero {
+    position: relative;
+    width: 100%;
+    height: 72vh;
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: #000;
+}
+
+/* Background image or video */
+.hero-visual {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: url('/static/images/gallery-bg.jpg') center/cover no-repeat;
+    filter: brightness(0.75);
+    animation: slowZoom 20s ease-in-out infinite alternate;
+}
+
+/* Text Content */
+.hero-content {
+    position: relative;
+    z-index: 10;
+    text-align: center;
+    color: white;
+    animation: fadeUp 1.3s ease-out forwards;
+}
+
+.hero-title {
+    font-size: 3.8rem;
+    font-weight: 600;
+    letter-spacing: 2px;
+    opacity: 0;
+    animation: fadeSlideDown 1.5s ease forwards;
+}
+
+.hero-sub {
+    font-size: 1.2rem;
+    margin-top: 10px;
+    opacity: 0;
+    animation: fadeSlideUp 1.5s ease 0.4s forwards;
+}
+
+/* Floating Decorative Elements */
+.floating-dot {
+    position: absolute;
+    background: rgba(255,255,255,0.15);
+    border-radius: 50%;
+    box-shadow: 0 0 15px rgba(255,255,255,0.25);
+    animation: float 6s ease-in-out infinite;
+}
+
+.dot1 {
+    width: 110px;
+    height: 110px;
+    top: 12%;
+    left: 10%;
+}
+.dot2 {
+    width: 70px;
+    height: 70px;
+    bottom: 15%;
+    right: 8%;
+    animation-delay: 1s;
+}
+.dot3 {
+    width: 50px;
+    height: 50px;
+    top: 50%;
+    right: 20%;
+    animation-delay: 2s;
+}
+
+/* Animations */
+@keyframes fadeUp {
+    from { opacity: 0; transform: translateY(40px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fadeSlideDown {
+    from { opacity: 0; transform: translateY(-20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fadeSlideUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes float {
+    0%, 100% { transform: translateY(0); opacity: 0.7; }
+    50% { transform: translateY(-20px); opacity: 1; }
+}
+
+@keyframes slowZoom {
+    0% { transform: scale(1); }
+    100% { transform: scale(1.15); }
+}
+
+/* Mobile */
+@media (max-width: 768px) {
+    .hero-title {
+        font-size: 2.5rem;
+    }
+    .hero-sub {
+        font-size: 1rem;
+    }
+    .creative-hero {
+        height: 55vh;
+    }
+}
+
     .gallery-hero {
         background: linear-gradient(rgba(46, 46, 46, 0.8), rgba(54, 54, 54, 0.8)),
                     url('/static/images/gallery-bg.jpg') center/cover no-repeat;
@@ -128,11 +248,20 @@
     }
 
     .lightbox-img {
-        max-width: 100%;
-        max-height: 80vh;
-        object-fit: contain;
-        border-radius: var(--border-radius);
-    }
+    display: block;
+    width: auto;
+    max-width: 90vw;
+    max-height: 80vh;
+    object-fit: contain;
+    margin: 0 auto;
+}
+.lightbox-nav {
+    z-index: 5;
+}
+.lightbox-info {
+    z-index: 10;
+}
+
 
     .lightbox-info {
         position: absolute;
@@ -370,21 +499,171 @@
         right: 10px !important;
     }
 }
+.experience-gallery {
+    padding: 120px 0;
+    background: linear-gradient(135deg, #faf6fb 0%, #ffffff 100%);
+}
+
+.exp-row {
+    display: grid;
+    grid-template-columns: 1.1fr 1fr;
+    align-items: center;
+    gap: 60px;
+    margin-bottom: 120px;
+    opacity: 0;
+    transform: translateY(40px);
+    animation: fadeUp 1.2s ease forwards;
+}
+
+.exp-row:nth-child(2) {
+    animation-delay: 0.4s;
+}
+.exp-row:nth-child(3) {
+    animation-delay: 0.8s;
+}
+
+.exp-row.reverse {
+    grid-template-columns: 1fr 1.1fr;
+}
+
+.exp-text h3 {
+    font-size: 2.3rem;
+    color: #500060;
+    margin-bottom: 15px;
+    font-weight: 600;
+}
+
+.exp-text p {
+    font-size: 1.15rem;
+    color: #444;
+    line-height: 1.7;
+    max-width: 500px;
+}
+
+.exp-video-wrapper {
+    position: relative;
+    overflow: hidden;
+    border-radius: 18px;
+    box-shadow: 0 25px 50px rgba(0,0,0,0.15);
+}
+
+.exp-video {
+    width: 100%;
+    height: 100%;
+    display: block;
+    border-radius: inherit;
+    object-fit: cover;
+    transition: transform .6s ease;
+}
+
+.exp-video-wrapper:hover .exp-video {
+    transform: scale(1.05);
+}
+
+@keyframes fadeUp {
+    from { opacity: 0; transform: translateY(40px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+/* Responsive */
+@media (max-width: 900px) {
+    .exp-row,
+    .exp-row.reverse {
+        grid-template-columns: 1fr;
+        text-align: center;
+    }
+
+    .exp-text p {
+        margin: 0 auto;
+    }
+}
 
 </style>
 {% endblock %}
 
 {% block content %}
 <!-- Hero Section -->
-<section class="gallery-hero">
+<section class="gallery-hero creative-hero">
+    
+    <!-- Background Visual -->
+    <div class="hero-visual"></div>
+
+    <!-- Animated Content -->
+    <div class="hero-content">
+        <h1 class="hero-title">Travaa Gallery</h1>
+        <p class="hero-sub">Where Beauty Meets Experience</p>
+    </div>
+
+    <!-- Floating Elements -->
+    <div class="floating-dot dot1"></div>
+    <div class="floating-dot dot2"></div>
+    <div class="floating-dot dot3"></div>
+
+</section>
+<section class="experience-gallery">
     <div class="container">
-        <h1>Gallery of Excellence</h1>
-        <p class="section-subtitle">A VISUAL JOURNEY THROUGH OUR WORK</p>
-        <p style="max-width: 600px; margin: 2rem auto; color: rgba(255, 255, 255, 0.9);">
-            Explore our portfolio of luxury treatments, exquisite nail art designs, and transformative wellness experiences.
-        </p>
+
+        <!-- Block 1 -->
+        <div class="exp-row">
+            <div class="exp-text">
+                <h3>Luxury Spa Experience</h3>
+                <p>Immerse yourself in deep relaxation with our premium Swedish, Deep Tissue, and Aroma therapies designed to rejuvenate your body and calm your mind.</p>
+            </div>
+            <div class="exp-video-wrapper">
+                <video class="exp-video" autoplay muted loop playsinline preload="auto">
+                    <source src="/static/videos/spa-hero1.mp4" type="video/mp4">
+                </video>
+            </div>
+        </div>
+
+        <!-- Block 2 (reversed layout) -->
+        <div class="exp-row reverse">
+            <div class="exp-video-wrapper">
+                <video class="exp-video" autoplay muted loop playsinline preload="auto">
+                    <source src="/static/videos/nail-art-showcase.mp4" type="video/mp4">
+                </video>
+            </div>
+            <div class="exp-text">
+                <h3>Premium Nail Art Creations</h3>
+                <p>Explore high-precision nail styling, gel polish perfection, marble effects, glitter artistry, and signature Travaa designs crafted by expert artists.</p>
+            </div>
+        </div>
+
+        <!-- Block 3 -->
+        <div class="exp-row">
+            <div class="exp-text">
+                <h3>Jacuzzi & Hydrotherapy Bliss</h3>
+                <p>Enjoy soothing warm water therapy that relieves muscle tension, reduces stress, and delivers a spa-grade rejuvenation you’ll never forget.</p>
+            </div>
+            <div class="exp-video-wrapper">
+                <video class="exp-video" autoplay muted loop playsinline preload="auto">
+                    <source src="/static/videos/jacuzzi-relax.mp4" type="video/mp4">
+                </video>
+            </div>
+        </div>
+
     </div>
 </section>
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    const vids = document.querySelectorAll(".exp-video");
+    
+    vids.forEach(video => {
+        video.play().catch(() => {});
+        
+        // If video is paused for any reason, force play again
+        video.addEventListener("pause", () => {
+            video.play().catch(() => {});
+        });
+
+        // Ensure looping continues smoothly
+        video.addEventListener("ended", () => {
+            video.currentTime = 0;
+            video.play().catch(() => {});
+        });
+    });
+});
+</script>
 <!-- Gallery Section -->
 <section class="gallery-container">
     <div class="container">
@@ -809,139 +1088,128 @@ lightboxImg.src = imgUrl;
 </script>
 {% block extra_js %}
 <script>
-    document.addEventListener('DOMContentLoaded', function() {
-        // Gallery Filter
-        const filterBtns = document.querySelectorAll('.filter-btn');
-        const galleryItems = document.querySelectorAll('.gallery-item');
-        
-        filterBtns.forEach(btn => {
-            btn.addEventListener('click', function() {
-                // Update active button
-                filterBtns.forEach(b => b.classList.remove('active'));
-                this.classList.add('active');
-                
-                // Get filter value
-                const filter = this.dataset.filter;
-                
-                // Filter items
-                galleryItems.forEach(item => {
-                    if (filter === 'all' || item.dataset.category === filter) {
-                        item.style.display = 'block';
-                        setTimeout(() => {
-                            item.style.opacity = '1';
-                            item.style.transform = 'scale(1)';
-                        }, 100);
-                    } else {
-                        item.style.opacity = '0';
-                        item.style.transform = 'scale(0.8)';
-                        setTimeout(() => {
-                            item.style.display = 'none';
-                        }, 300);
-                    }
-                });
+  document.addEventListener('DOMContentLoaded', function() {
+
+    // Filter
+    const filterBtns = document.querySelectorAll('.filter-btn');
+    const galleryItems = document.querySelectorAll('.gallery-item');
+
+    filterBtns.forEach(btn => {
+        btn.addEventListener('click', function() {
+            filterBtns.forEach(b => b.classList.remove('active'));
+            this.classList.add('active');
+            const filter = this.dataset.filter;
+
+            galleryItems.forEach(item => {
+                if (filter === 'all' || item.dataset.category === filter) {
+                    item.style.display = 'block';
+                    requestAnimationFrame(() => {
+                        item.style.opacity = '1';
+                        item.style.transform = 'scale(1)';
+                    });
+                } else {
+                    item.style.opacity = '0';
+                    item.style.transform = 'scale(0.8)';
+                    setTimeout(() => item.style.display = 'none', 200);
+                }
             });
         });
-        
-        // Lightbox functionality
-        const lightbox = document.querySelector('.lightbox');
-        const lightboxImg = document.querySelector('.lightbox-img');
-        const lightboxTitle = document.querySelector('.lightbox-title');
-        const lightboxDescription = document.querySelector('.lightbox-description');
-        const lightboxCategory = document.querySelector('.lightbox-category');
-        const closeLightbox = document.querySelector('.close-lightbox');
-        const prevBtn = document.querySelector('.lightbox-btn.prev');
-        const nextBtn = document.querySelector('.lightbox-btn.next');
-        
-        let currentImageIndex = 0;
-        const images = Array.from(galleryItems);
-        
-        // Open lightbox when gallery item is clicked
-        galleryItems.forEach((item, index) => {
-            item.addEventListener('click', function() {
-                currentImageIndex = index;
-                updateLightbox();
-                lightbox.classList.add('active');
-                document.body.style.overflow = 'hidden';
-            });
-        });
-        
-        // Close lightbox
-        closeLightbox.addEventListener('click', function() {
-            lightbox.classList.remove('active');
-            document.body.style.overflow = '';
-        });
-        
-        // Close lightbox when clicking outside
-        lightbox.addEventListener('click', function(e) {
-            if (e.target === lightbox) {
-                lightbox.classList.remove('active');
-                document.body.style.overflow = '';
-            }
-        });
-        
-        // Navigation
-        prevBtn.addEventListener('click', function(e) {
-            e.stopPropagation();
-            currentImageIndex = (currentImageIndex - 1 + images.length) % images.length;
-            updateLightbox();
-        });
-        
-        nextBtn.addEventListener('click', function(e) {
-            e.stopPropagation();
-            currentImageIndex = (currentImageIndex + 1) % images.length;
-            updateLightbox();
-        });
-        
-        // Keyboard navigation
-        document.addEventListener('keydown', function(e) {
-            if (!lightbox.classList.contains('active')) return;
-            
-            if (e.key === 'Escape') {
-                lightbox.classList.remove('active');
-                document.body.style.overflow = '';
-            } else if (e.key === 'ArrowLeft') {
-                currentImageIndex = (currentImageIndex - 1 + images.length) % images.length;
-                updateLightbox();
-            } else if (e.key === 'ArrowRight') {
-                currentImageIndex = (currentImageIndex + 1) % images.length;
-                updateLightbox();
-            }
-        });
-        
-        function updateLightbox() {
-            const item = images[currentImageIndex];
-            const overlay = item.querySelector('.gallery-overlay');
-            
-            // In a real implementation, you would use actual image URLs
-            // For now, we'll use the background color as a placeholder
-            const bgColor = item.querySelector('.gallery-img').style.backgroundColor;
-            lightboxImg.style.backgroundColor = bgColor;
-            
-            // Update text content
-            if (overlay) {
-                const title = overlay.querySelector('.gallery-title')?.textContent || '';
-                const description = overlay.querySelector('p')?.textContent || '';
-                const category = overlay.querySelector('.gallery-category')?.textContent || '';
-                
-                lightboxTitle.textContent = title;
-                lightboxDescription.textContent = description;
-                lightboxCategory.textContent = category;
-            }
-        }
-        
-        // Simulate Instagram feed loading
-        setTimeout(() => {
-            const instagramPosts = document.querySelectorAll('.instagram-post');
-            instagramPosts.forEach(post => {
-                const overlay = document.createElement('div');
-                overlay.className = 'post-overlay';
-                overlay.innerHTML = `
-                    <span><i class="fas fa-heart"></i> ${Math.floor(Math.random() * 5000)}</span>
-                    <span><i class="fas fa-comment"></i> ${Math.floor(Math.random() * 200)}</span>
-                `;
-                post.appendChild(overlay);
-            });
-        }, 1000);
     });
+
+    // Lightbox
+    const lightbox = document.querySelector('.lightbox');
+    const lightboxImg = document.querySelector('.lightbox-img');
+    const lightboxTitle = document.querySelector('.lightbox-title');
+    const lightboxDescription = document.querySelector('.lightbox-description');
+    const lightboxCategory = document.querySelector('.lightbox-category');
+
+    const closeLightbox = document.querySelector('.close-lightbox');
+    const prevBtn = document.querySelector('.lightbox-btn.prev');
+    const nextBtn = document.querySelector('.lightbox-btn.next');
+
+    let currentIndex = 0;
+    const items = Array.from(galleryItems);
+
+    // Extract actual image URL from background-image
+   function getItemImage(item) {
+    const bg = item.querySelector(".gallery-img").style.backgroundImage;
+
+    // Extract URL safely
+    const match = bg.match(/url\((['"]?)(.*?)\1\)/);
+
+    return match ? match[2] : "";
+}
+
+    function openLightbox(index) {
+        currentIndex = index;
+        updateLightbox();
+        lightbox.classList.add('active');
+        document.body.style.overflow = 'hidden';
+    }
+
+    function closeLB() {
+        lightbox.classList.remove('active');
+        document.body.style.overflow = '';
+    }
+
+function updateLightbox() {
+    const item = items[currentIndex];
+    const overlay = item.querySelector('.gallery-overlay');
+
+    // IMAGE
+    const imgUrl = getItemImage(item);
+    lightboxImg.src = imgUrl;
+    lightboxImg.style.display = "block";
+
+    // TEXT
+    lightboxTitle.textContent = overlay.querySelector(".gallery-title")?.textContent || "";
+    lightboxDescription.textContent = overlay.querySelector("p")?.textContent || "";
+    lightboxCategory.textContent = overlay.querySelector(".gallery-category")?.textContent || "";
+}
+
+
+    // OPEN LIGHTBOX
+    items.forEach((item, index) => {
+        item.addEventListener('click', () => openLightbox(index));
+    });
+
+    // CLOSE
+    closeLightbox.addEventListener('click', closeLB);
+    lightbox.addEventListener('click', e => {
+        if (e.target === lightbox) closeLB();
+    });
+
+    // NEXT / PREV
+    nextBtn.addEventListener('click', e => {
+        e.stopPropagation();
+        currentIndex = (currentIndex + 1) % items.length;
+        updateLightbox();
+    });
+
+    prevBtn.addEventListener('click', e => {
+        e.stopPropagation();
+        currentIndex =
+            (currentIndex - 1 + items.length) % items.length;
+        updateLightbox();
+    });
+
+    // KEYBOARD
+    document.addEventListener('keydown', e => {
+        if (!lightbox.classList.contains('active')) return;
+
+        if (e.key === 'Escape') closeLB();
+        if (e.key === 'ArrowRight') {
+            currentIndex = (currentIndex + 1) % items.length;
+            updateLightbox();
+        }
+        if (e.key === 'ArrowLeft') {
+            currentIndex =
+                (currentIndex - 1 + items.length) % items.length;
+            updateLightbox();
+        }
+    });
+
+});
+
 </script>
 {% endblock %}

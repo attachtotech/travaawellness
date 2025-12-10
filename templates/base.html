@@ -20,10 +20,13 @@
     <!-- Navigation -->
     <nav class="navbar">
         <div class="container">
-            <a href="{{ url_for('home') }}" class="logo">
-                <span class="logo-text">TRAVAA</span>
-                <span class="logo-subtitle">Wellness Spa & Nail Art</span>
-            </a>
+            <a href="{{ url_for('home') }}" class="logo" 
+   style="display:flex; align-items:center; text-decoration:none;">
+    <img src="{{ url_for('static', filename='images/logo.png') }}" 
+         alt="Travaa Wellness Logo"
+         style="height:55px; width:auto; object-fit:contain;"/>
+</a>
+
             
             <div class="nav-links">
                 <a href="{{ url_for('home') }}">Home</a>
@@ -31,6 +34,7 @@
                 <a href="{{ url_for('gallery') }}">Gallery</a>
                 <a href="{{ url_for('testimonials_page') }}">Testimonials</a>
                 <a href="{{ url_for('blog') }}">Blog</a>
+                <a href="{{ url_for('franchise') }}">Franchise</a>
                 <a href="{{ url_for('contact') }}">Contact</a>
                 <a href="{{ url_for('booking') }}" class="book-btn" style="color: #fff;background-color: #500060;">Book Now</a>
             </div>
@@ -84,9 +88,10 @@
                     <a href="{{ url_for('services') }}#skin">Skin Care</a>
                 </div>
                 
+
                 <div class="footer-col">
                     <h4>Contact Info</h4>
-                    <p><i class="fas fa-map-marker-alt"></i> Luxury District, Wellness Avenue</p>
+                    <p><i class="fas fa-map-marker-alt"></i>  First floor, SKYLARK Co-Operative Housing Society Ltd, Travaa wellness, Office No.1 to 5, Plot No. 8 -B, Sector 06, Kharghar, Navi Mumbai, Maharashtra 410210</p>
                     <p><i class="fas fa-phone"></i> +91 7039008000</p>
                     <p><i class="fas fa-envelope"></i> travaawellness@gmail.com</p>
                     <div class="social-links">
@@ -97,7 +102,11 @@
                     </div>
                 </div>
             </div>
-            
+            <div class="footer-download">
+    <a href="/download/pricelist" class="footer-download-link">
+        Download Price List (PDF)
+    </a>
+</div>
             <div class="footer-bottom">
                 <p>&copy; 2025 Travaa Wellness Spa & Nail Art. All rights reserved.</p>
                 <div class="footer-links">
@@ -105,6 +114,7 @@
                     <a href="#" style="color: white; text-decoration: none;">Terms of Service</a>
                 </div>
             </div>
+            
         </div>
     </footer>
 
