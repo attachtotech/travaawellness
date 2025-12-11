@@ -1,0 +1,1435 @@
+{% extends "base.html" %}
+
+{% block title %}Gallery - {{ super() }}{% endblock %}
+
+{% block extra_css %}
+<style>
+    /* ------------------------------------------- */
+/*  NEW GALLERY HERO – CLEAN & CINEMATIC       */
+/* ------------------------------------------- */
+
+.creative-hero {
+    position: relative;
+    width: 100%;
+    height: 72vh;
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: #000;
+}
+
+/* Background image or video */
+.hero-visual {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: url('/static/images/gallery-bg.jpg') center/cover no-repeat;
+    filter: brightness(0.75);
+    animation: slowZoom 20s ease-in-out infinite alternate;
+}
+
+/* Text Content */
+.hero-content {
+    position: relative;
+    z-index: 10;
+    text-align: center;
+    color: white;
+    animation: fadeUp 1.3s ease-out forwards;
+}
+
+.hero-title {
+    font-size: 3.8rem;
+    font-weight: 600;
+    letter-spacing: 2px;
+    opacity: 0;
+    animation: fadeSlideDown 1.5s ease forwards;
+}
+
+.hero-sub {
+    font-size: 1.2rem;
+    margin-top: 10px;
+    opacity: 0;
+    animation: fadeSlideUp 1.5s ease 0.4s forwards;
+}
+
+/* Floating Decorative Elements */
+.floating-dot {
+    position: absolute;
+    background: rgba(255,255,255,0.15);
+    border-radius: 50%;
+    box-shadow: 0 0 15px rgba(255,255,255,0.25);
+    animation: float 6s ease-in-out infinite;
+}
+
+.dot1 {
+    width: 110px;
+    height: 110px;
+    top: 12%;
+    left: 10%;
+}
+.dot2 {
+    width: 70px;
+    height: 70px;
+    bottom: 15%;
+    right: 8%;
+    animation-delay: 1s;
+}
+.dot3 {
+    width: 50px;
+    height: 50px;
+    top: 50%;
+    right: 20%;
+    animation-delay: 2s;
+}
+
+/* Animations */
+@keyframes fadeUp {
+    from { opacity: 0; transform: translateY(40px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fadeSlideDown {
+    from { opacity: 0; transform: translateY(-20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fadeSlideUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes float {
+    0%, 100% { transform: translateY(0); opacity: 0.7; }
+    50% { transform: translateY(-20px); opacity: 1; }
+}
+
+@keyframes slowZoom {
+    0% { transform: scale(1); }
+    100% { transform: scale(1.15); }
+}
+
+/* Mobile */
+@media (max-width: 768px) {
+    .hero-title {
+        font-size: 2.5rem;
+    }
+    .hero-sub {
+        font-size: 1rem;
+    }
+    .creative-hero {
+        height: 55vh;
+    }
+}
+
+    .gallery-hero {
+        background: linear-gradient(rgba(46, 46, 46, 0.8), rgba(54, 54, 54, 0.8)),
+                    url('/static/images/gallery-bg.jpg') center/cover no-repeat;
+        padding: 150px 0 100px;
+        text-align: center;
+        color: white;
+    }
+
+    .gallery-container {
+        padding: 80px 0;
+    }
+
+    .gallery-filter {
+        display: flex;
+        justify-content: center;
+        gap: 1rem;
+        margin-bottom: 3rem;
+        flex-wrap: wrap;
+    }
+
+    .filter-btn {
+        padding: 0.75rem 2rem;
+        border: 2px solid var(--black);
+        background: transparent;
+        color: var(--black);
+        border-radius: 50px;
+        cursor: pointer;
+        transition: var(--transition);
+        font-weight: 500;
+        font-size: 0.95rem;
+    }
+
+    .filter-btn.active,
+    .filter-btn:hover {
+        background: var(--black);
+        color: var(--white);
+    }
+
+    .gallery-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        gap: 1.5rem;
+    }
+
+    .gallery-item {
+        position: relative;
+        overflow: hidden;
+        border-radius: var(--border-radius);
+        aspect-ratio: 1;
+        background: #f5f5f5;
+        cursor: pointer;
+    }
+
+    .gallery-img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.5s ease;
+    }
+
+    .gallery-item:hover .gallery-img {
+        transform: scale(1.1);
+    }
+
+    .gallery-overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: linear-gradient(to top, rgba(0, 0, 0, 0.8), transparent);
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-end;
+        padding: 2rem;
+        color: white;
+        opacity: 0;
+        transition: opacity 0.3s ease;
+    }
+
+    .gallery-item:hover .gallery-overlay {
+        opacity: 1;
+    }
+
+    .gallery-category {
+        font-family: 'Cormorant Garamond', serif;
+        font-size: 0.9rem;
+        color: var(--gold);
+        margin-bottom: 0.5rem;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+
+    .gallery-title {
+        font-size: 1.25rem;
+        margin-bottom: 0.5rem;
+    }
+
+    /* Lightbox */
+    .lightbox {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(0, 0, 0, 0.9);
+        display: none;
+        justify-content: center;
+        align-items: center;
+        z-index: 2000;
+        padding: 2rem;
+    }
+
+    .lightbox.active {
+        display: flex;
+    }
+
+    .lightbox-content {
+        max-width: 90%;
+        max-height: 90%;
+        position: relative;
+    }
+
+    .lightbox-img {
+    display: block;
+    width: auto;
+    max-width: 90vw;
+    max-height: 80vh;
+    object-fit: contain;
+    margin: 0 auto;
+}
+.lightbox-nav {
+    z-index: 5;
+}
+.lightbox-info {
+    z-index: 10;
+}
+
+
+    .lightbox-info {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        background: rgba(0, 0, 0, 0.7);
+        color: white;
+        padding: 1.5rem;
+        transform: translateY(100%);
+        transition: transform 0.3s ease;
+    }
+
+    .lightbox-content:hover .lightbox-info {
+        transform: translateY(0);
+    }
+
+    .lightbox-nav {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 100%;
+        display: flex;
+        justify-content: space-between;
+        padding: 0 1rem;
+        pointer-events: none;
+    }
+
+    .lightbox-btn {
+        background: rgba(255, 255, 255, 0.1);
+        border: none;
+        color: white;
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        pointer-events: auto;
+        backdrop-filter: blur(10px);
+        transition: var(--transition);
+    }
+
+    .lightbox-btn:hover {
+        background: rgba(255, 255, 255, 0.2);
+        transform: scale(1.1);
+    }
+
+    .close-lightbox {
+        position: absolute;
+        top: 1rem;
+        right: 1rem;
+        background: rgba(255, 255, 255, 0.1);
+        border: none;
+        color: white;
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        backdrop-filter: blur(10px);
+    }
+
+    /* Instagram Feed */
+    .instagram-section {
+        padding: 100px 0;
+        background: var(--black);
+        color: var(--white);
+    }
+
+    .instagram-section h2 {
+        color: var(--white);
+        text-align: center;
+        margin-bottom: 1rem;
+    }
+
+    .instagram-feed {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 1rem;
+        margin-top: 3rem;
+    }
+
+    .instagram-post {
+        position: relative;
+        border-radius: var(--border-radius);
+        overflow: hidden;
+        aspect-ratio: 1;
+        background: #333;
+    }
+
+    .instagram-post img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: var(--transition);
+    }
+
+    .instagram-post:hover img {
+        transform: scale(1.1);
+    }
+
+    .post-overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(0, 0, 0, 0.7);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 1rem;
+        opacity: 0;
+        transition: var(--transition);
+    }
+
+    .instagram-post:hover .post-overlay {
+        opacity: 1;
+    }
+
+    .post-overlay span {
+        color: white;
+        font-size: 0.9rem;
+    }
+
+    .post-overlay i {
+        margin-right: 0.25rem;
+    }
+
+    .gallery-stats {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 2rem;
+        margin: 4rem 0;
+        padding: 3rem;
+        background: var(--light-gray);
+        border-radius: var(--border-radius);
+    }
+
+    .stat-item {
+        text-align: center;
+    }
+
+    .stat-number {
+        font-size: 3rem;
+        font-family: 'Playfair Display', serif;
+        color: #500060;
+        margin-bottom: 0.5rem;
+    }
+
+    .stat-label {
+        color: var(--gray);
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        font-size: 0.9rem;
+    }
+
+/* ------------------------------------------------- */
+/*    MOBILE LIGHTBOX – ALWAYS SHOW INFO, CLEAN UI   */
+/* ------------------------------------------------- */
+@media (max-width: 768px) {
+
+    .lightbox {
+        padding: 10px;
+        align-items: flex-start !important;
+        overflow-y: auto;
+    }
+
+    .lightbox-content {
+        width: 100% !important;
+        max-width: 100% !important;
+        max-height: none !important;
+        border-radius: 12px;
+        background: #111;
+    }
+
+    .lightbox-img {
+        width: 100%;
+        height: auto;
+        max-height: 45vh;
+        object-fit: cover;
+        border-radius: 0;
+    }
+
+    /* INFO ALWAYS VISIBLE (No hover) */
+    .lightbox-info {
+        position: relative !important;
+        transform: translateY(0) !important;
+        background: #111 !important;
+        padding: 1.5rem !important;
+        border-radius: 0 0 12px 12px;
+    }
+
+    /* Disable hover slide-up on mobile */
+    .lightbox-content:hover .lightbox-info {
+        transform: none !important;
+    }
+
+    /* Text Resizing */
+    .lightbox-title {
+        font-size: 1.3rem !important;
+        margin-bottom: 8px;
+    }
+
+    .lightbox-description {
+        font-size: 0.9rem !important;
+        line-height: 1.5;
+    }
+
+    .lightbox-category {
+        font-size: 0.75rem !important;
+        margin-top: 5px;
+        color: #d4a574 !important;
+    }
+
+    /* Navigation buttons smaller on mobile */
+    .lightbox-nav {
+        top: 40% !important;
+        padding: 0 !important;
+    }
+
+    .lightbox-btn {
+        width: 36px;
+        height: 36px;
+    }
+
+    .close-lightbox {
+        width: 36px !important;
+        height: 36px !important;
+        top: 10px !important;
+        right: 10px !important;
+    }
+}
+.experience-gallery {
+    padding: 120px 0;
+    background: linear-gradient(135deg, #faf6fb 0%, #ffffff 100%);
+}
+
+.exp-row {
+    display: grid;
+    grid-template-columns: 1.1fr 1fr;
+    align-items: center;
+    gap: 60px;
+    margin-bottom: 120px;
+    opacity: 0;
+    transform: translateY(40px);
+    animation: fadeUp 1.2s ease forwards;
+}
+
+.exp-row:nth-child(2) {
+    animation-delay: 0.4s;
+}
+.exp-row:nth-child(3) {
+    animation-delay: 0.8s;
+}
+
+.exp-row.reverse {
+    grid-template-columns: 1fr 1.1fr;
+}
+
+.exp-text h3 {
+    font-size: 2.3rem;
+    color: #500060;
+    margin-bottom: 15px;
+    font-weight: 600;
+}
+
+.exp-text p {
+    font-size: 1.15rem;
+    color: #444;
+    line-height: 1.7;
+    max-width: 500px;
+}
+
+.exp-video-wrapper {
+    position: relative;
+    overflow: hidden;
+    border-radius: 18px;
+    box-shadow: 0 25px 50px rgba(0,0,0,0.15);
+}
+
+.exp-video {
+    width: 100%;
+    height: 100%;
+    display: block;
+    border-radius: inherit;
+    object-fit: cover;
+    transition: transform .6s ease;
+}
+
+.exp-video-wrapper:hover .exp-video {
+    transform: scale(1.05);
+}
+
+@keyframes fadeUp {
+    from { opacity: 0; transform: translateY(40px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+/* Responsive */
+@media (max-width: 900px) {
+    .exp-row,
+    .exp-row.reverse {
+        grid-template-columns: 1fr;
+        text-align: center;
+    }
+
+    .exp-text p {
+        margin: 0 auto;
+    }
+}
+/* ============================================================
+   FULL RESPONSIVE UPGRADE — TRAVAA GALLERY PAGE
+============================================================ */
+
+/* ---------- HERO RESPONSIVE ---------- */
+@media (max-width: 768px) {
+    .creative-hero {
+        height: 55vh !important;
+    }
+
+    .hero-title {
+        font-size: 2.2rem !important;
+        letter-spacing: 1px !important;
+    }
+
+    .hero-sub {
+        font-size: 1rem !important;
+    }
+
+    /* Floating dots smaller */
+    .dot1 { width: 60px !important; height: 60px !important; left: 5% !important; }
+    .dot2 { width: 40px !important; height: 40px !important; }
+    .dot3 { width: 35px !important; height: 35px !important; }
+}
+
+/* ---------- GALLERY FILTER ---------- */
+@media (max-width: 768px) {
+    .gallery-filter {
+        gap: 0.6rem !important;
+        padding: 0 1rem;
+    }
+
+    .filter-btn {
+        font-size: 0.85rem !important;
+        padding: 0.5rem 1.2rem !important;
+        border-radius: 30px !important;
+    }
+}
+
+/* ---------- EXPERIENCE GALLERY RESPONSIVE ---------- */
+@media (max-width: 900px) {
+    .experience-gallery {
+        padding: 70px 0 !important;
+    }
+
+    .exp-row {
+        gap: 35px !important;
+        margin-bottom: 70px !important;
+    }
+
+    .exp-text h3 {
+        font-size: 1.8rem !important;
+    }
+
+    .exp-text p {
+        font-size: 1rem !important;
+        max-width: 90% !important;
+    }
+
+    .exp-video-wrapper {
+        border-radius: 14px !important;
+    }
+}
+
+/* ---------- GALLERY GRID RESPONISVE ---------- */
+@media (max-width: 768px) {
+    .gallery-grid {
+        grid-template-columns: repeat(auto-fill, minmax(170px, 1fr)) !important;
+        gap: 1rem !important;
+    }
+
+    .gallery-item {
+        aspect-ratio: 1 !important;
+        border-radius: 12px !important;
+    }
+
+    .gallery-overlay {
+        padding: 1.2rem !important;
+    }
+
+    .gallery-title {
+        font-size: 1rem !important;
+    }
+
+    .gallery-category {
+        font-size: .75rem !important;
+    }
+
+    .gallery-overlay p {
+        font-size: .85rem !important;
+    }
+}
+
+/* ---------- GALLERY STATS ---------- */
+@media (max-width: 768px) {
+    .gallery-stats {
+        grid-template-columns: 1fr 1fr !important;
+        gap: 1.2rem !important;
+        padding: 1.5rem !important;
+    }
+
+    .stat-number {
+        font-size: 2rem !important;
+    }
+
+    .stat-label {
+        font-size: 0.75rem !important;
+    }
+}
+
+@media (max-width: 480px) {
+    .gallery-stats {
+        grid-template-columns: 1fr !important;
+        text-align: center !important;
+    }
+}
+
+/* ---------- LIGHTBOX MOBILE OPTIMIZATION ---------- */
+@media (max-width: 768px) {
+    .lightbox {
+        padding: 15px !important;
+        align-items: flex-start !important;
+    }
+
+    .lightbox-content {
+        width: 100% !important;
+        max-width: 100% !important;
+        border-radius: 12px !important;
+    }
+
+    .lightbox-img {
+        width: 100% !important;
+        max-height: 45vh !important;
+        object-fit: cover !important;
+        border-radius: 12px 12px 0 0 !important;
+    }
+
+    .lightbox-info {
+        position: relative !important;
+        transform: none !important;
+        padding: 1.2rem !important;
+        background: #111 !important;
+        border-radius: 0 0 12px 12px !important;
+    }
+
+    .lightbox-title {
+        font-size: 1.2rem !important;
+    }
+
+    .lightbox-description {
+        font-size: 0.9rem !important;
+    }
+
+    .lightbox-category {
+        font-size: .8rem !important;
+    }
+
+    .lightbox-btn {
+        width: 36px !important;
+        height: 36px !important;
+        font-size: 0.85rem !important;
+    }
+
+    .lightbox-nav {
+        top: 38% !important;
+    }
+
+    .close-lightbox {
+        width: 32px !important;
+        height: 32px !important;
+        top: 12px !important;
+        right: 12px !important;
+    }
+}
+
+/* ---------- INSTAGRAM SECTION ---------- */
+@media (max-width: 1024px) {
+    iframe {
+        height: 600px !important;
+    }
+}
+
+@media (max-width: 768px) {
+    iframe {
+        height: 550px !important;
+    }
+
+    .section-header h2 {
+        font-size: 2.2rem !important;
+    }
+
+    .section-header p {
+        font-size: 1rem !important;
+    }
+}
+
+@media (max-width: 480px) {
+    iframe {
+        height: 480px !important;
+    }
+}
+
+/* ---------- FOLLOW BUTTON ---------- */
+@media (max-width: 768px) {
+    a[href*="travaa_wellness"] {
+        padding: 14px 30px !important;
+        font-size: 1rem !important;
+    }
+}
+
+/* ---------- BOOK NOW CTA ---------- */
+@media (max-width: 768px) {
+    .btn.btn-primary {
+        width: 100% !important;
+        text-align: center;
+        padding: 1rem !important;
+        font-size: 1rem !important;
+        border-radius: 10px !important;
+    }
+}
+
+</style>
+{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="gallery-hero creative-hero">
+    
+    <!-- Background Visual -->
+    <div class="hero-visual"></div>
+
+    <!-- Animated Content -->
+    <div class="hero-content">
+        <h1 class="hero-title">Travaa Gallery</h1>
+        <p class="hero-sub">Where Beauty Meets Experience</p>
+    </div>
+
+    <!-- Floating Elements -->
+    <div class="floating-dot dot1"></div>
+    <div class="floating-dot dot2"></div>
+    <div class="floating-dot dot3"></div>
+
+</section>
+<section class="experience-gallery">
+    <div class="container">
+
+        <!-- Block 1 -->
+        <div class="exp-row">
+            <div class="exp-text">
+                <h3>Luxury Spa Experience</h3>
+                <p>Immerse yourself in deep relaxation with our premium Swedish, Deep Tissue, and Aroma therapies designed to rejuvenate your body and calm your mind.</p>
+            </div>
+            <div class="exp-video-wrapper">
+                <video class="exp-video" autoplay muted loop playsinline preload="auto">
+                    <source src="/static/videos/spa-hero1.mp4" type="video/mp4">
+                </video>
+            </div>
+        </div>
+
+        <!-- Block 2 (reversed layout) -->
+        <div class="exp-row reverse">
+            <div class="exp-video-wrapper">
+                <video class="exp-video" autoplay muted loop playsinline preload="auto">
+                    <source src="/static/videos/nail-art-showcase.mp4" type="video/mp4">
+                </video>
+            </div>
+            <div class="exp-text">
+                <h3>Premium Nail Art Creations</h3>
+                <p>Explore high-precision nail styling, gel polish perfection, marble effects, glitter artistry, and signature Travaa designs crafted by expert artists.</p>
+            </div>
+        </div>
+
+        <!-- Block 3 -->
+        <div class="exp-row">
+            <div class="exp-text">
+                <h3>Jacuzzi & Hydrotherapy Bliss</h3>
+                <p>Enjoy soothing warm water therapy that relieves muscle tension, reduces stress, and delivers a spa-grade rejuvenation you’ll never forget.</p>
+            </div>
+            <div class="exp-video-wrapper">
+                <video class="exp-video" autoplay muted loop playsinline preload="auto">
+                    <source src="/static/videos/jacuzzi-relax.mp4" type="video/mp4">
+                </video>
+            </div>
+        </div>
+
+    </div>
+</section>
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    const vids = document.querySelectorAll(".exp-video");
+    
+    vids.forEach(video => {
+        video.play().catch(() => {});
+        
+        // If video is paused for any reason, force play again
+        video.addEventListener("pause", () => {
+            video.play().catch(() => {});
+        });
+
+        // Ensure looping continues smoothly
+        video.addEventListener("ended", () => {
+            video.currentTime = 0;
+            video.play().catch(() => {});
+        });
+    });
+});
+</script>
+<!-- Gallery Section -->
+<section class="gallery-container">
+    <div class="container">
+        <div class="section-header" style="text-align: center; margin-bottom: 3rem;">
+            <h2>Our Premium Work</h2>
+            <p style="max-width: 600px; margin: 0 auto;">Filter by category to explore specific treatments and results.</p>
+        </div>
+
+        <!-- Filter Buttons -->
+        <div class="gallery-filter">
+            <button class="filter-btn active" data-filter="all">All Work</button>
+            {% for category in categories %}
+            <button class="filter-btn" data-filter="{{ category|lower }}">{{ category }}</button>
+            {% endfor %}
+        </div>
+
+        <!-- Gallery Stats -->
+        <div class="gallery-stats">
+            <div class="stat-item">
+                <div class="stat-number">50+</div>
+                <div class="stat-label">Happy Clients</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number">4.8</div>
+                <div class="stat-label">Average Rating</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number">20+</div>
+                <div class="stat-label">Services</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number">100+</div>
+                <div class="stat-label">Transformations</div>
+            </div>
+        </div>
+
+        <!-- Gallery Grid -->
+        <div class="gallery-grid">
+            <!-- Spa Images -->
+            <div class="gallery-item" data-category="spa">
+                <div class="gallery-img" style="background: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)), url('/static/images/luxuryspa.jpg') center/cover no-repeat;"></div>
+                <div class="gallery-overlay">
+                    <div class="gallery-category">Spa</div>
+                    <h4 class="gallery-title">Signature Spa Suite</h4>
+                    <p>Private treatment room with premium amenities</p>
+                </div>
+            </div>
+
+            <div class="gallery-item" data-category="spa">
+                <div class="gallery-img" style="background: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)), url('/static/images/aroma.jpg') center/cover no-repeat;"></div>
+                <div class="gallery-overlay">
+                    <div class="gallery-category">Spa</div>
+                    <h4 class="gallery-title">Aromatherapy Session</h4>
+                    <p>Custom essential oil blends for relaxation</p>
+                </div>
+            </div>
+
+            <!-- Nail Art Images -->
+            <div class="gallery-item" data-category="nails">
+                <div class="gallery-img" style="background: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)), url('/static/images/getpolishonnaturalnails.jpg') center/cover no-repeat;"></div>
+                <div class="gallery-overlay">
+                    <div class="gallery-category">Nail Art</div>
+                    <h4 class="gallery-title">Get Polish On Natural Nails</h4>
+                    <p>Enhanced beauty, stress relief from the process, and potential strengthening/protection</p>
+                </div>
+            </div>
+
+            <div class="gallery-item" data-category="nails">
+                <div class="gallery-img" style="background: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)), url('/static/images/stickernails.jpg') center/cover no-repeat;"></div>
+                <div class="gallery-overlay">
+                    <div class="gallery-category">Nail Art</div>
+                    <h4 class="gallery-title">Sticker Nails Art</h4>
+                    <p>Elegance is at your fingertips.</p>
+                </div>
+            </div>
+
+            <div class="gallery-item" data-category="nails">
+                <div class="gallery-img" style="background: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)), url('/static/images/marbleart.jpg') center/cover no-repeat;"></div>
+                <div class="gallery-overlay">
+                    <div class="gallery-category">Nail Art</div>
+                    <h4 class="gallery-title">Marble Art</h4>
+                    <p>Sophisticated marble design with gemstones</p>
+                </div>
+            </div>
+
+            <!-- Body Images -->
+            <div class="gallery-item" data-category="body">
+                <div class="gallery-img" style="background: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)), url('/static/images/facial.jpg') center/cover no-repeat;"></div>
+                <div class="gallery-overlay">
+                    <div class="gallery-category">Body</div>
+                    <h4 class="gallery-title">Facial Premium</h4>
+                    <p>Your skin tells your story—make it a glowing one.</p>
+                </div>
+            </div>
+
+            <div class="gallery-item" data-category="body">
+                <div class="gallery-img" style="background: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)), url('/static/images/jaccuzi.jpg') center/cover no-repeat;"></div>
+                <div class="gallery-overlay">
+                    <div class="gallery-category">Body</div>
+                    <h4 class="gallery-title">Jaccuzi</h4>
+                    <p>The hot moving water in the Jacuzzi soothes your muscles.</p>
+                </div>
+            </div>
+
+            <!-- Skin Images -->
+            <div class="gallery-item" data-category="skin">
+                <div class="gallery-img" style="background: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)), url('/static/images/pedicure.jpg') center/cover no-repeat;"></div>
+                <div class="gallery-overlay">
+                    <div class="gallery-category">Skin</div>
+                    <h4 class="gallery-title">Pedicure</h4>
+                    <p>A cosmetic treatment for feet and toenails,</p>
+                </div>
+            </div>
+
+            <!-- Treatment Room Images -->
+            <div class="gallery-item" data-category="skin">
+                <div class="gallery-img" style="background: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)), url('/static/images/menicure.jpg') center/cover no-repeat;"></div>
+                <div class="gallery-overlay">
+                    <div class="gallery-category">Skin</div>
+                    <h4 class="gallery-title">Manicure</h4>
+                    <p>A cosmetic treatment for hands and fingernails</p>
+                </div>
+            </div>
+
+            <div class="gallery-item" data-category="spa">
+                <div class="gallery-img" style="background: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)), url('/static/images/sweedishmassage.jpg') center/cover no-repeat;"></div>
+                <div class="gallery-overlay">
+                    <div class="gallery-category">Wellness</div>
+                    <h4 class="gallery-title">Sweedish Massage</h4>
+                    <p>Swedish massage is a classic full-body massage technique using light-to-medium pressure and long, flowing strokes toward the heart to promote deep relaxation, improve circulation, and relieve muscle tension. </p>
+                </div>
+            </div>
+
+            <!-- More Nail Designs -->
+            <div class="gallery-item" data-category="nails">
+                <div class="gallery-img" style="background: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)), url('/static/images/jeweleryart.jpg') center/cover no-repeat;"></div>
+                <div class="gallery-overlay">
+                    <div class="gallery-category">Nail Art</div>
+                    <h4 class="gallery-title">Jewelery Nails Art</h4>
+                    <p>A unique expression of artistic vision, not just an ornament.</p>
+                </div>
+            </div>
+
+            <div class="gallery-item" data-category="nails">
+                <div class="gallery-img" style="background: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)), url('/static/images/glitterart.jpg') center/cover no-repeat;"></div>
+                <div class="gallery-overlay">
+                    <div class="gallery-category">Nail Art</div>
+                    <h4 class="gallery-title">Glitter Art</h4>
+                    <p>Seamless color transition with glitter</p>
+                </div>
+            </div>
+        </div>
+
+        <div style="text-align: center; margin-top: 3rem;">
+            <a href="{{ url_for('booking') }}" class="btn btn-primary" style="padding: 1rem 3rem;color: #ffffff;background-color: #500060;">
+                <i class="fas fa-calendar-alt"></i> Book Your Transformation
+            </a>
+        </div>
+    </div>
+</section>
+
+<!-- Instagram Section with SociableKit iframe -->
+<section style="
+    background: linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 100%);
+    padding: 100px 20px;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, sans-serif;
+    position: relative;
+    overflow: hidden;
+">
+    <!-- Animated Background Elements -->
+    <div style="
+        position: absolute;
+        top: 10%;
+        right: -50px;
+        width: 200px;
+        height: 200px;
+        background: radial-gradient(circle, rgba(212, 165, 116, 0.1) 0%, transparent 70%);
+        animation: pulseGlow 8s ease-in-out infinite;
+        border-radius: 50%;
+    "></div>
+    
+    <div style="
+        position: absolute;
+        bottom: 10%;
+        left: -100px;
+        width: 300px;
+        height: 300px;
+        background: radial-gradient(circle, rgba(129, 52, 175, 0.05) 0%, transparent 70%);
+        animation: float 12s ease-in-out infinite;
+        border-radius: 50%;
+    "></div>
+
+    <div style="
+        max-width: 1400px;
+        margin: 0 auto;
+        position: relative;
+        z-index: 2;
+    ">
+        <!-- Section Header -->
+        <div style="text-align: center; margin-bottom: 60px;">
+            <div style="
+                display: inline-block;
+                margin-bottom: 20px;
+                padding: 8px 24px;
+                background: rgba(212, 165, 116, 0.1);
+                border: 1px solid rgba(212, 165, 116, 0.3);
+                border-radius: 25px;
+                animation: fadeInUp 1s ease;
+            ">
+                <span style="
+                    color: #d4a574;
+                    font-size: 14px;
+                    letter-spacing: 3px;
+                    font-weight: 500;
+                ">SOCIAL ELEGANCE</span>
+            </div>
+            
+            <h2 style="
+                font-size: 3.2rem;
+                font-weight: 300;
+                color: white;
+                margin-bottom: 20px;
+                letter-spacing: -0.5px;
+                animation: fadeInUp 1s ease 0.2s both;
+                background: linear-gradient(135deg, #ffffff 0%, #d4a574 100%);
+                -webkit-background-clip: text;
+                -webkit-text-fill-color: transparent;
+                background-clip: text;
+            ">Follow Our Creative Journey</h2>
+            
+            <p style="
+                color: rgba(255, 255, 255, 0.7);
+                font-size: 1.2rem;
+                max-width: 700px;
+                margin: 0 auto;
+                line-height: 1.6;
+                animation: fadeInUp 1s ease 0.4s both;
+            ">Get daily inspiration, behind-the-scenes content, and client transformations on Instagram.</p>
+        </div>
+
+        <!-- Single iframe showing 6 posts (2 rows of 3) -->
+        <div style="
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 
+                0 20px 40px rgba(0, 0, 0, 0.3),
+                0 1px 0 rgba(255, 255, 255, 0.1) inset;
+            animation: slideUp 1s ease 0.6s both;
+            transition: all 0.4s ease;
+            margin: 0 auto;
+            max-width: 1200px;
+        " onmouseover="this.style.transform='translateY(-10px)'; this.style.boxShadow='0 30px 60px rgba(0, 0, 0, 0.4), 0 1px 0 rgba(255, 255, 255, 0.1) inset';"
+           onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 20px 40px rgba(0, 0, 0, 0.3), 0 1px 0 rgba(255, 255, 255, 0.1) inset';">
+            
+            <!-- SociableKit iframe showing 6 posts (3x2 grid) -->
+            <!-- Configure SociableKit to show: posts=6, columns=3, rows=2 -->
+            <iframe 
+                src="https://widgets.sociablekit.com/instagram-feed/iframe/25630598?layout=grid&posts=6&columns=3&rows=2&spacing=15&background=transparent&color_scheme=dark&show_caption=true&show_likes=true&show_comments=true"
+                style="
+                    width: 100%;
+                    height: 700px;
+                    border: none;
+                    border-radius: 12px;
+                    background: transparent;
+                "
+                frameborder="0"
+                scrolling="no"
+                title="Instagram Feed - 6 Posts"
+            ></iframe>
+        </div>
+
+        <!-- Animated Follow Button -->
+        <div style="
+            text-align: center;
+            margin-top: 60px;
+            animation: fadeIn 1s ease 1s both;
+        ">
+            <a href="https://instagram.com/travaa_wellness" 
+               target="_blank"
+               style="
+                    display: inline-flex;
+                    align-items: center;
+                    gap: 12px;
+                    background: linear-gradient(135deg, #E1306C 0%, #833AB4 50%, #d4a574 100%);
+                    background-size: 200% 200%;
+                    color: white;
+                    padding: 18px 45px;
+                    border-radius: 30px;
+                    text-decoration: none;
+                    font-weight: 500;
+                    font-size: 1.1rem;
+                    letter-spacing: 1px;
+                    transition: all 0.4s ease;
+                    position: relative;
+                    overflow: hidden;
+                    border: 1px solid rgba(255, 255, 255, 0.2);
+               "
+               onmouseover="this.style.backgroundPosition='100% 100%'; this.style.transform='translateY(-3px) scale(1.05)'; this.style.boxShadow='0 10px 30px rgba(225, 48, 108, 0.4)';"
+               onmouseout="this.style.backgroundPosition='0% 0%'; this.style.transform='translateY(0) scale(1)'; this.style.boxShadow='none';">
+               
+                <!-- Button Shine Effect -->
+                <div style="
+                    position: absolute;
+                    top: -50%;
+                    left: -50%;
+                    width: 200%;
+                    height: 200%;
+                    background: linear-gradient(45deg, transparent 30%, rgba(255,255,255,0.1) 50%, transparent 70%);
+                    animation: shine 3s infinite;
+                "></div>
+                
+                <i class="fab fa-instagram" style="font-size: 1.4rem; position: relative; z-index: 2;"></i> 
+                <span style="position: relative; z-index: 2;">Follow @travaa_wellness</span>
+            </a>
+            
+            <p style="
+                color: rgba(255, 255, 255, 0.5);
+                margin-top: 25px;
+                font-size: 0.95rem;
+                letter-spacing: 1px;
+                font-style: italic;
+            ">Join our community of wellness enthusiasts for daily inspiration</p>
+        </div>
+    </div>
+
+    <!-- Inline Animation Styles -->
+    <style>
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(40px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        @keyframes pulseGlow {
+            0%, 100% { transform: scale(1); opacity: 0.5; }
+            50% { transform: scale(1.2); opacity: 0.8; }
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(5deg); }
+        }
+        
+        @keyframes shine {
+            0% { transform: translateX(-100%) translateY(-100%) rotate(45deg); }
+            100% { transform: translateX(100%) translateY(100%) rotate(45deg); }
+        }
+    </style>
+</section>
+
+<!-- Font Awesome -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+<!-- Optional JavaScript for iframe loading animation -->
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const iframe = document.querySelector('iframe');
+        if (iframe) {
+            iframe.onload = function() {
+                iframe.style.opacity = '0';
+                iframe.style.transition = 'opacity 0.8s ease';
+                setTimeout(() => {
+                    iframe.style.opacity = '1';
+                }, 100);
+            };
+        }
+    });
+</script>
+
+<!-- Lightbox -->
+<div class="lightbox">
+    <div class="lightbox-content">
+        <img class="lightbox-img" src="" alt="">
+        <div class="lightbox-info">
+            <h3 class="lightbox-title"></h3>
+            <p class="lightbox-description"></p>
+            <div class="lightbox-category"></div>
+        </div>
+        <div class="lightbox-nav">
+            <button class="lightbox-btn prev"><i class="fas fa-chevron-left"></i></button>
+            <button class="lightbox-btn next"><i class="fas fa-chevron-right"></i></button>
+        </div>
+        <button class="close-lightbox"><i class="fas fa-times"></i></button>
+    </div>
+</div>
+{% endblock %}
+<script>
+    // Extract real background-image URL (remove gradient part)
+let bgStyle = item.querySelector('.gallery-img').style.backgroundImage;
+let imgUrl = bgStyle
+    .replace(/linear-gradient\(.*?\),\s*/i, '')
+    .replace('url("', '')
+    .replace('")', '')
+    .trim();
+
+lightboxImg.src = imgUrl;
+
+</script>
+{% block extra_js %}
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+
+    // Filter
+    const filterBtns = document.querySelectorAll('.filter-btn');
+    const galleryItems = document.querySelectorAll('.gallery-item');
+
+    filterBtns.forEach(btn => {
+        btn.addEventListener('click', function() {
+            filterBtns.forEach(b => b.classList.remove('active'));
+            this.classList.add('active');
+            const filter = this.dataset.filter;
+
+            galleryItems.forEach(item => {
+                if (filter === 'all' || item.dataset.category === filter) {
+                    item.style.display = 'block';
+                    requestAnimationFrame(() => {
+                        item.style.opacity = '1';
+                        item.style.transform = 'scale(1)';
+                    });
+                } else {
+                    item.style.opacity = '0';
+                    item.style.transform = 'scale(0.8)';
+                    setTimeout(() => item.style.display = 'none', 200);
+                }
+            });
+        });
+    });
+
+    // Lightbox
+    const lightbox = document.querySelector('.lightbox');
+    const lightboxImg = document.querySelector('.lightbox-img');
+    const lightboxTitle = document.querySelector('.lightbox-title');
+    const lightboxDescription = document.querySelector('.lightbox-description');
+    const lightboxCategory = document.querySelector('.lightbox-category');
+
+    const closeLightbox = document.querySelector('.close-lightbox');
+    const prevBtn = document.querySelector('.lightbox-btn.prev');
+    const nextBtn = document.querySelector('.lightbox-btn.next');
+
+    let currentIndex = 0;
+    const items = Array.from(galleryItems);
+
+    // Extract actual image URL from background-image
+   function getItemImage(item) {
+    const bg = item.querySelector(".gallery-img").style.backgroundImage;
+
+    // Extract URL safely
+    const match = bg.match(/url\((['"]?)(.*?)\1\)/);
+
+    return match ? match[2] : "";
+}
+
+    function openLightbox(index) {
+        currentIndex = index;
+        updateLightbox();
+        lightbox.classList.add('active');
+        document.body.style.overflow = 'hidden';
+    }
+
+    function closeLB() {
+        lightbox.classList.remove('active');
+        document.body.style.overflow = '';
+    }
+
+function updateLightbox() {
+    const item = items[currentIndex];
+    const overlay = item.querySelector('.gallery-overlay');
+
+    // IMAGE
+    const imgUrl = getItemImage(item);
+    lightboxImg.src = imgUrl;
+    lightboxImg.style.display = "block";
+
+    // TEXT
+    lightboxTitle.textContent = overlay.querySelector(".gallery-title")?.textContent || "";
+    lightboxDescription.textContent = overlay.querySelector("p")?.textContent || "";
+    lightboxCategory.textContent = overlay.querySelector(".gallery-category")?.textContent || "";
+}
+
+
+    // OPEN LIGHTBOX
+    items.forEach((item, index) => {
+        item.addEventListener('click', () => openLightbox(index));
+    });
+
+    // CLOSE
+    closeLightbox.addEventListener('click', closeLB);
+    lightbox.addEventListener('click', e => {
+        if (e.target === lightbox) closeLB();
+    });
+
+    // NEXT / PREV
+    nextBtn.addEventListener('click', e => {
+        e.stopPropagation();
+        currentIndex = (currentIndex + 1) % items.length;
+        updateLightbox();
+    });
+
+    prevBtn.addEventListener('click', e => {
+        e.stopPropagation();
+        currentIndex =
+            (currentIndex - 1 + items.length) % items.length;
+        updateLightbox();
+    });
+
+    // KEYBOARD
+    document.addEventListener('keydown', e => {
+        if (!lightbox.classList.contains('active')) return;
+
+        if (e.key === 'Escape') closeLB();
+        if (e.key === 'ArrowRight') {
+            currentIndex = (currentIndex + 1) % items.length;
+            updateLightbox();
+        }
+        if (e.key === 'ArrowLeft') {
+            currentIndex =
+                (currentIndex - 1 + items.length) % items.length;
+            updateLightbox();
+        }
+    });
+
+});
+
+</script>
+{% endblock %}

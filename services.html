@@ -1,0 +1,1574 @@
+{% extends "base.html" %}
+
+{% block title %}Services - {{ super() }}{% endblock %}
+
+{% block extra_css %}
+<style>
+    /* ============================================================
+   HERO SECTION
+============================================================ */
+.services-hero {
+    position: relative;
+    width: 100%;
+    height: 75vh;
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.hero-video {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transform: translate(-50%, -50%);
+    z-index: 1;
+}
+
+.hero-content {
+    position: relative;
+    z-index: 2;
+    text-align: center;
+    color: #ffffff;
+    max-width: 800px;
+    padding: 0 20px;
+}
+
+.services-hero h1 {
+    font-size: 3rem;
+    font-weight: 700;
+}
+
+.section-subtitle {
+    font-size: 1.4rem;
+    margin: 1rem 0;
+}
+
+.hero-desc {
+    font-size: 1.1rem;
+    line-height: 1.6;
+    max-width: 650px;
+    margin: 0 auto 20px auto;
+}
+
+.hero-music-btn {
+    padding: 10px 22px;
+    border-radius: 30px;
+    background: rgba(255,255,255,0.2);
+    color: #fff;
+    border: 1px solid rgba(255,255,255,0.3);
+    cursor: pointer;
+    font-size: 15px;
+    font-weight: 600;
+    backdrop-filter: blur(10px);
+    transition: 0.3s;
+}
+
+.hero-music-btn:hover {
+    background: rgba(255,255,255,0.35);
+    transform: scale(1.08);
+}
+
+/* ============================================================
+   CATEGORY NAVIGATION
+============================================================ */
+.services-categories {
+    position: sticky;
+    top: 80px;
+    z-index: 100;
+    background: var(--white);
+    padding: 1rem 0;
+    border-bottom: 1px solid rgba(0,0,0,0.1);
+    margin-bottom: 3rem;
+}
+
+.category-nav {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    overflow-x: auto;
+    padding: 1rem 0;
+}
+
+.category-btn {
+    padding: 0.75rem 2rem;
+    border: 2px solid transparent;
+    background: transparent;
+    color: var(--black);
+    font-weight: 600;
+    cursor: pointer;
+    border-radius: 50px;
+    transition: 0.3s;
+    white-space: nowrap;
+}
+
+.category-btn.active,
+.category-btn:hover {
+    background: var(--black);
+    border-color: var(--black);
+    color: var(--white);
+}
+
+/* ============================================================
+   SERVICES SECTION
+============================================================ */
+.service-category {
+    padding: 80px 0;
+    scroll-margin-top: 120px;
+}
+
+.service-category:nth-child(even) {
+    background: var(--light-gray);
+}
+
+.service-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px,1fr));
+    gap: 2rem;
+    margin-top: 3rem;
+}
+
+/* ============================================================
+   RESPONSIVE SERVICE IMAGE FIX — UNIFORM & MOBILE PERFECT
+============================================================ */
+.service-image {
+    width: 100%;
+    aspect-ratio: 16 / 11;
+    overflow: hidden;
+    border-radius: 14px;
+    background: #f2f2f2;
+    position: relative;
+    opacity: 0;
+    transform: translateY(30px);
+    transition: all 0.8s ease;
+}
+
+.service-image.active {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.service-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+    display: block;
+}
+
+/* ============================================================
+   SERVICE CARDS
+============================================================ */
+.service-item {
+    background: var(--white);
+    padding: 2rem;
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow);
+    transition: 0.3s;
+    opacity: 0;
+    transform: translateY(30px);
+}
+
+.service-item.active {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.service-item:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+}
+
+.service-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+
+.service-name {
+    font-size: 1.5rem;
+}
+
+.service-duration {
+    color: var(--gray);
+    font-size: 0.9rem;
+    margin-bottom: 0.2rem;
+}
+
+.service-price {
+    color: #500060;
+    font-weight: 600;
+    font-size: 1.1rem;
+}
+
+.service-features {
+    list-style: none;
+    margin: 1rem 0 1.5rem 0;
+}
+
+.service-features li {
+    padding: 0.5rem 0;
+    color: var(--gray);
+    border-bottom: 1px solid rgba(0,0,0,0.05);
+}
+
+.service-features li:before {
+    content: "✓";
+    color: #500060;
+    margin-right: 8px;
+}
+
+/* ============================================================
+   DOWNLOAD PRICE SECTION
+============================================================ */
+.download-price-section {
+    padding: 60px 20px;
+    display: flex;
+    justify-content: center;
+}
+
+.download-card {
+    background: rgba(255,255,255,0.1);
+    border-radius: 16px;
+    padding: 30px;
+    text-align: center;
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(255,255,255,0.2);
+}
+
+.download-btn {
+    background: #500060;
+    color: white;
+    padding: 12px 24px;
+    border-radius: 30px;
+    text-decoration: none;
+    font-weight: 600;
+    transition: 0.3s;
+}
+
+.download-btn:hover {
+    background: #6a0080;
+    transform: translateY(-3px);
+}
+
+/* ============================================================
+   PACKAGES SECTION
+============================================================ */
+.packages-section {
+    padding: 100px 0;
+    background: var(--black);
+    color: var(--white);
+}
+
+.packages-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px,1fr));
+    gap: 2rem;
+}
+
+.package-card {
+    background: rgba(255,255,255,0.05);
+    padding: 3rem 2rem;
+    border-radius: var(--border-radius);
+    border: 1px solid rgba(255,255,255,0.1);
+    text-align: center;
+    transition: 0.3s;
+}
+
+.package-card:hover {
+    transform: translateY(-10px);
+}
+
+/* ============================================================
+   MOBILE RESPONSIVE
+============================================================ */
+@media (max-width: 768px) {
+    .services-hero {
+        height: 55vh;
+        padding: 100px 20px 60px;
+    }
+
+    .services-hero h1 {
+        font-size: 2rem;
+    }
+
+    .hero-video {
+        width: 180%;
+    }
+
+    .category-nav {
+        gap: 0.5rem;
+        padding: 0.5rem 1rem;
+    }
+
+    .category-btn {
+        padding: 0.6rem 1.3rem;
+        font-size: 0.85rem;
+    }
+
+    .service-list {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+    }
+
+    .service-item {
+        padding: 1.5rem;
+    }
+
+    .service-image {
+        aspect-ratio: 16 / 12;
+    }
+}
+
+@media (max-width: 480px) {
+    .services-hero {
+        height: 50vh;
+    }
+
+    .service-image {
+        aspect-ratio: 4 / 3;
+    }
+
+    .service-cta {
+        flex-direction: column;
+        gap: 0.8rem;
+    }
+
+    .book-btn {
+        width: 100%;
+    }
+}
+
+
+/* Download section */
+.download-price-section {
+    padding: 60px 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.download-card {
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(12px);
+    border-radius: 16px;
+    padding: 30px;
+    max-width: 600px;
+    text-align: center;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    box-shadow: 0px 8px 24px rgba(0,0,0,0.12);
+    animation: fadeUp 1s ease;
+}
+.download-icon { font-size: 48px; margin-bottom: 10px; }
+.download-card h3 { font-size: 24px; margin-bottom: 10px; color: #500060; font-weight: 600; }
+.download-card p { font-size: 16px; margin-bottom: 20px; color: #555; }
+.download-btn {
+    display: inline-block;
+    padding: 12px 24px;
+    background: #500060;
+    color: #fff;
+    border-radius: 30px;
+    text-decoration: none;
+    font-weight: 600;
+    transition: 0.3s ease;
+}
+.download-btn:hover {
+    background: #6a0080;
+    transform: translateY(-3px);
+}
+
+/* Smooth animation */
+@keyframes fadeUp {
+    from { opacity: 0; transform: translateY(30px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* Packages section */
+.packages-section {
+    padding: 100px 0;
+    background: var(--black);
+    color: var(--white);
+}
+.packages-section h2 { text-align: center; }
+
+.packages-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px,1fr));
+    gap: 2rem;
+    margin-top: 3rem;
+}
+.package-card {
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: var(--border-radius);
+    padding: 3rem 2rem;
+    text-align: center;
+    transition: var(--transition);
+    position: relative;
+    overflow: hidden;
+}
+.package-card.popular { border-color: #500060; transform: scale(1.05); }
+.package-card.popular:before {
+    content: "MOST POPULAR";
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    background: #500060;
+    color: var(--black);
+    padding: 0.5rem;
+    font-size: 0.8rem;
+    font-weight: 600;
+    letter-spacing: 1px;
+}
+.package-card:hover {
+    transform: translateY(-10px);
+    border-color: var(--gold);
+}
+.package-card.popular:hover {
+    transform: scale(1.05) translateY(-10px);
+}
+.package-name { font-size: 1.5rem; margin-bottom: 1rem; }
+.package-price {
+    font-size: 3rem;
+    color: var(--gold);
+    margin: 1.5rem 0;
+    font-family: 'Playfair Display', serif;
+}
+.package-features { list-style: none; margin: 2rem 0; }
+.package-features li {
+    padding: 0.75rem 0;
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+    color: var(--gray);
+}
+.package-features li:before {
+    content: "✓";
+    color: var(--gold);
+    margin-right: 0.5rem;
+}
+
+/* Download price responsive */
+@media (max-width: 768px) {
+    .download-card {
+        padding: 25px !important;
+        max-width: 90% !important;
+        margin: 0 auto !important;
+    }
+    .download-card h3 { font-size: 20px !important; }
+    .download-card p { font-size: 14px !important; }
+    .download-btn { padding: 10px 20px !important; font-size: 14px !important; }
+}
+
+/* Packages responsive */
+@media (max-width: 992px) {
+    .packages-grid { grid-template-columns: 1fr !important; gap: 1.5rem !important; }
+    .package-card { padding: 2rem 1.5rem !important; transform: none !important; }
+    .package-card.popular { transform: none !important; }
+    .package-name { font-size: 1.3rem !important; }
+    .package-price { font-size: 2.3rem !important; }
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="services-hero">
+    
+    <!-- Full clean video background -->
+    <video class="hero-video" autoplay loop muted playsinline>
+        <source src="/static/videos/spa-hero.mp4" type="video/mp4">
+    </video>
+
+    <!-- Clean text, no transparent box -->
+    <div class="hero-content">
+        <h1>Travaa Wellness Services</h1>
+        <p class="section-subtitle">Luxury Spa, Wellness & Nail Art in Kharghar</p>
+        <p class="hero-desc" style="color: #fff;">
+            Explore our curated menu of massages, rituals, hydrotherapies and nail services,
+            crafted to help you unwind, reset and glow from within.
+        </p>
+
+        <!-- Music button inside hero -->
+        <button id="heroMusicToggle" class="hero-music-btn">🎵 Play Music</button>
+
+        <audio id="heroSpaMusic" loop>
+            <source src="/static/audio/spa-music.mp3" type="audio/mp3">
+        </audio>
+    </div>
+
+</section>
+
+
+
+<!-- Category Navigation -->
+<div class="services-categories">
+    <div class="container">
+        <div class="category-nav">
+            <button class="category-btn active" data-category="massages">Spa Massages</button>
+            <button class="category-btn" data-category="focus-massage">Foot & Back Rituals</button>
+            <button class="category-btn" data-category="rituals">Body Rituals & Baths</button>
+            <button class="category-btn" data-category="nailbar">Nail & Beauty Bar</button>
+        </div>
+    </div>
+</div>
+
+<!-- Spa Massages (Page 1) -->
+<section id="massages" class="service-category">
+    <div class="container">
+        <div class="section-header">
+            <div class="section-subtitle" style="color: #500060;">FULL BODY SPA</div>
+            <h2>Signature Spa Massages</h2>
+            <p>Deep relaxation therapies designed to melt away stress and restore balance.</p>
+        </div>
+
+        <div class="service-list">
+
+            <!-- Aroma Massage -->
+            <div class="service-item">
+                <div class="service-header">
+                    <div>
+                        <h3 class="service-name">Aroma Massage</h3>
+                        <div class="service-duration">60 / 90 / 120 minutes</div>
+                        <div class="service-price">Rs. 2400 / 3000 / 3600</div>
+                    </div>
+                </div>
+
+                <div class="service-image">
+                    <img src="/static/images/services/aroma-massage.jpg" alt="Aroma Massage">
+                </div>
+
+                <ul class="service-features">
+                    <li>Gentle, rhythmic full body strokes</li>
+                    <li>Customized essential oil blend</li>
+                    <li>Focus on relaxation & stress relief</li>
+                    <li>Ideal for first-time spa guests</li>
+                </ul>
+
+                <div class="service-cta">
+                    <a href="{{ url_for('booking') }}?category=Spa+Massages&service=Aroma+Massage"
+                       class="book-btn">Book Now</a>
+                    <a href="#contact" class="read-more">Ask a Therapist</a>
+                </div>
+            </div>
+
+            <!-- Swedish Massage -->
+            <div class="service-item">
+                <div class="service-header">
+                    <div>
+                        <h3 class="service-name">Swedish Massage</h3>
+                        <div class="service-duration">60 / 90 / 120 minutes</div>
+                        <div class="service-price">Rs. 2450 / 3200 / 3800</div>
+                    </div>
+                </div>
+
+                <div class="service-image">
+                    <img src="/static/images/services/swedish-massage.jpg" alt="Swedish Massage">
+                </div>
+
+                <ul class="service-features">
+                    <li>Light to medium pressure</li>
+                    <li>Relieves everyday fatigue</li>
+                    <li>Improves circulation & flexibility</li>
+                    <li>Perfect weekend reset</li>
+                </ul>
+
+                <div class="service-cta">
+                    <a href="{{ url_for('booking') }}?category=Spa+Massages&service=Swedish+Massage"
+                       class="book-btn">Book Now</a>
+                    <a href="#contact" class="read-more">Ask a Therapist</a>
+                </div>
+            </div>
+
+            <!-- Deep Tissue Massage -->
+            <div class="service-item">
+                <div class="service-header">
+                    <div>
+                        <h3 class="service-name">Deep Tissue Massage</h3>
+                        <div class="service-duration">60 / 90 / 120 minutes</div>
+                        <div class="service-price">Rs. 2600 / 3400 / 4000</div>
+                    </div>
+                </div>
+
+                <div class="service-image">
+                    <img src="/static/images/services/deep-tissue-massage.jpg" alt="Deep Tissue Massage">
+                </div>
+
+                <ul class="service-features">
+                    <li>Focused work on tight areas</li>
+                    <li>Reduces stiffness & soreness</li>
+                    <li>Supports post-workout recovery</li>
+                    <li>Best for guests who enjoy firm pressure</li>
+                </ul>
+
+                <div class="service-cta">
+                    <a href="{{ url_for('booking') }}?category=Spa+Massages&service=Deep+Tissue+Massage"
+                       class="book-btn">Book Now</a>
+                    <a href="#contact" class="read-more">Ask a Therapist</a>
+                </div>
+            </div>
+
+            <!-- Balinese Massage -->
+            <div class="service-item">
+                <div class="service-header">
+                    <div>
+                        <h3 class="service-name">Balinese Massage</h3>
+                        <div class="service-duration">60 / 90 / 120 minutes</div>
+                        <div class="service-price">Rs. 2600 / 3400 / 4000</div>
+                    </div>
+                </div>
+
+                <div class="service-image">
+                    <img src="/static/images/services/balinese-massage.jpg" alt="Balinese Massage">
+                </div>
+
+                <ul class="service-features">
+                    <li>Stretching & pressure techniques</li>
+                    <li>Balances body energy flow</li>
+                    <li>Promotes deep relaxation</li>
+                    <li>Great for mental & physical reset</li>
+                </ul>
+
+                <div class="service-cta">
+                    <a href="{{ url_for('booking') }}?category=Spa+Massages&service=Balinese+Massage"
+                       class="book-btn">Book Now</a>
+                    <a href="#contact" class="read-more">Ask a Therapist</a>
+                </div>
+            </div>
+
+            <!-- Thai Dry Massage -->
+            <div class="service-item">
+                <div class="service-header">
+                    <div>
+                        <h3 class="service-name">Thai Dry Massage</h3>
+                        <div class="service-duration">60 / 90 / 120 minutes</div>
+                        <div class="service-price">Rs. 2600 / 3400 / 4000</div>
+                    </div>
+                </div>
+
+                <div class="service-image">
+                    <img src="/static/images/services/thai-dry-massage.jpg" alt="Thai Dry Massage">
+                </div>
+
+                <ul class="service-features">
+                    <li>Traditional Thai-inspired technique</li>
+                    <li>Ideal for flexibility & mobility</li>
+                    <li>Performed without oil</li>
+                    <li>Best for guests who like yoga-style stretches</li>
+                </ul>
+
+                <div class="service-cta">
+                    <a href="{{ url_for('booking') }}?category=Spa+Massages&service=Thai+Dry+Massage"
+                       class="book-btn">Book Now</a>
+                    <a href="#contact" class="read-more">Ask a Therapist</a>
+                </div>
+            </div>
+
+            <!-- Four Hand Massage -->
+            <div class="service-item">
+                <div class="service-header">
+                    <div>
+                        <h3 class="service-name">Four Hand Massage</h3>
+                        <div class="service-duration">60 / 90 / 120 minutes</div>
+                        <div class="service-price">Rs. 5200 / 6800 / 8000</div>
+                    </div>
+                </div>
+
+                <div class="service-image">
+                    <img src="/static/images/services/four-hand-massage.jpg" alt="Four Hand Massage">
+                </div>
+
+                <ul class="service-features">
+                    <li>Two therapists simultaneously</li>
+                    <li>Enhanced relaxation & pressure balance</li>
+                    <li>Perfect for special occasions</li>
+                    <li>Highly recommended for spa connoisseurs</li>
+                </ul>
+
+                <div class="service-cta">
+                    <a href="{{ url_for('booking') }}?category=Spa+Massages&service=Four+Hand+Massage"
+                       class="book-btn">Book Now</a>
+                    <a href="#contact" class="read-more">Ask a Therapist</a>
+                </div>
+            </div>
+
+            <!-- Signature Massage -->
+            <div class="service-item">
+                <div class="service-header">
+                    <div>
+                        <h3 class="service-name">Signature Massage</h3>
+                        <div class="service-duration">90 / 120 minutes</div>
+                        <div class="service-price">Rs. 3800 / 4800</div>
+                    </div>
+                </div>
+
+                <div class="service-image">
+                    <img src="/static/images/services/signature-massage.jpg" alt="Signature Massage">
+                </div>
+
+                <ul class="service-features">
+                    <li>Personalised pressure & focus areas</li>
+                    <li>Curated oil & aroma selection</li>
+                    <li>Extended relaxation time</li>
+                    <li>Includes soothing head massage</li>
+                </ul>
+
+                <div class="service-cta">
+                    <a href="{{ url_for('booking') }}?category=Spa+Massages&service=Signature+Massage"
+                       class="book-btn">Book Now</a>
+                    <a href="#contact" class="read-more">Ask a Therapist</a>
+                </div>
+            </div>
+
+            <!-- Herbal Potli Massage -->
+            <div class="service-item">
+                <div class="service-header">
+                    <div>
+                        <h3 class="service-name">Herbal Potli Massage</h3>
+                        <div class="service-duration">90 / 120 minutes</div>
+                        <div class="service-price">Rs. 4000 / 5000</div>
+                    </div>
+                </div>
+
+                <div class="service-image">
+                    <img src="/static/images/services/herbal-potli-massage.jpg" alt="Herbal Potli Massage">
+                </div>
+
+                <ul class="service-features">
+                    <li>Traditional herbal potli application</li>
+                    <li>Ideal for achy joints & muscles</li>
+                    <li>Deep warmth & relaxation</li>
+                    <li>Perfect during colder seasons</li>
+                </ul>
+
+                <div class="service-cta">
+                    <a href="{{ url_for('booking') }}?category=Spa+Massages&service=Herbal+Potli+Massage"
+                       class="book-btn">Book Now</a>
+                    <a href="#contact" class="read-more">Ask a Therapist</a>
+                </div>
+            </div>
+
+            <!-- Hot Stone Massage -->
+            <div class="service-item">
+                <div class="service-header">
+                    <div>
+                        <h3 class="service-name">Hot Stone Massage</h3>
+                        <div class="service-duration">90 / 120 minutes</div>
+                        <div class="service-price">Rs. 4000 / 5000</div>
+                    </div>
+                </div>
+
+                <div class="service-image">
+                    <img src="/static/images/services/hot-stone-massage.jpg" alt="Hot Stone Massage">
+                </div>
+
+                <ul class="service-features">
+                    <li>Warm stones for deep muscle comfort</li>
+                    <li>Helps with insomnia & stress</li>
+                    <li>Enhances circulation</li>
+                    <li>Deeply soothing full body ritual</li>
+                </ul>
+
+                <div class="service-cta">
+                    <a href="{{ url_for('booking') }}?category=Spa+Massages&service=Hot+Stone+Massage"
+                       class="book-btn">Book Now</a>
+                    <a href="#contact" class="read-more">Ask a Therapist</a>
+                </div>
+            </div>
+
+        </div>
+
+        <p class="service-note">
+            *Energizing herbal tea is served post therapy with all our full body massages.*
+        </p>
+    </div>
+</section>
+
+<!-- Foot, Back & Focus Massages (Page 2) -->
+<section id="focus-massage" class="service-category">
+    <div class="container">
+        <div class="section-header">
+            <div class="section-subtitle" style="color: #500060;">FOCUS THERAPIES</div>
+            <h2>Foot, Back & Head Rituals</h2>
+            <p>Shorter, focused treatments perfect for quick relief and targeted relaxation.</p>
+        </div>
+
+        <div class="service-list">
+
+            <!-- Foot Massage -->
+            <div class="service-item">
+                <div class="service-header">
+                    <div>
+                        <h3 class="service-name">Foot Massage</h3>
+                        <div class="service-duration">30 / 60 / 90 minutes</div>
+                        <div class="service-price">Rs. 1400 / 2000 / 2600</div>
+                    </div>
+                </div>
+
+                <div class="service-image">
+                    <img src="/static/images/services/foot-massage.jpg" alt="Foot Massage">
+                </div>
+
+                <ul class="service-features">
+                    <li>Soothing foot soak & massage</li>
+                    <li>Targets tired, overworked feet</li>
+                    <li>Great add-on to any massage</li>
+                    <li>Perfect post-shopping or commute</li>
+                </ul>
+
+                <div class="service-cta">
+                    <a href="{{ url_for('booking') }}?category=Foot+%26+Back+Rituals&service=Foot+Massage"
+                       class="book-btn">Book Now</a>
+                    <a href="#contact" class="read-more">Ask a Therapist</a>
+                </div>
+            </div>
+
+            <!-- Back Massage -->
+            <div class="service-item">
+                <div class="service-header">
+                    <div>
+                        <h3 class="service-name">Back Massage</h3>
+                        <div class="service-duration">30 / 60 / 90 minutes</div>
+                        <div class="service-price">Rs. 1600 / 1800 / 2800</div>
+                    </div>
+                </div>
+
+                <div class="service-image">
+                    <img src="/static/images/services/back-massage.jpg" alt="Back Massage">
+                </div>
+
+                <ul class="service-features">
+                    <li>Targets upper & lower back</li>
+                    <li>Relieves stiffness & knots</li>
+                    <li>Helps improve posture comfort</li>
+                    <li>Ideal mid-week recharge</li>
+                </ul>
+
+                <div class="service-cta">
+                    <a href="{{ url_for('booking') }}?category=Foot+%26+Back+Rituals&service=Back+Massage"
+                       class="book-btn">Book Now</a>
+                    <a href="#contact" class="read-more">Ask a Therapist</a>
+                </div>
+            </div>
+
+            <!-- Head Massage -->
+            <div class="service-item">
+                <div class="service-header">
+                    <div>
+                        <h3 class="service-name">Head Massage</h3>
+                        <div class="service-duration">30 / 60 / 90 minutes</div>
+                        <div class="service-price">Rs. 1400 / 2000 / 2600</div>
+                    </div>
+                </div>
+
+                <div class="service-image">
+                    <img src="/static/images/services/head-massage.jpg" alt="Head Massage">
+                </div>
+
+                <ul class="service-features">
+                    <li>Gentle, rhythmic scalp work</li>
+                    <li>Supports better sleep</li>
+                    <li>Great add-on with any therapy</li>
+                    <li>Reduces mental fatigue</li>
+                </ul>
+
+                <div class="service-cta">
+                    <a href="{{ url_for('booking') }}?category=Foot+%26+Back+Rituals&service=Head+Massage"
+                       class="book-btn">Book Now</a>
+                    <a href="#contact" class="read-more">Ask a Therapist</a>
+                </div>
+            </div>
+
+            <!-- Head, Shoulder & Back Massage -->
+            <div class="service-item">
+                <div class="service-header">
+                    <div>
+                        <h3 class="service-name">Head, Shoulder & Back Massage</h3>
+                        <div class="service-duration">45 / 60 / 90 minutes</div>
+                        <div class="service-price">Rs. 1700 / 2000 / 2800</div>
+                    </div>
+                </div>
+
+                <div class="service-image">
+                    <img src="/static/images/services/head-shoulder-back-massage.jpg" alt="Head Shoulder Back Massage">
+                </div>
+
+                <ul class="service-features">
+                    <li>Targets common tension areas</li>
+                    <li>Great for corporate professionals</li>
+                    <li>Helps release stiffness</li>
+                    <li>Pairs well with foot massage</li>
+                </ul>
+
+                <div class="service-cta">
+                    <a href="{{ url_for('booking') }}?category=Foot+%26+Back+Rituals&service=Head+Shoulder+%26+Back+Massage"
+                       class="book-btn">Book Now</a>
+                    <a href="#contact" class="read-more">Ask a Therapist</a>
+                </div>
+            </div>
+
+            <!-- Hot Stone Foot Massage -->
+            <div class="service-item">
+                <div class="service-header">
+                    <div>
+                        <h3 class="service-name">Hot Stone Foot Massage</h3>
+                        <div class="service-duration">45 / 60 / 90 minutes</div>
+                        <div class="service-price">Rs. 1800 / 2200 / 3000</div>
+                    </div>
+                </div>
+
+                <div class="service-image">
+                    <img src="/static/images/services/hot-stone-foot-massage.jpg" alt="Hot Stone Foot Massage">
+                </div>
+
+                <ul class="service-features">
+                    <li>Warm basalt stones on feet & calves</li>
+                    <li>Deeply comforting & grounding</li>
+                    <li>Wonderful evening wind-down</li>
+                    <li>Great for travellers & runners</li>
+                </ul>
+
+                <div class="service-cta">
+                    <a href="{{ url_for('booking') }}?category=Foot+%26+Back+Rituals&service=Hot+Stone+Foot+Massage"
+                       class="book-btn">Book Now</a>
+                    <a href="#contact" class="read-more">Ask a Therapist</a>
+                </div>
+            </div>
+
+            <!-- Herbal Potli Focus Massage -->
+            <div class="service-item">
+                <div class="service-header">
+                    <div>
+                        <h3 class="service-name">Herbal Potli Focus Massage</h3>
+                        <div class="service-duration">45 / 60 / 90 minutes</div>
+                        <div class="service-price">Rs. 1800 / 2200 / 3000</div>
+                    </div>
+                </div>
+
+                <div class="service-image">
+                    <img src="/static/images/services/herbal-potli-focus-massage.jpg" alt="Herbal Potli Focus Massage">
+                </div>
+
+                <ul class="service-features">
+                    <li>Ideal for targeted pain relief</li>
+                    <li>Soothing herbal compress</li>
+                    <li>Can be added to other therapies</li>
+                    <li>Perfect for localised concerns</li>
+                </ul>
+
+                <div class="service-cta">
+                    <a href="{{ url_for('booking') }}?category=Foot+%26+Back+Rituals&service=Herbal+Potli+Focus+Massage"
+                       class="book-btn">Book Now</a>
+                    <a href="#contact" class="read-more">Ask a Therapist</a>
+                </div>
+            </div>
+
+            <!-- Foot Massage + Scrub -->
+            <div class="service-item">
+                <div class="service-header">
+                    <div>
+                        <h3 class="service-name">Foot Massage + Scrub</h3>
+                        <div class="service-duration">45 / 60 / 90 minutes</div>
+                        <div class="service-price">Rs. 1600 / 2000 / 2400</div>
+                    </div>
+                </div>
+
+                <div class="service-image">
+                    <img src="/static/images/services/foot-massage-scrub.jpg" alt="Foot Massage and Scrub">
+                </div>
+
+                <ul class="service-features">
+                    <li>Exfoliating scrub for smooth skin</li>
+                    <li>Soothing massage for tired feet</li>
+                    <li>Great pre-pedicure ritual</li>
+                    <li>Perfect for daily walkers</li>
+                </ul>
+
+                <div class="service-cta">
+                    <a href="{{ url_for('booking') }}?category=Foot+%26+Back+Rituals&service=Foot+Massage+%2B+Scrub"
+                       class="book-btn">Book Now</a>
+                    <a href="#contact" class="read-more">Ask a Therapist</a>
+                </div>
+            </div>
+
+            <!-- Balinese Foot Ritual -->
+            <div class="service-item">
+                <div class="service-header">
+                    <div>
+                        <h3 class="service-name">Balinese Foot Ritual</h3>
+                        <div class="service-duration">60 / 90 minutes</div>
+                        <div class="service-price">Rs. 2000 / 2800</div>
+                    </div>
+                </div>
+
+                <div class="service-image">
+                    <img src="/static/images/services/balinese-foot-ritual.jpg" alt="Balinese Foot Ritual">
+                </div>
+
+                <ul class="service-features">
+                    <li>Foot soak, scrub & massage</li>
+                    <li>Relaxing & pampering experience</li>
+                    <li>Great as a standalone treatment</li>
+                    <li>Perfect pre-holiday ritual</li>
+                </ul>
+
+                <div class="service-cta">
+                    <a href="{{ url_for('booking') }}?category=Foot+%26+Back+Rituals&service=Balinese+Foot+Ritual"
+                       class="book-btn">Book Now</a>
+                    <a href="#contact" class="read-more">Ask a Therapist</a>
+                </div>
+            </div>
+
+        </div>
+
+        <p class="service-note">
+            *Energizing herbal tea is served post therapy with all our spa treatments.*
+        </p>
+    </div>
+</section>
+<!-- Body Rituals & Baths (Page 3) -->
+<section id="rituals" class="service-category">
+    <div class="container">
+        <div class="section-header">
+            <div class="section-subtitle" style="color: #500060;">RITUALS & HYDROTHERAPY</div>
+            <h2>Body Treatments & Water Therapies</h2>
+            <p>Brighten, smooth and revitalize your skin with luxurious body care and baths.</p>
+        </div>
+
+        <div class="service-list">
+
+            <!-- Facial -->
+            <div class="service-item">
+                <div class="service-header">
+                    <div>
+                        <h3 class="service-name">Facial</h3>
+                        <div class="service-duration">60 minutes</div>
+                        <div class="service-price">Rs. 2400</div>
+                    </div>
+                </div>
+
+                <div class="service-image">
+                    <img src="/static/images/services/facial.jpg" alt="Facial">
+                </div>
+
+                <ul class="service-features">
+                    <li>Skin analysis & consultation</li>
+                    <li>Deep cleansing & exfoliation</li>
+                    <li>Relaxing massage & mask</li>
+                    <li>Finishing serum & protection</li>
+                </ul>
+
+                <div class="service-cta">
+                    <a href="{{ url_for('booking') }}?category=Rituals+%26+Baths&service=Facial"
+                       class="book-btn">Book Now</a>
+                    <a href="#contact" class="read-more">Skin Consultation</a>
+                </div>
+            </div>
+
+            <!-- Premium Facial -->
+            <div class="service-item">
+                <div class="service-header">
+                    <div>
+                        <h3 class="service-name">Premium Facial</h3>
+                        <div class="service-duration">90 minutes</div>
+                        <div class="service-price">Rs. 3000</div>
+                    </div>
+                </div>
+
+                <div class="service-image">
+                    <img src="/static/images/services/premium-facial.jpg" alt="Premium Facial">
+                </div>
+
+                <ul class="service-features">
+                    <li>Extended massage & relaxation</li>
+                    <li>Targeted treatment masques</li>
+                    <li>Enhanced radiance & hydration</li>
+                    <li>Perfect before events</li>
+                </ul>
+
+                <div class="service-cta">
+                    <a href="{{ url_for('booking') }}?category=Rituals+%26+Baths&service=Premium+Facial"
+                       class="book-btn">Book Now</a>
+                    <a href="#contact" class="read-more">Skin Consultation</a>
+                </div>
+            </div>
+
+            <!-- Body Scrub -->
+            <div class="service-item">
+                <div class="service-header">
+                    <div>
+                        <h3 class="service-name">Body Scrub</h3>
+                        <div class="service-duration">30 / 60 / 90 minutes</div>
+                        <div class="service-price">Rs. 1800 / 2200 / 2800</div>
+                    </div>
+                </div>
+
+                <div class="service-image">
+                    <img src="/static/images/services/body-scrub.jpg" alt="Body Scrub">
+                </div>
+
+                <ul class="service-features">
+                    <li>Full body exfoliation</li>
+                    <li>Hydrating finishing lotion</li>
+                    <li>Ideal before special occasions</li>
+                    <li>Perfect add-on pre-massage</li>
+                </ul>
+
+                <div class="service-cta">
+                    <a href="{{ url_for('booking') }}?category=Rituals+%26+Baths&service=Body+Scrub"
+                       class="book-btn">Book Now</a>
+                    <a href="#contact" class="read-more">Ask for Advice</a>
+                </div>
+            </div>
+
+            <!-- Body Scrub + Polishing + Wrap -->
+            <div class="service-item">
+                <div class="service-header">
+                    <div>
+                        <h3 class="service-name">Body Scrub + Polishing + Wrap</h3>
+                        <div class="service-duration">75 / 90 minutes</div>
+                        <div class="service-price">Rs. 4000 / 5000</div>
+                    </div>
+                </div>
+
+                <div class="service-image">
+                    <img src="/static/images/services/body-scrub-polish-wrap.jpg" alt="Body Scrub Polishing Wrap">
+                </div>
+
+                <ul class="service-features">
+                    <li>Deep exfoliation & brightening</li>
+                    <li>Nourishing body wrap</li>
+                    <li>Improves texture & glow</li>
+                    <li>Perfect spa day upgrade</li>
+                </ul>
+
+                <div class="service-cta">
+                    <a href="{{ url_for('booking') }}?category=Rituals+%26+Baths&service=Body+Scrub+Polish+Wrap"
+                       class="book-btn">Book Now</a>
+                    <a href="#contact" class="read-more">Ask for Advice</a>
+                </div>
+            </div>
+
+            <!-- Bubble Jacuzzi -->
+            <div class="service-item">
+                <div class="service-header">
+                    <div>
+                        <h3 class="service-name">Bubble Jacuzzi</h3>
+                        <div class="service-duration">30 minutes</div>
+                        <div class="service-price">Rs. 2400 (Single) / 3000 (Couple)</div>
+                    </div>
+                </div>
+
+                <div class="service-image">
+                    <img src="/static/images/services/bubble-jacuzzi.jpg" alt="Bubble Jacuzzi">
+                </div>
+
+                <ul class="service-features">
+                    <li>Warm, bubbling jacuzzi bath</li>
+                    <li>Choice of single or couple session</li>
+                    <li>Ideal pre- or post-massage</li>
+                    <li>Beautiful private bathing space</li>
+                </ul>
+
+                <div class="service-cta">
+                    <a href="{{ url_for('booking') }}?category=Rituals+%26+Baths&service=Bubble+Jacuzzi"
+                       class="book-btn">Book Now</a>
+                    <a href="#contact" class="read-more">Couple Enquiry</a>
+                </div>
+            </div>
+
+            <!-- Salt Bath -->
+            <div class="service-item">
+                <div class="service-header">
+                    <div>
+                        <h3 class="service-name">Salt Bath</h3>
+                        <div class="service-duration">30 minutes</div>
+                        <div class="service-price">Rs. 900 (Single) / 1800 (Couple)</div>
+                    </div>
+                </div>
+
+                <div class="service-image">
+                    <img src="/static/images/services/salt-bath.jpg" alt="Salt Bath">
+                </div>
+
+                <ul class="service-features">
+                    <li>Therapeutic salt-infused water</li>
+                    <li>Softens & smoothens skin</li>
+                    <li>Supports detox & relaxation</li>
+                    <li>Available for singles or couples</li>
+                </ul>
+
+                <div class="service-cta">
+                    <a href="{{ url_for('booking') }}?category=Rituals+%26+Baths&service=Salt+Bath"
+                       class="book-btn">Book Now</a>
+                    <a href="#contact" class="read-more">Couple Enquiry</a>
+                </div>
+            </div>
+
+            <!-- Bath Bomb Jacuzzi -->
+            <div class="service-item">
+                <div class="service-header">
+                    <div>
+                        <h3 class="service-name">Bath Bomb Jacuzzi</h3>
+                        <div class="service-duration">30 minutes</div>
+                        <div class="service-price">Rs. 1100 (Single) / 2100 (Couple)</div>
+                    </div>
+                </div>
+
+                <div class="service-image">
+                    <img src="/static/images/services/bath-bomb-jacuzzi.jpg" alt="Bath Bomb Jacuzzi">
+                </div>
+
+                <ul class="service-features">
+                    <li>Aromatic bath bomb of your choice</li>
+                    <li>Hydrating & fun experience</li>
+                    <li>Great for celebrations</li>
+                    <li>Solo or couple friendly</li>
+                </ul>
+
+                <div class="service-cta">
+                    <a href="{{ url_for('booking') }}?category=Rituals+%26+Baths&service=Bath+Bomb+Jacuzzi"
+                       class="book-btn">Book Now</a>
+                    <a href="#contact" class="read-more">Couple Enquiry</a>
+                </div>
+            </div>
+
+            <!-- Ice Bath Therapy -->
+            <div class="service-item">
+                <div class="service-header">
+                    <div>
+                        <h3 class="service-name">Ice Bath Therapy</h3>
+                        <div class="service-duration">30 minutes</div>
+                        <div class="service-price">Rs. 1400 (Single) / 2400 (Couple)</div>
+                    </div>
+                </div>
+
+                <div class="service-image">
+                    <img src="/static/images/services/ice-bath-therapy.jpg" alt="Ice Bath Therapy">
+                </div>
+
+                <ul class="service-features">
+                    <li>Guided exposure & support</li>
+                    <li>Helps muscle recovery</li>
+                    <li>Boosts alertness & energy</li>
+                    <li>Advanced wellness experience</li>
+                </ul>
+
+                <div class="service-cta">
+                    <a href="{{ url_for('booking') }}?category=Rituals+%26+Baths&service=Ice+Bath+Therapy"
+                       class="book-btn">Book Now</a>
+                    <a href="#contact" class="read-more">Wellness Guidance</a>
+                </div>
+            </div>
+
+        </div>
+
+        <p class="service-note">
+            *Energizing herbal tea is served post therapy with all our rituals and hydrotherapy experiences.*
+        </p>
+    </div>
+</section>
+<!-- Nail & Beauty Bar (Page 4) -->
+<section id="nailbar" class="service-category">
+    <div class="container">
+        <div class="section-header">
+            <div class="section-subtitle" style="color: #500060;">NAIL & BEAUTY BAR</div>
+            <h2>Manicure, Pedicure & Nail Art</h2>
+            <p>From classic care to creative art, pamper your hands and feet at Travaa Nail Bar.</p>
+        </div>
+
+        <div class="service-list">
+
+            <!-- Pedicure / Manicure -->
+            <div class="service-item">
+                <div class="service-header">
+                    <div>
+                        <h3 class="service-name">Pedicure & Manicure</h3>
+                        <div class="service-duration">30 – 75 minutes (approx.)</div>
+                        <div class="service-price">Rs. 100 – 2000</div>
+                    </div>
+                </div>
+
+                <div class="service-image">
+                    <img src="/static/images/services/pedicure-manicure-services.jpg" alt="Manicure and Pedicure">
+                </div>
+
+                <ul class="service-features">
+                    <li>Cut File – Rs. 200</li>
+                    <li>Normal Nail Polish – Rs. 100</li>
+                    <li>Classic Manicure – Rs. 800</li>
+                    <li>Classic Pedicure – Rs. 1000</li>
+                    <li>Aroma Pedicure – Rs. 1500</li>
+                    <li>Spa Pedicure – Rs. 1600</li>
+                    <li>Signature Pedicure – Rs. 2000</li>
+                </ul>
+
+                <div class="service-cta">
+                    <a href="{{ url_for('booking') }}?category=Nail+Bar&service=Pedicure+%26+Manicure"
+                       class="book-btn">Book Now</a>
+                    <a href="{{ url_for('gallery') }}" class="read-more">View Nail Gallery</a>
+                </div>
+            </div>
+
+            <!-- Nail Extensions -->
+            <div class="service-item">
+                <div class="service-header">
+                    <div>
+                        <h3 class="service-name">Nail Extensions</h3>
+                        <div class="service-duration">90 – 150 minutes (approx.)</div>
+                        <div class="service-price">Rs. 700 – 3000</div>
+                    </div>
+                </div>
+
+                <div class="service-image">
+                    <img src="/static/images/services/nail-extensions.jpg" alt="Nail Extensions">
+                </div>
+
+                <ul class="service-features">
+                    <li>Gel Polish on Natural Nail – Rs. 700</li>
+                    <li>Gel Polish / Extension Remover – Rs. 300</li>
+                    <li>Overlay / Refill – Rs. 1500</li>
+                    <li>Temporary / Soft Gel Extensions – from Rs. 1500</li>
+                    <li>Gel / Acrylic / Baby Boomer / Gum Gel Extensions – from Rs. 2000</li>
+                    <li>Per Finger Extension – Rs. 300</li>
+                </ul>
+
+                <div class="service-cta">
+                    <a href="{{ url_for('booking') }}?category=Nail+Bar&service=Nail+Extensions"
+                       class="book-btn">Book Now</a>
+                    <a href="{{ url_for('gallery') }}" class="read-more">View Extensions</a>
+                </div>
+            </div>
+
+            <!-- Nail Art -->
+            <div class="service-item">
+                <div class="service-header">
+                    <div>
+                        <h3 class="service-name">Nail Art Designs</h3>
+                        <div class="service-duration">45 – 90 minutes (approx.)</div>
+                        <div class="service-price">From Rs. 300 (10 fingers)</div>
+                    </div>
+                </div>
+
+                <div class="service-image">
+                    <img src="/static/images/services/nail-art-design.jpg" alt="Nail Art Designs">
+                </div>
+
+                <ul class="service-features">
+                    <li>Sticker, Glitter & French Art</li>
+                    <li>Chrome, Cat Eye & Ombre Effects</li>
+                    <li>Foil, 2D/3D & Sweater Art</li>
+                    <li>Jewellery, Pigment & Spider Gel</li>
+                    <li>Animal Print & more custom designs</li>
+                    <li>Prices vary by complexity and design</li>
+                </ul>
+
+                <div class="service-cta">
+                    <a href="{{ url_for('booking') }}?category=Nail+Bar&service=Nail+Art+Designs"
+                       class="book-btn">Book Now</a>
+                    <a href="{{ url_for('gallery') }}" class="read-more">View Nail Art</a>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</section>
+
+<section class="download-price-section">
+    <div class="download-card">
+        <div class="download-icon">💠</div>
+        <h3>Download Full Price Catalogue</h3>
+        <p>Get a beautifully designed PDF with all spa, rituals, nail, and hydrotherapy pricing.</p>
+    <a href="/download/pricelist" class="download-btn">Download PDF</a>
+    </div>
+</section>
+
+<!-- Why Choose Travaa Wellness Section -->
+<section class="packages-section" style="padding: 120px 0;">
+    <div class="container">
+        <div class="section-header">
+            <div class="section-subtitle" style="color: #500060;">WHY CHOOSE US</div>
+            <h2>Experience the Essence of Travaa Wellness</h2>
+            <p style="color: var(--gray); max-width: 650px; margin: 0 auto;">
+                At Travaa Wellness, we blend ancient healing traditions with modern luxury.
+                Every detail—from our curated therapies to our calming ambience—is crafted
+                to deliver a world-class wellness journey.
+            </p>
+        </div>
+
+        <div class="packages-grid" style="margin-top: 4rem;">
+            
+            <!-- Feature 1 -->
+            <div class="package-card">
+                <h3 class="package-name">Certified Expert Therapists</h3>
+                <p class="feature-text" style="color: var(--gray); margin-top: 1rem;">
+                    Our team consists of trained professionals skilled in global wellness
+                    techniques to ensure safe, effective and deeply relaxing treatments.
+                </p>
+            </div>
+
+            <!-- Feature 2 -->
+            <div class="package-card popular">
+                <h3 class="package-name">Premium Imported Oils & Products</h3>
+                <p class="feature-text" style="color: var(--gray); margin-top: 1rem;">
+                    We use only high-quality essential oils, creams and spa products sourced
+                    from trusted international brands to elevate your experience.
+                </p>
+            </div>
+
+            <!-- Feature 3 -->
+            <div class="package-card">
+                <h3 class="package-name">Luxury Private Spa Rooms</h3>
+                <p class="feature-text" style="color: var(--gray); margin-top: 1rem;">
+                    Step into our serene, beautifully designed spaces crafted to rejuvenate your senses 
+                    and offer complete privacy during every session.
+                </p>
+            </div>
+
+            <!-- Feature 4 -->
+            <div class="package-card">
+                <h3 class="package-name">Personalized Wellness Approach</h3>
+                <p class="feature-text" style="color: var(--gray); margin-top: 1rem;">
+                    Every treatment begins with a consultation, allowing our therapists to tailor
+                    the therapy to your body’s needs for the best possible results.
+                </p>
+            </div>
+
+            <!-- Feature 5 -->
+            <div class="package-card">
+                <h3 class="package-name">Holistic Mind & Body Healing</h3>
+                <p class="feature-text" style="color: var(--gray); margin-top: 1rem;">
+                    We believe wellness extends beyond the body. Our peaceful environment and 
+                    sensory-rich therapies promote emotional and mental relaxation.
+                </p>
+            </div>
+
+            <!-- Feature 6 -->
+            <div class="package-card">
+                <h3 class="package-name">Jacuzzi, Hydrotherapy & More</h3>
+                <p class="feature-text" style="color: var(--gray); margin-top: 1rem;">
+                    Enhance your spa journey with luxurious water-based therapies, crafted
+                    for detox, rejuvenation and deep muscle comfort.
+                </p>
+            </div>
+
+        </div>
+    </div>
+</section>
+
+
+<!-- Booking CTA -->
+<section style="padding: 100px 0; text-align: center; background: var(--white);">
+    <div class="container">
+        <h2>Ready to Experience Travaa Wellness?</h2>
+        <p style="max-width: 600px; margin: 1rem auto 2rem; color: var(--gray);">
+            Reserve your slot and let our therapists design a personalized wellness journey just for you.
+        </p>
+        <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
+            <a href="{{ url_for('booking') }}" class="btn btn-primary" style="padding: 1rem 3rem;">
+                <i class="fas fa-calendar-alt"></i> Book Appointment
+            </a>
+            <a href="{{ url_for('contact') }}" class="btn" style="padding: 1rem 3rem;">
+                <i class="fas fa-envelope"></i> Contact Us
+            </a>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Category Navigation
+        const categoryBtns = document.querySelectorAll('.category-btn');
+        const serviceCategories = document.querySelectorAll('.service-category');
+
+        categoryBtns.forEach(btn => {
+            btn.addEventListener('click', function() {
+                const category = this.dataset.category;
+
+                categoryBtns.forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
+
+                const targetSection = document.getElementById(category);
+                if (targetSection) {
+                    window.scrollTo({
+                        top: targetSection.offsetTop - 100,
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        });
+
+        // Highlight active category on scroll
+        window.addEventListener('scroll', function() {
+            let current = '';
+            serviceCategories.forEach(section => {
+                const sectionTop = section.offsetTop;
+                if (pageYOffset >= (sectionTop - 150)) {
+                    current = section.getAttribute('id');
+                }
+            });
+
+            categoryBtns.forEach(btn => {
+                btn.classList.remove('active');
+                if (btn.dataset.category === current) {
+                    btn.classList.add('active');
+                }
+            });
+        });
+
+        // Pre-fill booking form from URL parameters (logic kept same)
+        const urlParams = new URLSearchParams(window.location.search);
+        const category = urlParams.get('category');
+        const service = urlParams.get('service');
+
+        if (category && service) {
+            console.log('Pre-fill:', category, service);
+        }
+    });
+
+    
+</script>
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    const elements = document.querySelectorAll(".service-item, .service-image");
+
+    function revealOnScroll() {
+        const windowHeight = window.innerHeight;
+
+        elements.forEach((el) => {
+            const position = el.getBoundingClientRect().top;
+
+            if (position < windowHeight - 100) {
+                el.classList.add("active");
+            }
+        });
+    }
+
+    window.addEventListener("scroll", revealOnScroll);
+    revealOnScroll(); // initial check
+});
+</script>
+
+<script>
+const heroMusic = document.getElementById("heroSpaMusic");
+const heroBtn = document.getElementById("heroMusicToggle");
+
+let heroMusicPlaying = false;
+
+heroBtn.addEventListener("click", () => {
+    if (!heroMusicPlaying) {
+        heroMusic.play();
+        heroBtn.textContent = "⏸ Pause Music";
+    } else {
+        heroMusic.pause();
+        heroBtn.textContent = "🎵 Play Music";
+    }
+    heroMusicPlaying = !heroMusicPlaying;
+});
+</script>
+
+{% endblock %}
+

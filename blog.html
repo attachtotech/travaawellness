@@ -1,0 +1,821 @@
+{% extends "base.html" %}
+
+{% block title %}Wellness Blog - {{ super() }}{% endblock %}
+
+{% block extra_css %}
+<style>
+    .blog-hero {
+        background: linear-gradient(rgba(70, 70, 70, 0.8), rgba(63, 63, 63, 0.8)),
+                    url('/static/images/blog-bg.jpg') center/cover no-repeat;
+        padding: 150px 0 100px;
+        text-align: center;
+        color: white;
+    }
+
+    .blog-container {
+        padding: 80px 0;
+        background: var(--light-gray);
+    }
+
+    .blog-layout {
+        display: grid;
+        grid-template-columns: 1fr 300px;
+        gap: 3rem;
+    }
+
+    @media (max-width: 992px) {
+        .blog-layout {
+            grid-template-columns: 1fr;
+        }
+    }
+
+    .blog-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+        gap: 2rem;
+        margin-bottom: 3rem;
+    }
+
+    .blog-card {
+        background: var(--white);
+        border-radius: var(--border-radius);
+        overflow: hidden;
+        transition: var(--transition);
+        box-shadow: var(--shadow);
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .blog-card:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
+    }
+
+    .blog-img {
+        height: 60px;
+        width: 100%;
+        background-color: black;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .blog-img:before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: linear-gradient(to bottom, transparent, rgba(0, 0, 0, 0.1));
+    }
+
+    .blog-category {
+        position: absolute;
+        top: 1rem;
+        left: 1rem;
+        background: #500060;
+        color: white;
+        padding: 0.25rem 1rem;
+        border-radius: 50px;
+        font-size: 0.8rem;
+        font-weight: 600;
+        z-index: 1;
+    }
+
+    .blog-content {
+        padding: 2rem;
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .blog-meta {
+        display: flex;
+        gap: 1rem;
+        margin-bottom: 1rem;
+        color: var(--gray);
+        font-size: 0.9rem;
+    }
+
+    .blog-meta i {
+        margin-right: 0.25rem;
+    }
+
+    .blog-excerpt {
+        color: var(--gray);
+        margin-bottom: 1.5rem;
+        flex: 1;
+    }
+
+    /* Sidebar */
+    .blog-sidebar {
+        position: sticky;
+        top: 100px;
+        height: fit-content;
+    }
+
+    .sidebar-widget {
+        background: var(--white);
+        padding: 2rem;
+        border-radius: var(--border-radius);
+        margin-bottom: 2rem;
+        box-shadow: var(--shadow);
+    }
+
+    .widget-title {
+        font-size: 1.25rem;
+        margin-bottom: 1.5rem;
+        padding-bottom: 1rem;
+        border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+    }
+
+    .categories-list {
+        list-style: none;
+    }
+
+    .categories-list li {
+        padding: 0.75rem 0;
+        border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+    }
+
+    .categories-list li:last-child {
+        border-bottom: none;
+    }
+
+    .categories-list a {
+        color: var(--gray);
+        text-decoration: none;
+        transition: var(--transition);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .categories-list a:hover {
+        color: var(--black);
+    }
+
+    .category-count {
+        background: var(--light-gray);
+        padding: 0.25rem 0.5rem;
+        border-radius: 4px;
+        font-size: 0.8rem;
+    }
+
+    .recent-posts {
+        list-style: none;
+    }
+
+    .recent-post {
+        display: flex;
+        gap: 1rem;
+        padding: 1rem 0;
+        border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+    }
+
+    .recent-post:last-child {
+        border-bottom: none;
+    }
+
+    .recent-post-img {
+        width: 80px;
+        height: 60px;
+        background: black;
+        border-radius: 8px;
+        flex-shrink: 0;
+    }
+
+    .recent-post-content h4 {
+        font-size: 0.95rem;
+        margin-bottom: 0.25rem;
+        line-height: 1.3;
+    }
+
+    .recent-post-date {
+        font-size: 0.8rem;
+        color: var(--gray);
+    }
+
+    .search-widget form {
+        display: flex;
+        gap: 0.5rem;
+    }
+
+    .search-input {
+        flex: 1;
+        padding: 0.75rem;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        font-size: 0.95rem;
+    }
+
+    .search-btn {
+        background: var(--black);
+        color: var(--white);
+        border: none;
+        width: 45px;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: var(--transition);
+    }
+
+    .search-btn:hover {
+        background: #500060;
+        color: var(--black);
+    }
+
+    .tags-widget {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+    }
+
+    .tag {
+        background: var(--light-gray);
+        color: var(--gray);
+        padding: 0.5rem 1rem;
+        border-radius: 50px;
+        font-size: 0.85rem;
+        transition: var(--transition);
+        text-decoration: none;
+    }
+
+    .tag:hover {
+        background: var(--black);
+        color: var(--white);
+    }
+
+    /* Pagination */
+    .pagination {
+        display: flex;
+        justify-content: center;
+        gap: 0.5rem;
+        margin-top: 3rem;
+    }
+
+    .page-link {
+        width: 40px;
+        height: 40px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        text-decoration: none;
+        color: var(--black);
+        transition: var(--transition);
+    }
+
+    .page-link:hover,
+    .page-link.active {
+        background: var(--black);
+        color: var(--white);
+        border-color: var(--black);
+    }
+
+    .page-link.prev,
+    .page-link.next {
+        width: auto;
+        padding: 0 1rem;
+    }
+
+    /* Newsletter */
+    .newsletter-widget {
+        background: linear-gradient(135deg, var(--black), #1a1a1a);
+        color: var(--white);
+        border-radius: var(--border-radius);
+        padding: 2rem;
+        text-align: center;
+    }
+
+    .newsletter-widget h3 {
+        color: var(--white);
+        margin-bottom: 1rem;
+    }
+
+    .newsletter-widget p {
+        color: var(--gray);
+        margin-bottom: 1.5rem;
+        font-size: 0.95rem;
+    }
+
+    .newsletter-form input {
+        width: 100%;
+        padding: 0.75rem;
+        margin-bottom: 1rem;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        background: rgba(255, 255, 255, 0.05);
+        border-radius: 8px;
+        color: var(--white);
+    }
+
+    .newsletter-form input::placeholder {
+        color: var(--gray);
+    }
+
+    .newsletter-form button {
+        width: 100%;
+        padding: 0.75rem;
+        background: #500060;
+        color: var(--white);
+        border: none;
+        border-radius: 8px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: var(--transition);
+    }
+
+    .newsletter-form button:hover {
+        background: var(--light-gold);
+    }
+
+    /* ============================================================
+   FULL RESPONSIVE DESIGN FOR BLOG PAGE (MOBILE + TABLET)
+============================================================ */
+
+/* ------------ HERO SECTION ------------ */
+@media (max-width: 768px) {
+    .blog-hero {
+        padding: 100px 0 70px;
+        text-align: center;
+    }
+
+    .blog-hero h1 {
+        font-size: 2rem;
+    }
+
+    .blog-hero p {
+        font-size: 0.95rem;
+        margin-top: 1rem !important;
+    }
+}
+
+/* ------------ BLOG LAYOUT (GRID + SIDEBAR) ------------ */
+@media (max-width: 992px) {
+    .blog-layout {
+        grid-template-columns: 1fr !important;
+        gap: 2rem !important;
+    }
+
+    .blog-sidebar {
+        position: static !important;
+        width: 100%;
+    }
+}
+
+/* ------------ BLOG CARDS / GRID ------------ */
+@media (max-width: 768px) {
+    .blog-grid {
+        grid-template-columns: 1fr !important;
+        gap: 1.5rem;
+    }
+
+    .blog-card {
+        border-radius: 14px;
+    }
+
+    .blog-content {
+        padding: 1.5rem !important;
+    }
+
+    .blog-meta {
+        flex-direction: column;
+        gap: 0.3rem;
+    }
+
+    .blog-card h3 {
+        font-size: 1.2rem;
+    }
+
+    .blog-excerpt {
+        font-size: 0.95rem;
+    }
+}
+
+/* ------------ BLOG IMAGE PLACEHOLDER FIX ------------ */
+@media (max-width: 768px) {
+    .blog-img {
+        height: 180px !important;
+        background: #111;
+    }
+
+    .blog-category {
+        top: 0.75rem;
+        left: 0.75rem;
+        font-size: 0.7rem;
+        padding: 0.2rem 0.8rem;
+    }
+}
+
+/* ------------ SIDEBAR WIDGETS ------------ */
+@media (max-width: 768px) {
+    .sidebar-widget {
+        padding: 1.5rem !important;
+    }
+
+    .widget-title {
+        font-size: 1.1rem;
+        padding-bottom: 0.8rem;
+    }
+
+    .categories-list li {
+        padding: 0.6rem 0;
+    }
+
+    .recent-post {
+        gap: 0.8rem;
+    }
+
+    .recent-post-img {
+        width: 70px !important;
+        height: 50px !important;
+    }
+
+    .recent-post-content h4 {
+        font-size: 0.85rem;
+    }
+}
+
+/* ------------ SEARCH BAR ------------ */
+@media (max-width: 768px) {
+    .search-widget form {
+        flex-direction: row;
+        gap: 0.4rem;
+    }
+
+    .search-input {
+        padding: 0.65rem;
+    }
+
+    .search-btn {
+        width: 40px;
+        border-radius: 6px;
+    }
+}
+
+/* ------------ TAGS WIDGET ------------ */
+@media (max-width: 768px) {
+    .tags-widget {
+        gap: 0.4rem;
+    }
+
+    .tag {
+        padding: 0.4rem 0.8rem;
+        font-size: 0.78rem;
+    }
+}
+
+/* ------------ NEWSLETTER ------------ */
+@media (max-width: 768px) {
+    .newsletter-widget {
+        padding: 1.5rem;
+        text-align: center;
+    }
+
+    .newsletter-widget h3 {
+        font-size: 1.2rem;
+    }
+
+    .newsletter-widget p {
+        font-size: 0.85rem;
+    }
+
+    .newsletter-form input {
+        padding: 0.7rem;
+    }
+
+    .newsletter-form button {
+        padding: 0.7rem;
+        font-size: 0.95rem;
+    }
+}
+
+/* ------------ PAGINATION ------------ */
+@media (max-width: 768px) {
+    .pagination {
+        gap: 0.3rem !important;
+    }
+
+    .page-link {
+        width: 35px;
+        height: 35px;
+        font-size: 0.85rem;
+    }
+
+    .page-link.prev,
+    .page-link.next {
+        padding: 0 0.7rem;
+        font-size: 0.85rem;
+    }
+}
+
+/* ------------ CTA SECTION ------------ */
+@media (max-width: 768px) {
+    section[style] h2 {
+        font-size: 1.7rem !important;
+    }
+
+    section[style] p {
+        font-size: 0.95rem;
+    }
+
+    section[style] .btn {
+        margin-top: 1rem;
+        padding: 0.8rem 1.3rem;
+        font-size: 0.95rem;
+    }
+}
+
+/* ------------ EXTRA SMALL SCREENS (360px) ------------ */
+@media (max-width: 380px) {
+    .blog-hero h1 {
+        font-size: 1.7rem;
+    }
+
+    .blog-content h3 {
+        font-size: 1.1rem !important;
+    }
+
+    .blog-excerpt {
+        font-size: 0.9rem;
+    }
+
+    .tag {
+        font-size: 0.75rem;
+        padding: 0.35rem 0.7rem;
+    }
+}
+
+</style>
+{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="blog-hero">
+    <div class="container">
+        <h1>Wellness Insights</h1>
+        <p class="section-subtitle">ELEVATE YOUR SELF-CARE JOURNEY</p>
+        <p style="max-width: 600px; margin: 2rem auto; color: rgba(255, 255, 255, 0.9);">
+            Discover expert tips, industry trends, and wellness wisdom from our team of specialists.
+        </p>
+    </div>
+</section>
+
+<!-- Blog Content -->
+<section class="blog-container">
+    <div class="container">
+        <div class="blog-layout">
+            <!-- Main Content -->
+            <main class="blog-main">
+                {% if posts %}
+                <div class="blog-grid">
+                    {% for post in posts %}
+                    <article class="blog-card">
+                        <div class="blog-img">
+                            <div class="blog-category">{{ post.category }}</div>
+                        </div>
+                        <div class="blog-content">
+                            <div class="blog-meta">
+                                <span><i class="far fa-calendar"></i> {{ post.created_at.strftime('%B %d, %Y') }}</span>
+                                <span><i class="far fa-user"></i> {{ post.author }}</span>
+                            </div>
+                            <h3>{{ post.title }}</h3>
+                            <p class="blog-excerpt">{{ post.excerpt }}</p>
+                            <a href="{{ url_for('blog_post', slug=post.slug) }}" class="read-more">
+                                Read Article <i class="fas fa-arrow-right"></i>
+                            </a>
+                        </div>
+                    </article>
+                    {% endfor %}
+                </div>
+                {% else %}
+                <div style="text-align: center; padding: 4rem; background: var(--white); border-radius: var(--border-radius);">
+                    <h3>No Articles Yet</h3>
+                    <p>Check back soon for wellness insights and beauty tips.</p>
+                </div>
+                {% endif %}
+
+                <!-- Pagination (static for now) -->
+                <div class="pagination">
+                    <a href="#" class="page-link prev"><i class="fas fa-chevron-left"></i> Previous</a>
+                    <a href="#" class="page-link active">1</a>
+                    <a href="#" class="page-link">2</a>
+                    <a href="#" class="page-link">3</a>
+                    <a href="#" class="page-link next">Next <i class="fas fa-chevron-right"></i></a>
+                </div>
+            </main>
+
+            <!-- Sidebar -->
+            <aside class="blog-sidebar">
+                <!-- Search Widget -->
+                <div class="sidebar-widget search-widget">
+                    <h3 class="widget-title">Search Articles</h3>
+                    <form>
+                        <input type="text" class="search-input" placeholder="Search keywords...">
+                        <button type="submit" class="search-btn"><i class="fas fa-search"></i></button>
+                    </form>
+                </div>
+
+                <!-- Categories Widget -->
+                <div class="sidebar-widget">
+                    <h3 class="widget-title">Categories</h3>
+                    <ul class="categories-list">
+                        {% for category in categories %}
+                        <li>
+                            <a href="#">
+                                {{ category }}
+                                <span class="category-count">{{ posts|selectattr('category', 'equalto', category)|list|length }}</span>
+                            </a>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+
+                <!-- Recent Posts Widget -->
+                <div class="sidebar-widget">
+                    <h3 class="widget-title">Recent Articles</h3>
+                    <ul class="recent-posts">
+                        {% for post in posts[:3] %}
+                        <li class="recent-post">
+                            <div class="recent-post-img"></div>
+                            <div class="recent-post-content">
+                                <h4><a href="{{ url_for('blog_post', slug=post.slug) }}">{{ post.title }}</a></h4>
+                                <div class="recent-post-date">{{ post.created_at.strftime('%b %d, %Y') }}</div>
+                            </div>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+
+                <!-- Tags Widget -->
+                <div class="sidebar-widget">
+                    <h3 class="widget-title">Popular Tags</h3>
+                    <div class="tags-widget">
+                        <a href="#" class="tag">Wellness</a>
+                        <a href="#" class="tag">Self-Care</a>
+                        <a href="#" class="tag">Beauty Tips</a>
+                        <a href="#" class="tag">Spa</a>
+                        <a href="#" class="tag">Nail Art</a>
+                        <a href="#" class="tag">Skin Care</a>
+                        <a href="#" class="tag">Body Care</a>
+                        <a href="#" class="tag">Relaxation</a>
+                    </div>
+                </div>
+
+                <!-- Newsletter Widget -->
+                <div class="newsletter-widget">
+                    <h3>Join Our Wellness Community</h3>
+                    <p>Subscribe to receive exclusive wellness tips and special offers.</p>
+                    <form class="newsletter-form">
+                        <input type="email" placeholder="Your email address" required>
+                        <button type="submit">Subscribe</button>
+                    </form>
+                    <p style="font-size: 0.8rem; margin-top: 1rem;">We respect your privacy. Unsubscribe at any time.</p>
+                </div>
+            </aside>
+        </div>
+    </div>
+</section>
+
+<!-- CTA Section -->
+<section style="padding: 80px 0; text-align: center; background: var(--white);">
+    <div class="container">
+        <h2>Want to Contribute?</h2>
+        <p style="max-width: 600px; margin: 1rem auto 2rem; color: var(--gray);">
+            Are you a wellness expert with insights to share? We're always looking for quality content to feature.
+        </p>
+        <a href="{{ url_for('contact') }}" class="btn btn-primary">
+            <i class="fas fa-envelope"></i> Contact Us to Collaborate
+        </a>
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Search functionality
+        const searchForm = document.querySelector('.search-widget form');
+        const searchInput = searchForm.querySelector('.search-input');
+        
+        searchForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            const searchTerm = searchInput.value.trim().toLowerCase();
+            
+            if (searchTerm) {
+                // Filter blog posts based on search term
+                const blogCards = document.querySelectorAll('.blog-card');
+                let foundResults = false;
+                
+                blogCards.forEach(card => {
+                    const title = card.querySelector('h3').textContent.toLowerCase();
+                    const excerpt = card.querySelector('.blog-excerpt').textContent.toLowerCase();
+                    const category = card.querySelector('.blog-category').textContent.toLowerCase();
+                    
+                    if (title.includes(searchTerm) || excerpt.includes(searchTerm) || category.includes(searchTerm)) {
+                        card.style.display = 'block';
+                        foundResults = true;
+                    } else {
+                        card.style.display = 'none';
+                    }
+                });
+                
+                // Show message if no results
+                const blogGrid = document.querySelector('.blog-grid');
+                let noResultsMsg = document.querySelector('.no-results');
+                
+                if (!foundResults) {
+                    if (!noResultsMsg) {
+                        noResultsMsg = document.createElement('div');
+                        noResultsMsg.className = 'no-results';
+                        noResultsMsg.style.textAlign = 'center';
+                        noResultsMsg.style.padding = '3rem';
+                        noResultsMsg.style.background = 'var(--white)';
+                        noResultsMsg.style.borderRadius = 'var(--border-radius)';
+                        noResultsMsg.innerHTML = `
+                            <h3>No Results Found</h3>
+                            <p>Try searching with different keywords.</p>
+                        `;
+                        blogGrid.parentNode.insertBefore(noResultsMsg, blogGrid.nextSibling);
+                    }
+                } else if (noResultsMsg) {
+                    noResultsMsg.remove();
+                }
+            }
+        });
+        
+        // Clear search on input change
+        searchInput.addEventListener('input', function() {
+            if (!this.value.trim()) {
+                // Show all posts
+                const blogCards = document.querySelectorAll('.blog-card');
+                blogCards.forEach(card => {
+                    card.style.display = 'block';
+                });
+                
+                // Remove no results message
+                const noResultsMsg = document.querySelector('.no-results');
+                if (noResultsMsg) {
+                    noResultsMsg.remove();
+                }
+            }
+        });
+        
+        // Newsletter subscription
+        const newsletterForm = document.querySelector('.newsletter-form');
+        newsletterForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            const emailInput = this.querySelector('input[type="email"]');
+            const email = emailInput.value.trim();
+            
+            if (email && validateEmail(email)) {
+                // Show success message
+                const successMsg = document.createElement('div');
+                successMsg.style.color = 'var(--gold)';
+                successMsg.style.marginTop = '1rem';
+                successMsg.style.fontSize = '0.9rem';
+                successMsg.textContent = 'Thank you for subscribing!';
+                
+                this.appendChild(successMsg);
+                emailInput.value = '';
+                
+                // Remove message after 5 seconds
+                setTimeout(() => {
+                    successMsg.remove();
+                }, 5000);
+            } else {
+                emailInput.style.borderColor = '#dc3545';
+                setTimeout(() => {
+                    emailInput.style.borderColor = 'rgba(255, 255, 255, 0.1)';
+                }, 2000);
+            }
+        });
+        
+        function validateEmail(email) {
+            const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            return re.test(email);
+        }
+        
+        // Category filtering
+        const categoryLinks = document.querySelectorAll('.categories-list a');
+        categoryLinks.forEach(link => {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                const category = this.textContent.split('\n')[0].trim();
+                
+                // Filter blog posts by category
+                const blogCards = document.querySelectorAll('.blog-card');
+                blogCards.forEach(card => {
+                    const cardCategory = card.querySelector('.blog-category').textContent;
+                    if (category === 'All' || cardCategory === category) {
+                        card.style.display = 'block';
+                    } else {
+                        card.style.display = 'none';
+                    }
+                });
+            });
+        });
+    });
+</script>
+{% endblock %}

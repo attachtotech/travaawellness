@@ -1,0 +1,1856 @@
+{% extends "base.html" %}
+
+{% block title %}Luxury Wellness Spa & Nail Art - {{ super() }}{% endblock %}
+
+{% block extra_css %}
+<style>
+/* ===========================
+   HERO SLIDER BASE
+=========================== */
+.hero-slider {
+    min-height: 100vh;
+    height: 90vh;
+    position: relative;
+    overflow: hidden;
+    color: var(--white);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.slider-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+}
+
+.slider-slide {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    opacity: 0;
+    transition: opacity 1.2s ease-in-out;
+}
+
+.slider-slide.active {
+    opacity: 1;
+}
+
+/* ===========================
+   TEXT BLOCK FOR SLIDES
+=========================== */
+.hero-text-block {
+    position: absolute;
+    bottom: 18%;
+    left: 7%;
+    max-width: 500px;
+    opacity: 0; /* animation will make it visible */
+}
+
+.hero-text-block h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: 52px;
+    font-weight: 600;
+    margin-bottom: 10px;
+    color: white;
+    text-shadow: 0px 4px 25px rgba(0,0,0,0.4);
+}
+
+.hero-text-block p {
+    font-size: 20px;
+    color: #f2f2f2;
+    opacity: 0.9;
+    text-shadow: 0px 4px 25px rgba(0,0,0,0.4);
+}
+
+/* Right Alignment for Slide 2 */
+.hero-text-block.right-align {
+    left: auto;
+    right: 7%;
+    text-align: right;
+}
+
+/* ===========================
+   SLIDER TEXT ANIMATIONS
+=========================== */
+@keyframes fadeFromLeft {
+    0% { opacity: 0; transform: translateX(-40px); }
+    100% { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes fadeFromRight {
+    0% { opacity: 0; transform: translateX(40px); }
+    100% { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes fadeUp {
+    0% { opacity: 0; transform: translateY(20px); }
+    100% { opacity: 1; transform: translateY(0); }
+}
+
+/* Apply directional animations ONLY through slider (NOT scroll) */
+.slider-slide.active .animate-left {
+    animation: fadeFromLeft 1s ease-out forwards;
+}
+
+.slider-slide.active .animate-right {
+    animation: fadeFromRight 1s ease-out forwards;
+}
+
+.slider-slide.active h1 {
+    animation: fadeUp 1.2s ease-out forwards;
+    animation-delay: 0.25s;
+}
+
+.slider-slide.active p {
+    animation: fadeUp 1.4s ease-out forwards;
+    animation-delay: 0.45s;
+}
+
+/* ===========================
+   SLIDER CONTROLS + DOTS
+=========================== */
+.slider-controls {
+    position: absolute;
+    bottom: 30px;
+    right: 40px;
+    display: flex;
+    gap: 12px;
+    z-index: 10;
+}
+
+.slider-nav {
+    background: rgba(255,255,255,0.85);
+    border: none;
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 18px;
+}
+
+.slider-nav:hover {
+    background: #500060;
+    color: white;
+}
+
+.slider-dots {
+    position: absolute;
+    bottom: 30px;
+    left: 40px;
+    display: flex;
+    gap: 8px;
+}
+
+.slider-dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.4);
+    cursor: pointer;
+}
+
+.slider-dot.active {
+    background: #500060;
+}
+
+/* ===========================
+   CLEAN SCROLL ANIMATIONS
+   (NO LEFT/RIGHT HERE)
+=========================== */
+.animate-on-scroll {
+    opacity: 0;
+    transform: translateY(50px);
+    transition: all 0.8s ease-out;
+}
+
+.animate-on-scroll.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.animate-scale {
+    opacity: 0;
+    transform: scale(0.9);
+    transition: all 0.8s ease-out;
+}
+
+.animate-scale.visible {
+    opacity: 1;
+    transform: scale(1);
+}
+
+.animate-fade {
+    opacity: 0;
+    transition: opacity 0.8s ease-out;
+}
+
+.animate-fade.visible {
+    opacity: 1;
+}
+
+    /* Enhanced Cards with animations */
+    .highlight-card {
+        text-align: center;
+        padding: 2.5rem;
+        transition: all 0.4s ease;
+        background: var(--white);
+        border-radius: 15px;
+        position: relative;
+        overflow: hidden;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+        opacity: 0;
+        transform: translateY(30px);
+    }
+
+    .highlight-card.visible {
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+    .highlight-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 4px;
+        background: linear-gradient(90deg, var(--gold), transparent);
+        transform: translateX(-100%);
+        transition: transform 0.6s ease;
+    }
+
+    .highlight-card:hover::before {
+        transform: translateX(0);
+    }
+
+    .highlight-card:hover {
+        transform: translateY(-15px);
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+    }
+
+  .highlight-icon {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    overflow: hidden; /* forces image to stay inside the circle */
+    margin: 0 auto 20px;
+    box-shadow: 0px 6px 20px rgba(0,0,0,0.15);
+    background: #ffffff; /* or transparent if you want */
+}
+
+.highlight-icon img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;  /* fully fills the circle */
+}
+
+
+
+    .highlight-card:hover .highlight-icon {
+        transform: rotateY(180deg) scale(1.1);
+        background: linear-gradient(135deg,var(--gold));
+    }
+
+    /* Featured Services */
+    .featured-services {
+        padding: 100px 0;
+        background: var(--white);
+        position: relative;
+        z-index: 1;
+    }
+
+    .section-header {
+        opacity: 0;
+        transform: translateY(30px);
+        transition: all 0.8s ease-out;
+    }
+
+    .section-header.visible {
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+    body, html {
+        overflow-x: hidden;
+        width: 100%;
+    }
+
+    html {
+        scroll-behavior: smooth;
+    }
+
+    section {
+        position: relative;
+        width: 100%;
+    }
+
+    .service-highlights {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 2rem;
+        margin-top: 3rem;
+    }
+
+    /* Instagram Section */
+    .instagram-section {
+        padding: 80px 0;
+        background: var(--black);
+        color: var(--white);
+    }
+
+    .instagram-section h2 {
+        color: var(--white);
+        text-align: center;
+    }
+
+    .instagram-feed {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 1rem;
+        margin-top: 3rem;
+    }
+
+    .instagram-post {
+        position: relative;
+        border-radius: var(--border-radius);
+        overflow: hidden;
+        aspect-ratio: 1;
+        background: #333;
+        opacity: 0;
+        transform: scale(0.9);
+        transition: all 0.8s ease-out;
+    }
+
+    .instagram-post.visible {
+        opacity: 1;
+        transform: scale(1);
+    }
+
+    .instagram-post img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: var(--transition);
+    }
+
+    .instagram-post:hover img {
+        transform: scale(1.1);
+    }
+
+    .post-overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(0, 0, 0, 0.7);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        opacity: 0;
+        transition: var(--transition);
+    }
+
+    .instagram-post:hover .post-overlay {
+        opacity: 1;
+    }
+
+    .post-overlay span {
+        color: white;
+        margin: 0 0.5rem;
+        font-size: 0.9rem;
+    }
+
+/* Review Fade Container (floating overlay) */
+#review-fade-container {
+    position: fixed;
+    top: 150px; /* adjust vertically */
+    width: 100%;
+    pointer-events: none;
+    z-index: 9999;
+}
+
+/* Review Box */
+#review-fade-card {
+    position: absolute;
+    width: 240px;
+    padding: 16px 20px;
+    background: #ffffff; /* solid white box */
+    border-radius: 12px;
+
+    box-shadow: 0 6px 25px rgba(0,0,0,0.25);
+    font-family: 'Inter', sans-serif;
+
+    opacity: 0;
+}
+
+/* Author text */
+#review-fade-card span {
+    display: block;
+    margin-top: 6px;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+/* FADE animation only (no movement) */
+@keyframes fadeCycle {
+    0%   { opacity: 0; }
+    20%  { opacity: 1; }
+    80%  { opacity: 1; }
+    100% { opacity: 0; }
+}
+
+.fade-animate {
+    animation: fadeCycle 5s ease-in-out;
+}
+
+
+
+    /* CTA Section */
+    .cta-section {
+        padding: 120px 0;
+        background: linear-gradient(rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.9)),
+                    url('/static/images/cta-bg.jpg') center/cover no-repeat;
+        color: var(--black);
+        text-align: center;
+        opacity: 0;
+        transform: translateY(30px);
+        transition: all 0.8s ease-out;
+    }
+
+    .cta-section.visible {
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+    .cta-section h2 {
+        color: var(--black);
+        font-size: 3.5rem;
+        margin-bottom: 1.5rem;
+    }
+
+    .cta-section .section-subtitle {
+        color: var(--gold);
+    }
+
+    .cta-btns {
+        display: flex;
+        gap: 1rem;
+        justify-content: center;
+        margin-top: 3rem;
+        flex-wrap: wrap;
+        opacity: 0;
+        transform: translateY(20px);
+        transition: all 0.8s ease-out 0.3s;
+    }
+
+    .cta-section.visible .cta-btns {
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+    /* Gallery */
+    .gallery {
+        padding: 100px 0;
+    }
+
+    .gallery-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 5rem;
+        margin-top: 3rem;
+    }
+
+    .gallery-item, .gallery-item2, .gallery-item3 {
+        position: relative;
+        border-radius: 15px;
+        overflow: hidden;
+        height: 400px;
+        opacity: 0;
+        transform: translateY(30px);
+        transition: all 0.8s ease-out;
+    }
+
+    .gallery-item.visible, .gallery-item2.visible, .gallery-item3.visible {
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+    .gallery-img {
+        width: 100%;
+        height: 100%;
+        transition: transform 0.6s ease;
+    }
+
+    .gallery-item:hover .gallery-img,
+    .gallery-item2:hover .gallery-img,
+    .gallery-item3:hover .gallery-img {
+        transform: scale(1.1);
+    }
+
+    .gallery-overlay {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        background: linear-gradient(transparent, rgba(0,0,0,0.8));
+        color: white;
+        padding: 2rem;
+        transform: translateY(20px);
+        opacity: 0;
+        transition: all 0.4s ease;
+    }
+
+    .gallery-item:hover .gallery-overlay,
+    .gallery-item2:hover .gallery-overlay,
+    .gallery-item3:hover .gallery-overlay {
+        transform: translateY(0);
+        opacity: 1;
+    }
+
+    /* Testimonials */
+    .testimonials {
+        padding: 100px 0;
+        background: var(--light-gray);
+    }
+
+    .testimonial-card {
+        background: white;
+        padding: 3rem;
+        border-radius: 15px;
+        box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+        opacity: 0;
+        transform: translateY(30px);
+        transition: all 0.8s ease-out;
+    }
+
+    .testimonial-card.visible {
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+    /* Blog */
+    .blog {
+        padding: 100px 0;
+    }
+
+    .blog-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 2rem;
+        margin-top: 3rem;
+    }
+
+    .blog-card {
+        background: white;
+        border-radius: 15px;
+        overflow: hidden;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        opacity: 0;
+        transform: translateY(30px);
+        transition: all 0.8s ease-out;
+    }
+
+    .blog-card.visible {
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+    /* Floating Elements */
+    .floating-element {
+        position: absolute;
+        border-radius: 50%;
+        z-index: 0;
+        opacity: 0.1;
+        pointer-events: none;
+    }
+
+    .floating-1 {
+        width: 300px;
+        height: 300px;
+        background: var(--gold);
+        top: -150px;
+        right: -150px;
+        animation: float 15s ease-in-out infinite;
+    }
+
+    .floating-2 {
+        width: 200px;
+        height: 200px;
+        background: var(--black);
+        bottom: -100px;
+        left: -100px;
+        animation: float 12s ease-in-out infinite reverse;
+    }
+
+    /* Animations */
+    @keyframes fadeInUp {
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    @keyframes float {
+        0%, 100% {
+            transform: translateY(0) rotate(0deg);
+        }
+        50% {
+            transform: translateY(-20px) rotate(180deg);
+        }
+    }
+
+    @keyframes pulse {
+        0%, 100% {
+            transform: scale(1);
+        }
+        50% {
+            transform: scale(1.05);
+        }
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+        .hero h1 {
+            font-size: 3rem;
+        }
+        
+        .hero-subtitle {
+            font-size: 1.2rem;
+        }
+        
+        .slider-controls {
+            bottom: 20px;
+            right: 20px;
+        }
+        
+        .slider-dots {
+            bottom: 20px;
+        }
+        
+        .hero-btns {
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        .hero-btns .btn {
+            width: 100%;
+            max-width: 300px;
+        }
+    }
+
+    /* ================================
+   JACUZZI PREMIUM HOT SALE SECTION
+================================ */
+.jacuzzi-section {
+    position: relative;
+    height: 80vh;
+    width: 100%;
+    margin: 80px 0;
+    border-radius: 20px;
+    overflow: hidden;
+}
+
+.jacuzzi-video-container {
+    position: relative;
+    height: 100%;
+    width: 100%;
+}
+
+.jacuzzi-video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* Gold–Purple Gradient Overlay */
+.jacuzzi-overlay {
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: linear-gradient(
+        120deg,
+        rgba(80,0,96,0.7),
+        rgba(0,0,0,0.4),
+        rgba(182,122,62,0.3)
+    );
+    z-index: 2;
+}
+
+/* Hot Selling Badge */
+.jacuzzi-badge {
+    position: absolute;
+    top: 30px;
+    right: 30px;
+
+    background: linear-gradient(135deg, #b67a3e, #e0b886);
+    padding: 10px 22px;
+    border-radius: 30px;
+
+    font-size: 14px;
+    letter-spacing: 2px;
+    font-weight: 600;
+    color: white;
+
+    z-index: 5;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.25);
+}
+
+/* Content */
+.jacuzzi-content {
+    position: absolute;
+    bottom: 14%;
+    left: 7%;
+    z-index: 5;
+    max-width: 550px;
+}
+
+.jacuzzi-content h2 {
+    font-family: "Playfair Display", serif;
+    font-size: 52px;
+    color: white;
+    margin-bottom: 12px;
+    text-shadow: 0 4px 20px rgba(0,0,0,0.4);
+}
+
+.jacuzzi-content p {
+    font-size: 19px;
+    line-height: 1.6;
+    color: rgba(255,255,255,0.9);
+    max-width: 580px;
+    text-shadow: 0 3px 15px rgba(0,0,0,0.4);
+}
+
+/* CTA Button */
+.jacuzzi-btn {
+    display: inline-block;
+    margin-top: 25px;
+
+    padding: 14px 32px;
+    font-size: 16px;
+    letter-spacing: 1px;
+
+    color: white;
+    background: #500060;
+    border-radius: 30px;
+    text-decoration: none;
+
+    box-shadow: 0 8px 25px rgba(0,0,0,0.25);
+    transition: 0.3s ease;
+}
+
+.jacuzzi-btn:hover {
+    background: #b67a3e;
+    transform: translateY(-3px);
+    box-shadow: 0 12px 35px rgba(0,0,0,0.35);
+}
+
+/* Mobile Responsive */
+@media (max-width: 768px) {
+    .jacuzzi-section {
+        height: 65vh;
+    }
+
+    .jacuzzi-content h2 {
+        font-size: 34px;
+    }
+
+    .jacuzzi-content {
+        left: 5%;
+        bottom: 12%;
+    }
+
+    .jacuzzi-badge {
+        top: 20px;
+        right: 20px;
+        font-size: 12px;
+        padding: 7px 16px;
+    }
+}
+.offer-month-section {
+    padding: 100px 20px;
+    background: linear-gradient(135deg, #f7e9f8 0%, #fff 100%);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    overflow: hidden;
+}
+
+/* Decorative glowing circles */
+.offer-month-section::before,
+.offer-month-section::after {
+    content: "";
+    position: absolute;
+    width: 350px;
+    height: 350px;
+    background: rgba(212, 165, 116, 0.12);
+    border-radius: 50%;
+    filter: blur(40px);
+    animation: floatGlow 10s ease-in-out infinite;
+}
+.offer-month-section::before {
+    top: -80px;
+    right: -80px;
+}
+.offer-month-section::after {
+    bottom: -100px;
+    left: -100px;
+}
+
+@keyframes floatGlow {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.2); }
+}
+
+.offer-container {
+    max-width: 1300px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 50px;
+    align-items: center;
+    position: relative;
+    z-index: 2;
+}
+
+.offer-image-wrapper {
+    overflow: hidden;
+    border-radius: 22px;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+    animation: fadeSlideLeft 1s ease forwards;
+    opacity: 0;
+}
+.offer-image {
+    width: 100%;
+    height: auto;
+    display: block;
+    transition: transform .6s ease;
+}
+.offer-image-wrapper:hover .offer-image {
+    transform: scale(1.05);
+}
+
+@keyframes fadeSlideLeft {
+    from { opacity: 0; transform: translateX(-40px); }
+    to   { opacity: 1; transform: translateX(0); }
+}
+
+.offer-content {
+    animation: fadeSlideRight 1s ease forwards;
+    opacity: 0;
+}
+
+@keyframes fadeSlideRight {
+    from { opacity: 0; transform: translateX(40px); }
+    to   { opacity: 1; transform: translateX(0); }
+}
+
+.offer-heading {
+    font-size: 2.8rem;
+    color: #500060;
+    margin-bottom: 10px;
+    font-weight: 600;
+}
+
+.offer-subheading {
+    font-size: 1.6rem;
+    color: #9440a0;
+    margin-bottom: 20px;
+    font-weight: 500;
+    letter-spacing: 0.5px;
+}
+
+.offer-price {
+    background: #500060;
+    padding: 18px 25px;
+    border-radius: 12px;
+    display: inline-block;
+    margin-bottom: 25px;
+    color: white;
+    text-align: center;
+}
+.price-text {
+    font-size: 2rem;
+    font-weight: bold;
+    display: block;
+}
+.price-tag {
+    font-size: 1rem;
+    opacity: 0.85;
+}
+
+.offer-desc {
+    font-size: 1.1rem;
+    color: #333;
+    max-width: 90%;
+    margin-bottom: 20px;
+}
+
+.offer-list {
+    list-style: none;
+    margin: 20px 0;
+    padding: 0;
+}
+.offer-list li {
+    margin-bottom: 10px;
+    font-size: 1rem;
+    position: relative;
+    padding-left: 22px;
+    color: #500060;
+}
+.offer-list li::before {
+    content: "•";
+    position: absolute;
+    left: 0;
+    top: 0;
+    font-size: 1.4rem;
+    color: #d4a574;
+}
+
+.offer-btn {
+    display: inline-block;
+    padding: 15px 40px;
+    background: linear-gradient(135deg, #500060, #9b358a);
+    color: white;
+    font-size: 1.1rem;
+    border-radius: 30px;
+    text-decoration: none;
+    font-weight: 600;
+    transition: 0.3s ease;
+    box-shadow: 0 10px 20px rgba(80, 0, 96, 0.2);
+}
+.offer-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 18px 30px rgba(80, 0, 96, 0.3);
+}
+
+/* Mobile Responsive */
+@media (max-width: 900px) {
+    .offer-container {
+        grid-template-columns: 1fr;
+        text-align: center;
+    }
+    .offer-desc {
+        margin: auto;
+    }
+}
+
+/* ================================================
+   FULL MOBILE + TABLET RESPONSIVE FRAMEWORK
+================================================ */
+
+/* ---------- Global Padding & Text Scaling ---------- */
+@media (max-width: 992px) {
+    body {
+        font-size: 15px;
+    }
+    section {
+        padding-left: 18px;
+        padding-right: 18px;
+    }
+}
+
+/* ---------- MOBILE HERO SLIDER FIX ---------- */
+@media (max-width: 768px) {
+    .hero-slider {
+        height: 75vh !important;
+        min-height: 500px;
+    }
+
+    .hero-text-block {
+        bottom: 15%;
+        max-width: 85%;
+    }
+
+    .hero-text-block h1 {
+        font-size: 32px !important;
+        line-height: 1.2;
+    }
+
+    .hero-text-block p {
+        font-size: 16px !important;
+        line-height: 1.4;
+    }
+
+    .slider-controls {
+        bottom: 10px;
+        right: 15px;
+        transform: scale(0.9);
+    }
+
+    .slider-dots {
+        bottom: 12px;
+        left: 15px;
+        transform: scale(0.85);
+    }
+}
+
+/* ---------- TABLET HERO ---------- */
+@media (min-width: 769px) and (max-width: 1024px) {
+    .hero-text-block h1 {
+        font-size: 40px;
+    }
+    .hero-text-block p {
+        font-size: 18px;
+    }
+}
+
+/* ---------- JACUZZI SECTION RESPONSIVE ---------- */
+@media (max-width: 768px) {
+    .jacuzzi-section {
+        height: 55vh !important;
+        min-height: 420px;
+        margin: 50px 0;
+    }
+
+    .jacuzzi-content {
+        max-width: 90%;
+        left: 5%;
+        bottom: 12%;
+    }
+
+    .jacuzzi-content h2 {
+        font-size: 28px !important;
+    }
+
+    .jacuzzi-content p {
+        font-size: 15px;
+        line-height: 1.5;
+    }
+
+    .jacuzzi-badge {
+        font-size: 10px;
+        padding: 6px 12px;
+        top: 10px;
+        right: 10px;
+    }
+
+    .jacuzzi-btn {
+        padding: 12px 24px;
+        font-size: 14px;
+    }
+}
+
+/* ---------- FEATURED SERVICES GRID ---------- */
+@media (max-width: 768px) {
+    .service-highlights {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+        margin-top: 2rem;
+    }
+
+    .highlight-card {
+        padding: 1.8rem;
+    }
+
+    .highlight-icon {
+        width: 60px;
+        height: 60px;
+    }
+}
+
+/* ---------- GALLERY GRID ---------- */
+@media (max-width: 768px) {
+    .gallery-grid {
+        grid-template-columns: 1fr;
+        gap: 2.5rem;
+    }
+
+    .gallery-item,
+    .gallery-item2,
+    .gallery-item3 {
+        height: 280px !important;
+    }
+}
+
+/* ---------- OFFER OF THE MONTH ---------- */
+@media (max-width: 900px) {
+    .offer-container {
+        grid-template-columns: 1fr !important;
+        gap: 30px;
+        text-align: center;
+    }
+
+    .offer-image-wrapper {
+        max-width: 100%;
+    }
+
+    .offer-heading {
+        font-size: 2rem;
+    }
+
+    .offer-subheading {
+        font-size: 1.3rem;
+    }
+
+    .offer-price .price-text {
+        font-size: 1.6rem;
+    }
+}
+
+/* ---------- TESTIMONIALS ---------- */
+@media (max-width: 768px) {
+    .testimonial-card {
+        padding: 1.8rem;
+        font-size: 14px;
+    }
+
+    .slider-controls {
+        bottom: -10px;
+        justify-content: center;
+    }
+}
+
+/* ---------- CTA SECTION ---------- */
+@media (max-width: 768px) {
+    .cta-section h2 {
+        font-size: 2rem;
+    }
+
+    .cta-btns {
+        flex-direction: column;
+        gap: 1rem;
+    }
+
+    .cta-btns .btn {
+        width: 100%;
+        max-width: 280px;
+    }
+}
+
+/* ---------- FLOATING REVIEW BOX ---------- */
+@media (max-width: 600px) {
+    #review-fade-card {
+        width: 180px !important;
+        font-size: 13px;
+        padding: 12px 14px;
+    }
+
+    #review-fade-container {
+        top: 120px;
+    }
+}
+
+/* ---------- EXTRA SMALL PHONES (360px) ---------- */
+@media (max-width: 380px) {
+    .hero-text-block h1 {
+        font-size: 26px !important;
+    }
+
+    .jacuzzi-content h2 {
+        font-size: 24px !important;
+    }
+
+    .offer-heading {
+        font-size: 1.7rem;
+    }
+
+    .offer-price .price-text {
+        font-size: 1.3rem;
+    }
+}
+.hero-slider {
+    height: 85vh;
+    min-height: 520px;
+}
+.testimonial-slider {
+    width: 100%;
+    overflow: hidden;
+}
+
+</style>
+{% endblock %}
+
+{% block content %}
+<section class="hero-slider">
+
+    <div class="slider-container">
+
+        <!-- SLIDE 1 (fade from left) -->
+        <div class="slider-slide active" style="background-image: url('/static/images/hero.jpg');">
+            <div class="hero-text-block animate-left">
+                <h1>Luxury Wellness Redefined</h1>
+                <p>Where tranquility meets elegance…</p>
+            </div>
+        </div>
+
+        <!-- SLIDE 2 (fade from right) -->
+       <!-- SLIDE 2 -->
+<div class="slider-slide" style="background-image: url('/static/images/hero1.jpg');">
+    <div class="hero-text-block animate-right right-align">
+        <h1>Experience Pure Indulgence</h1>
+        <p>Holistic therapies crafted for inner balance.</p>
+    </div>
+</div>
+
+
+        <!-- SLIDE 3 (fade from left again) -->
+        <div class="slider-slide" style="background-image: url('/static/images/hero3.jpg');">
+            <div class="hero-text-block animate-left">
+                <h1>Polishing up your look, one nail at a time </h1>
+                <p>Making your hands look fabulous, every time.</p>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Controls -->
+    <div class="slider-controls">
+        <button class="slider-nav prev-slide"><i class="fas fa-chevron-left"></i></button>
+        <button class="slider-nav next-slide"><i class="fas fa-chevron-right"></i></button>
+    </div>
+
+    <!-- Dots -->
+    <div class="slider-dots">
+        <span class="slider-dot active" data-slide="0"></span>
+        <span class="slider-dot" data-slide="1"></span>
+        <span class="slider-dot" data-slide="2"></span>
+    </div>
+
+</section>
+
+<!-- Jacuzzi Premium Section -->
+<section class="jacuzzi-section animate-on-scroll">
+    <div class="jacuzzi-video-container">
+        <video autoplay muted loop playsinline class="jacuzzi-video">
+            <source src="/static/videos/jacuzzi.mp4" type="video/mp4">
+        </video>
+
+        <!-- Overlay Gradient -->
+        <div class="jacuzzi-overlay"></div>
+
+        <!-- Hot Selling Badge -->
+        <div class="jacuzzi-badge animate-fade">
+            HOT SELLING EXPERIENCE
+        </div>
+
+        <!-- Text Content -->
+        <div class="jacuzzi-content animate-left">
+            <h2>Jacuzzi Luxury Therapy</h2>
+            <p>
+                Melt your stress away in our premium jacuzzi suite—  
+                a rejuvenating hydrotherapy experience that relaxes, detoxifies,  
+                and restores harmony to your body.
+            </p>
+
+            <div class="jacuzzi-cta animate-up">
+                <a href="{{ url_for('booking') }}" class="jacuzzi-btn">
+                    Book Jacuzzi Session
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Featured Services -->
+<section class="featured-services">
+    <div class="container">
+        <div class="section-header animate-on-scroll">
+            <div class="section-subtitle" style="color: #500060;">OUR SIGNATURE TREATMENTS</div>
+            <h2>Luxury Experiences Tailored for You</h2>
+            <p>Each treatment is carefully crafted to provide the ultimate wellness experience, combining ancient techniques with modern luxury.</p>
+        </div>
+
+        <div class="service-highlights">
+            <div class="highlight-card animate-on-scroll" data-delay="0.1">
+                <div class="highlight-icon">
+    <img src="/static/images/icons/spa.png" alt="Spa Icon">
+</div>
+
+                <h3>Signature Spa</h3>
+                <p>Indulge in our exclusive full-body treatments designed to rejuvenate your senses and restore balance.</p>
+                <a href="{{ url_for('services') }}#spa" class="read-more">Discover More</a>
+            </div>
+
+            <div class="highlight-card animate-on-scroll" data-delay="0.2">
+                <div class="highlight-icon">
+    <img src="/static/images/icons/nails.png" alt="Nail Art Icon">
+</div>
+
+                <h3>Nail Artistry</h3>
+                <p>Experience premium nail care with intricate designs that reflect your unique style and personality.</p>
+                <a href="{{ url_for('services') }}#nails" class="read-more">View Gallery</a>
+            </div>
+
+            <div class="highlight-card animate-on-scroll" data-delay="0.3">
+                <div class="highlight-icon">
+    <img src="/static/images/icons/body.png" alt="Body Icon">
+</div>
+
+                <h3>Body Excellence</h3>
+                <p>Transform your look with our luxury Body treatments and styling services from master Body artists.</p>
+                <a href="{{ url_for('services') }}#Body" class="read-more">Book Service</a>
+            </div>
+
+            <div class="highlight-card animate-on-scroll" data-delay="0.4">
+                <div class="highlight-icon">
+    <img src="/static/images/icons/skin.png" alt="Skin Icon">
+</div>
+
+                <h3>Skin Rejuvenation</h3>
+                <p>Advanced skincare treatments using premium products for radiant, healthy-looking skin.</p>
+                <a href="{{ url_for('services') }}#skin" class="read-more">Learn More</a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Gallery Preview -->
+<section class="gallery">
+    <div class="container">
+        <div class="section-header animate-on-scroll">
+            <div class="section-subtitle" style="color: #500060;">OUR PREMIUM WORK</div>
+            <h2>Gallery of Elegance</h2>
+            <p>A glimpse into the luxury experiences and impeccable artistry that define Travaa Wellness.</p>
+        </div>
+
+        <div class="gallery-grid">
+            <div class="gallery-item animate-scale" data-delay="0.1">
+                <div class="gallery-img" style="background: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)), url('/static/images/luxuryspa.jpg') center/cover no-repeat;"></div>
+                <div class="gallery-overlay">
+                    <h4>Luxury Spa Suite</h4>
+                    <p>Experience tranquility in our private spa chambers</p>
+                </div>
+            </div>
+
+            <div class="gallery-item2 animate-scale" data-delay="0.2">
+                <div class="gallery-img" style="background: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)), url('/static/images/marbleart.jpg') center/cover no-repeat;"></div>
+                <div class="gallery-overlay">
+                    <h4>Nail Art Designs</h4>
+                    <p>Intricate patterns and premium finishes</p>
+                </div>
+            </div>
+
+            <div class="gallery-item3 animate-scale" data-delay="0.3">
+                <div class="gallery-img" style="background: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)), url('/static/images/menicure.jpg') center/cover no-repeat;"></div>
+                <div class="gallery-overlay">
+                    <h4>Body Transformations</h4>
+                    <p>Masterful cuts and coloring techniques</p>
+                </div>
+            </div>
+        </div>
+
+        <div style="text-align: center; margin-top: 3rem;" class="animate-on-scroll" data-delay="0.4">
+            <a href="{{ url_for('gallery') }}" class="btn">
+                <i class="fas fa-images"></i> View Full Gallery
+            </a>
+        </div>
+    </div>
+</section>
+<section class="offer-month-section">
+    <div class="offer-container">
+        
+        <!-- Left Image -->
+        <div class="offer-image-wrapper">
+            <img src="/static/images/offer1499.jpg" alt="Offer of the Month" class="offer-image" />
+        </div>
+
+        <!-- Right Content -->
+        <div class="offer-content">
+            <h2 class="offer-heading">Offer of the Month</h2>
+            <h3 class="offer-subheading">Luxury Spa Introductory Offer</h3>
+
+            <div class="offer-price">
+                <span class="price-text">Only @ ₹1499</span>
+                <span class="price-tag">1-Hour Premium Massage</span>
+            </div>
+
+            <p class="offer-desc">
+                Experience deep relaxation with our signature one-hour massage designed for first-time guests.
+                Immerse yourself in luxury, calmness, and world-class therapy from Travaa Wellness.
+            </p>
+
+            <ul class="offer-list">
+                <li>Swedish, Thai, Deep Tissue, Aroma</li>
+                <li>Couple & Jacuzzi Add-On Options</li>
+                <li>Perfect for Stress Relief & Rejuvenation</li>
+                <li>Limited-Time Exclusive Offer</li>
+            </ul>
+
+            <a href="{{ url_for('booking') }}" class="offer-btn">
+                Book Now & Save
+            </a>
+        </div>
+    </div>
+</section>
+<!-- Testimonials -->
+<section class="testimonials">
+    <div class="container">
+        <div class="section-header animate-on-scroll">
+            <div class="section-subtitle" style="color: #500060;">CLIENT EXPERIENCES</div>
+            <h2>What Our Clients Say</h2>
+            <p>Join our community of satisfied clients who have experienced the Travaa difference.</p>
+        </div>
+
+        <div class="testimonial-slider">
+
+            <!-- Review 1 – Divya Thawani -->
+            <div class="testimonial-card animate-on-scroll" data-delay="0">
+                <div class="testimonial-text">
+                    "My partner and I recently treated ourselves to a couples spa massage at Travaa Wellness, 
+                    and it was nothing short of a relaxing experience! The serene ambiance set the tone beautifully."
+                </div>
+                <div class="rating">
+                    <i class="fas fa-star"></i><i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i><i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                </div>
+                <div class="client-info">
+                    <div class="client-details">
+                        <h4>Divya Thawani</h4>
+                        <p>Google Review</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Review 2 – Deepali Chawla (Local Guide) -->
+            <div class="testimonial-card animate-on-scroll" data-delay="0.1">
+                <div class="testimonial-text">
+                    "5-star bliss! Just visited Travaa Wellness in Kharghar and left feeling like royalty. 
+                    Truly a luxurious and rejuvenating experience!"
+                </div>
+                <div class="rating">
+                    <i class="fas fa-star"></i><i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i><i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                </div>
+                <div class="client-info">
+                    <div class="client-details">
+                        <h4>Deepali Chawla</h4>
+                        <p>Local Guide</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Review 3 – Internship Productions -->
+            <div class="testimonial-card animate-on-scroll" data-delay="0.2">
+                <div class="testimonial-text">
+                    "Visited Travaa Wellness for a hot stone massage and it was fantastic. 
+                    The therapist made me feel truly pampered — highly recommended!"
+                </div>
+                <div class="rating">
+                    <i class="fas fa-star"></i><i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i><i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                </div>
+                <div class="client-info">
+                    <div class="client-details">
+                        <h4>Internship Productions</h4>
+                        <p>Hot Stone Massage Client</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Slider Controls -->
+            <div class="slider-controls animate-fade" data-delay="0.5">
+                <button class="slider-btn prev">
+                    <i class="fas fa-chevron-left"></i>
+                </button>
+                <button class="slider-btn next">
+                    <i class="fas fa-chevron-right"></i>
+                </button>
+            </div>
+
+        </div>
+    </div>
+</section>
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+
+    const slider = document.querySelector(".testimonial-slider");
+    const cards = document.querySelectorAll(".testimonial-card");
+    const prevBtn = document.querySelector(".slider-btn.prev");
+    const nextBtn = document.querySelector(".slider-btn.next");
+
+    let index = 0;
+
+    // Show card by index
+    function showCard(i) {
+        cards.forEach((card, idx) => {
+            card.style.display = idx === i ? "block" : "none";
+            card.style.opacity = idx === i ? "1" : "0";
+        });
+    }
+
+    // Initialize
+    showCard(index);
+
+    // Next button
+    nextBtn.addEventListener("click", () => {
+        index = (index + 1) % cards.length;
+        showCard(index);
+    });
+
+    // Previous button
+    prevBtn.addEventListener("click", () => {
+        index = (index - 1 + cards.length) % cards.length;
+        showCard(index);
+    });
+
+    // OPTIONAL AUTO-SLIDE (uncomment to enable)
+    
+    setInterval(() => {
+        index = (index + 1) % cards.length;
+        showCard(index);
+    }, 5000);
+    
+
+    // Mobile swipe support
+    let startX = 0;
+
+    slider.addEventListener("touchstart", (e) => {
+        startX = e.touches[0].clientX;
+    });
+
+    slider.addEventListener("touchend", (e) => {
+        let endX = e.changedTouches[0].clientX;
+
+        if (startX - endX > 50) {
+            nextBtn.click();
+        } else if (endX - startX > 50) {
+            prevBtn.click();
+        }
+    });
+
+});
+</script>
+
+
+
+
+
+    <!-- Inline Animation Styles -->
+    <style>
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(40px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        @keyframes pulseGlow {
+            0%, 100% { transform: scale(1); opacity: 0.5; }
+            50% { transform: scale(1.2); opacity: 0.8; }
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(5deg); }
+        }
+        
+        @keyframes shine {
+            0% { transform: translateX(-100%) translateY(-100%) rotate(45deg); }
+            100% { transform: translateX(100%) translateY(100%) rotate(45deg); }
+        }
+    </style>
+</section>
+
+<!-- Floating Review (single card, moves left → right) -->
+<div id="review-fade-container">
+    <div id="review-fade-card"></div>
+</div>
+
+
+<script>
+    const reviews = [
+        {% for r in testimonials %}
+            {
+                content: `{{ r.content | replace('\n', ' ') }}`,
+                author: "{{ r.client_name }}"
+            },
+        {% endfor %}
+    ];
+
+    let index = 0;
+    let side = "left"; // left first
+
+    function showReview() {
+        const card = document.getElementById("review-fade-card");
+
+        const r = reviews[index];
+
+        // Alternate text color purple → gold → purple...
+        const textColor = index % 2 === 0 ? "#500060" : "#b67a3e";
+        card.style.color = textColor;
+
+        // Move card to left or right
+        if (side === "left") {
+            card.style.left = "20px";
+            card.style.right = "auto";
+            side = "right"; // next one will appear on the right
+        } else {
+            card.style.right = "20px";
+            card.style.left = "auto";
+            side = "left"; // next one will appear on the left
+        }
+
+        // Update content
+        card.innerHTML = `
+            <p>“${r.content}”</p>
+            <span>– ${r.author}</span>
+        `;
+
+        // Restart animation
+        card.classList.remove("fade-animate");
+        void card.offsetWidth;
+        card.classList.add("fade-animate");
+
+        // Next review
+        index = (index + 1) % reviews.length;
+    }
+
+    // First review
+    showReview();
+
+    // Faster timing: every 5 seconds
+    setInterval(showReview, 5000);
+</script>
+
+
+<!-- CTA Section -->
+<section class="cta-section animate-on-scroll">
+    <div class="container">
+        <div class="section-subtitle" style="color: #500060;">BEGIN YOUR WELLNESS JOURNEY</div>
+        <h2 style="color: #0a0a0a;">Ready to Experience Luxury Wellness?</h2>
+        <p style="max-width: 600px; margin: 0 auto 2rem; color: rgba(0, 0, 0, 0.9);">
+            Book your appointment today and discover why Travaa is the preferred choice for luxury wellness.
+        </p>
+        <div class="cta-btns">
+            <a href="{{ url_for('booking') }}" class="btn btn-primary">
+                <i class="fas fa-calendar-alt"></i> Book Now
+            </a>
+            <a href="tel:+917039008000" class="btn btn-primary" style="color: #500060;background-color:#E1306C;">
+                <i class="fas fa-phone"></i> Call Now
+            </a>
+        </div>
+    </div>
+</section>
+
+
+
+<!-- Font Awesome -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+{% endblock %}
+
+{% block extra_js %}
+<script>
+/* ------------------------------
+   FIXED + MERGED HERO SLIDER
+-------------------------------- */
+class HeroSlider {
+    constructor() {
+        this.slides = document.querySelectorAll(".slider-slide");
+        this.dots = document.querySelectorAll(".slider-dot");
+        this.current = 0;
+        this.total = this.slides.length;
+        this.timer = null;
+
+        this.init();
+    }
+
+    init() {
+        // Buttons
+        document.querySelector(".prev-slide").addEventListener("click", () => this.prev());
+        document.querySelector(".next-slide").addEventListener("click", () => this.next());
+
+        // Dots
+        this.dots.forEach(dot => {
+            dot.addEventListener("click", e => {
+                const index = Number(e.target.dataset.slide);
+                this.go(index);
+            });
+        });
+
+        // Auto-slide
+        this.startAuto();
+
+        // Pause on hover
+        document.querySelector(".hero-slider").addEventListener("mouseenter", () => this.stopAuto());
+        document.querySelector(".hero-slider").addEventListener("mouseleave", () => this.startAuto());
+
+        // Initial slide
+        this.show(0);
+    }
+
+    /* MAIN DISPLAY FUNCTION */
+    show(index) {
+        // Remove active
+        this.slides.forEach(slide => slide.classList.remove("active"));
+        this.dots.forEach(dot => dot.classList.remove("active"));
+
+        // Add active
+        const slide = this.slides[index];
+        slide.classList.add("active");
+        this.dots[index].classList.add("active");
+
+        // Reset animations INSIDE the slide
+        const textBlock = slide.querySelector(".hero-text-block");
+        if (textBlock) {
+            textBlock.style.animation = "none";
+            void textBlock.offsetWidth;
+            textBlock.style.animation = "";
+        }
+
+        this.current = index;
+    }
+
+    next() {
+        const index = (this.current + 1) % this.total;
+        this.show(index);
+    }
+
+    prev() {
+        const index = (this.current - 1 + this.total) % this.total;
+        this.show(index);
+    }
+
+    go(index) {
+        this.show(index);
+    }
+
+    startAuto() {
+        this.stopAuto();
+        this.timer = setInterval(() => this.next(), 5000);
+    }
+
+    stopAuto() {
+        if (this.timer) clearInterval(this.timer);
+    }
+}
+
+/* ------------------------------
+   SCROLL ANIMATIONS
+-------------------------------- */
+class ScrollAnimations {
+    constructor() {
+        this.elements = document.querySelectorAll(
+            ".animate-on-scroll, .animate-scale, .animate-fade, .section-header, .highlight-card, .gallery-item, .gallery-item2, .gallery-item3, .testimonial-card, .blog-card, .cta-section"
+        );
+
+        this.init();
+    }
+
+    init() {
+        this.check();
+        window.addEventListener("scroll", () => this.check());
+        window.addEventListener("resize", () => this.check());
+        window.addEventListener("load", () => this.check());
+    }
+
+    check() {
+const trigger = window.innerHeight * (window.innerWidth < 768 ? 0.9 : 0.8);
+
+        this.elements.forEach(el => {
+            const top = el.getBoundingClientRect().top;
+            const bottom = el.getBoundingClientRect().bottom;
+            const delay = el.dataset.delay || 0;
+
+            if (top < trigger && bottom > 0) {
+                setTimeout(() => {
+                    el.classList.add("visible");
+                }, delay * 1000);
+            }
+        });
+    }
+}
+
+/* ------------------------------
+   HOVER EFFECTS
+-------------------------------- */
+class HoverEffects {
+    constructor() {
+        this.buttons = document.querySelectorAll(".pulse-hover");
+        this.init();
+    }
+
+    init() {
+        this.buttons.forEach(btn => {
+            btn.addEventListener("mouseenter", () => btn.style.animation = "pulse 0.5s ease");
+            btn.addEventListener("mouseleave", () => btn.style.animation = "");
+            btn.addEventListener("animationend", () => btn.style.animation = "");
+        });
+    }
+}
+
+/* ------------------------------
+   SMOOTH SCROLL
+-------------------------------- */
+function initSmoothScroll() {
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener("click", function(e) {
+            if (this.getAttribute("href") === "#") return;
+            e.preventDefault();
+            const target = document.querySelector(this.getAttribute("href"));
+            if (target) target.scrollIntoView({ behavior: "smooth", block: "start" });
+        });
+    });
+}
+
+/* ------------------------------
+   INSTAGRAM IFRAME FADE-IN
+-------------------------------- */
+function initInstagramIframe() {
+    const iframe = document.querySelector("iframe");
+    if (!iframe) return;
+    iframe.onload = () => {
+        iframe.style.opacity = "0";
+        iframe.style.transition = "opacity 0.8s ease";
+        setTimeout(() => iframe.style.opacity = "1", 100);
+    };
+}
+
+/* ------------------------------
+   INITIALIZE EVERYTHING
+-------------------------------- */
+document.addEventListener("DOMContentLoaded", () => {
+    new HeroSlider();
+    new ScrollAnimations();
+    new HoverEffects();
+    initSmoothScroll();
+    initInstagramIframe();
+
+    // Inject pulse animation
+    const style = document.createElement("style");
+    style.textContent = `
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+    `;
+    document.head.appendChild(style);
+});
+</script>
+
+{% endblock %}
