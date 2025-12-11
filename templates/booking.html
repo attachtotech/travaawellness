@@ -349,6 +349,194 @@
     opacity: 1;
     transform: scale(1);
 }
+/* ============================================================
+   FULL RESPONSIVE DESIGN FOR BOOKING PAGE (MOBILE + TABLET)
+============================================================ */
+
+/* ------------ Global Adjustments ------------ */
+@media (max-width: 768px) {
+    .container {
+        padding: 0 16px;
+    }
+    body {
+        font-size: 15px;
+    }
+}
+
+/* ------------ HERO SECTION RESPONSIVE ------------ */
+@media (max-width: 768px) {
+    .booking-hero {
+        height: 55vh !important;
+        min-height: 420px;
+    }
+
+    .hero-title {
+        font-size: 2rem !important;
+        margin-bottom: 8px;
+    }
+
+    .hero-subtitle {
+        font-size: 1.1rem !important;
+    }
+
+    .hero-divider {
+        margin: 15px auto;
+        width: 60px;
+    }
+
+    .hero-small-text {
+        font-size: 0.9rem;
+        max-width: 85%;
+        margin: auto;
+    }
+
+    .buddha-glow {
+        width: 250px;
+        height: 250px;
+        left: 50%;
+        transform: translateX(-50%);
+    }
+
+    #spaParticles {
+        height: 100% !important;
+    }
+}
+
+/* Small devices (360–480px) */
+@media (max-width: 480px) {
+    .hero-title {
+        font-size: 1.7rem !important;
+    }
+}
+
+/* ------------ BOOKING FORM RESPONSIVE ------------ */
+@media (max-width: 768px) {
+    .booking-card {
+        padding: 1.3rem !important;
+        border-radius: 14px;
+    }
+
+    .booking-step-title {
+        font-size: 1.2rem;
+    }
+
+    .form-row {
+        flex-direction: column;
+        gap: 1rem;
+    }
+
+    .form-group {
+        width: 100%;
+        min-width: 100%;
+    }
+
+    input.form-control,
+    select.form-control,
+    textarea.form-control {
+        font-size: 1rem;
+        padding: 12px;
+    }
+}
+
+/* ------------ ROOM GRID RESPONSIVE ------------ */
+@media (max-width: 768px) {
+    .rooms-grid {
+        grid-template-columns: repeat(2, 1fr) !important;
+        gap: 1rem;
+    }
+
+    .room-tile {
+        padding: 0.9rem;
+    }
+
+    .room-name {
+        font-size: 1.1rem;
+    }
+
+    .room-meta {
+        font-size: 0.8rem;
+    }
+
+    .room-status {
+        font-size: 0.75rem;
+    }
+}
+
+/* Very small width 360px */
+@media (max-width: 400px) {
+    .rooms-grid {
+        grid-template-columns: 1fr !important;
+    }
+}
+
+/* ------------ STEP INDICATOR RESPONSIVE ------------ */
+@media (max-width: 768px) {
+    .booking-steps {
+        flex-direction: column;
+        gap: 2rem;
+    }
+
+    .step-number {
+        width: 32px;
+        height: 32px;
+        font-size: 0.9rem;
+    }
+
+    .step-text {
+        font-size: 0.78rem;
+    }
+}
+
+/* ------------ WHATSAPP CTA RESPONSIVE ------------ */
+@media (max-width: 768px) {
+    #confirm-booking-btn {
+        font-size: 1rem;
+        padding: 1.1rem;
+    }
+
+    .whatsapp-btn {
+        width: 100%;
+        max-width: 280px;
+        font-size: 1rem;
+        padding: 12px 20px;
+    }
+}
+
+/* ------------ CTA FOOTER RESPONSIVE ------------ */
+@media (max-width: 768px) {
+    .cta-section h3 {
+        font-size: 1.4rem;
+    }
+
+    .cta-section p {
+        font-size: 0.95rem;
+        max-width: 90%;
+        margin: auto;
+    }
+
+    .cta-section .btn {
+        display: block;
+        width: 100%;
+        margin: 0 0 1rem 0 !important;
+        max-width: 280px;
+    }
+}
+
+/* ------------ PARTICLES CANVAS RESPONSIVE ------------ */
+@media (max-width: 768px) {
+    canvas#spaParticles {
+        width: 100% !important;
+        height: 100% !important;
+    }
+}
+
+/* ------------ ANIMATION PERFORMANCE FOR MOBILE ------------ */
+@media (max-width: 600px) {
+    .scroll-animate {
+        transform: translateY(20px);
+        opacity: 0;
+    }
+}
 
 </style>
 {% endblock %}
@@ -614,8 +802,8 @@
                     if (value.length > 7) {
                         value = value.substring(0, 7) + ' ' + value.substring(7);
                     }
-                    if (value.length > 12) {
-                        value = value.substring(0, 12);
+                    if (value.length > 13) {
+                        value = value.substring(0, 13);
                     }
                 }
 

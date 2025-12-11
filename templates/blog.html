@@ -329,6 +329,224 @@
     .newsletter-form button:hover {
         background: var(--light-gold);
     }
+
+    /* ============================================================
+   FULL RESPONSIVE DESIGN FOR BLOG PAGE (MOBILE + TABLET)
+============================================================ */
+
+/* ------------ HERO SECTION ------------ */
+@media (max-width: 768px) {
+    .blog-hero {
+        padding: 100px 0 70px;
+        text-align: center;
+    }
+
+    .blog-hero h1 {
+        font-size: 2rem;
+    }
+
+    .blog-hero p {
+        font-size: 0.95rem;
+        margin-top: 1rem !important;
+    }
+}
+
+/* ------------ BLOG LAYOUT (GRID + SIDEBAR) ------------ */
+@media (max-width: 992px) {
+    .blog-layout {
+        grid-template-columns: 1fr !important;
+        gap: 2rem !important;
+    }
+
+    .blog-sidebar {
+        position: static !important;
+        width: 100%;
+    }
+}
+
+/* ------------ BLOG CARDS / GRID ------------ */
+@media (max-width: 768px) {
+    .blog-grid {
+        grid-template-columns: 1fr !important;
+        gap: 1.5rem;
+    }
+
+    .blog-card {
+        border-radius: 14px;
+    }
+
+    .blog-content {
+        padding: 1.5rem !important;
+    }
+
+    .blog-meta {
+        flex-direction: column;
+        gap: 0.3rem;
+    }
+
+    .blog-card h3 {
+        font-size: 1.2rem;
+    }
+
+    .blog-excerpt {
+        font-size: 0.95rem;
+    }
+}
+
+/* ------------ BLOG IMAGE PLACEHOLDER FIX ------------ */
+@media (max-width: 768px) {
+    .blog-img {
+        height: 180px !important;
+        background: #111;
+    }
+
+    .blog-category {
+        top: 0.75rem;
+        left: 0.75rem;
+        font-size: 0.7rem;
+        padding: 0.2rem 0.8rem;
+    }
+}
+
+/* ------------ SIDEBAR WIDGETS ------------ */
+@media (max-width: 768px) {
+    .sidebar-widget {
+        padding: 1.5rem !important;
+    }
+
+    .widget-title {
+        font-size: 1.1rem;
+        padding-bottom: 0.8rem;
+    }
+
+    .categories-list li {
+        padding: 0.6rem 0;
+    }
+
+    .recent-post {
+        gap: 0.8rem;
+    }
+
+    .recent-post-img {
+        width: 70px !important;
+        height: 50px !important;
+    }
+
+    .recent-post-content h4 {
+        font-size: 0.85rem;
+    }
+}
+
+/* ------------ SEARCH BAR ------------ */
+@media (max-width: 768px) {
+    .search-widget form {
+        flex-direction: row;
+        gap: 0.4rem;
+    }
+
+    .search-input {
+        padding: 0.65rem;
+    }
+
+    .search-btn {
+        width: 40px;
+        border-radius: 6px;
+    }
+}
+
+/* ------------ TAGS WIDGET ------------ */
+@media (max-width: 768px) {
+    .tags-widget {
+        gap: 0.4rem;
+    }
+
+    .tag {
+        padding: 0.4rem 0.8rem;
+        font-size: 0.78rem;
+    }
+}
+
+/* ------------ NEWSLETTER ------------ */
+@media (max-width: 768px) {
+    .newsletter-widget {
+        padding: 1.5rem;
+        text-align: center;
+    }
+
+    .newsletter-widget h3 {
+        font-size: 1.2rem;
+    }
+
+    .newsletter-widget p {
+        font-size: 0.85rem;
+    }
+
+    .newsletter-form input {
+        padding: 0.7rem;
+    }
+
+    .newsletter-form button {
+        padding: 0.7rem;
+        font-size: 0.95rem;
+    }
+}
+
+/* ------------ PAGINATION ------------ */
+@media (max-width: 768px) {
+    .pagination {
+        gap: 0.3rem !important;
+    }
+
+    .page-link {
+        width: 35px;
+        height: 35px;
+        font-size: 0.85rem;
+    }
+
+    .page-link.prev,
+    .page-link.next {
+        padding: 0 0.7rem;
+        font-size: 0.85rem;
+    }
+}
+
+/* ------------ CTA SECTION ------------ */
+@media (max-width: 768px) {
+    section[style] h2 {
+        font-size: 1.7rem !important;
+    }
+
+    section[style] p {
+        font-size: 0.95rem;
+    }
+
+    section[style] .btn {
+        margin-top: 1rem;
+        padding: 0.8rem 1.3rem;
+        font-size: 0.95rem;
+    }
+}
+
+/* ------------ EXTRA SMALL SCREENS (360px) ------------ */
+@media (max-width: 380px) {
+    .blog-hero h1 {
+        font-size: 1.7rem;
+    }
+
+    .blog-content h3 {
+        font-size: 1.1rem !important;
+    }
+
+    .blog-excerpt {
+        font-size: 0.9rem;
+    }
+
+    .tag {
+        font-size: 0.75rem;
+        padding: 0.35rem 0.7rem;
+    }
+}
+
 </style>
 {% endblock %}
 

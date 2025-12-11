@@ -577,6 +577,226 @@
         margin: 0 auto;
     }
 }
+/* ============================================================
+   FULL RESPONSIVE UPGRADE — TRAVAA GALLERY PAGE
+============================================================ */
+
+/* ---------- HERO RESPONSIVE ---------- */
+@media (max-width: 768px) {
+    .creative-hero {
+        height: 55vh !important;
+    }
+
+    .hero-title {
+        font-size: 2.2rem !important;
+        letter-spacing: 1px !important;
+    }
+
+    .hero-sub {
+        font-size: 1rem !important;
+    }
+
+    /* Floating dots smaller */
+    .dot1 { width: 60px !important; height: 60px !important; left: 5% !important; }
+    .dot2 { width: 40px !important; height: 40px !important; }
+    .dot3 { width: 35px !important; height: 35px !important; }
+}
+
+/* ---------- GALLERY FILTER ---------- */
+@media (max-width: 768px) {
+    .gallery-filter {
+        gap: 0.6rem !important;
+        padding: 0 1rem;
+    }
+
+    .filter-btn {
+        font-size: 0.85rem !important;
+        padding: 0.5rem 1.2rem !important;
+        border-radius: 30px !important;
+    }
+}
+
+/* ---------- EXPERIENCE GALLERY RESPONSIVE ---------- */
+@media (max-width: 900px) {
+    .experience-gallery {
+        padding: 70px 0 !important;
+    }
+
+    .exp-row {
+        gap: 35px !important;
+        margin-bottom: 70px !important;
+    }
+
+    .exp-text h3 {
+        font-size: 1.8rem !important;
+    }
+
+    .exp-text p {
+        font-size: 1rem !important;
+        max-width: 90% !important;
+    }
+
+    .exp-video-wrapper {
+        border-radius: 14px !important;
+    }
+}
+
+/* ---------- GALLERY GRID RESPONISVE ---------- */
+@media (max-width: 768px) {
+    .gallery-grid {
+        grid-template-columns: repeat(auto-fill, minmax(170px, 1fr)) !important;
+        gap: 1rem !important;
+    }
+
+    .gallery-item {
+        aspect-ratio: 1 !important;
+        border-radius: 12px !important;
+    }
+
+    .gallery-overlay {
+        padding: 1.2rem !important;
+    }
+
+    .gallery-title {
+        font-size: 1rem !important;
+    }
+
+    .gallery-category {
+        font-size: .75rem !important;
+    }
+
+    .gallery-overlay p {
+        font-size: .85rem !important;
+    }
+}
+
+/* ---------- GALLERY STATS ---------- */
+@media (max-width: 768px) {
+    .gallery-stats {
+        grid-template-columns: 1fr 1fr !important;
+        gap: 1.2rem !important;
+        padding: 1.5rem !important;
+    }
+
+    .stat-number {
+        font-size: 2rem !important;
+    }
+
+    .stat-label {
+        font-size: 0.75rem !important;
+    }
+}
+
+@media (max-width: 480px) {
+    .gallery-stats {
+        grid-template-columns: 1fr !important;
+        text-align: center !important;
+    }
+}
+
+/* ---------- LIGHTBOX MOBILE OPTIMIZATION ---------- */
+@media (max-width: 768px) {
+    .lightbox {
+        padding: 15px !important;
+        align-items: flex-start !important;
+    }
+
+    .lightbox-content {
+        width: 100% !important;
+        max-width: 100% !important;
+        border-radius: 12px !important;
+    }
+
+    .lightbox-img {
+        width: 100% !important;
+        max-height: 45vh !important;
+        object-fit: cover !important;
+        border-radius: 12px 12px 0 0 !important;
+    }
+
+    .lightbox-info {
+        position: relative !important;
+        transform: none !important;
+        padding: 1.2rem !important;
+        background: #111 !important;
+        border-radius: 0 0 12px 12px !important;
+    }
+
+    .lightbox-title {
+        font-size: 1.2rem !important;
+    }
+
+    .lightbox-description {
+        font-size: 0.9rem !important;
+    }
+
+    .lightbox-category {
+        font-size: .8rem !important;
+    }
+
+    .lightbox-btn {
+        width: 36px !important;
+        height: 36px !important;
+        font-size: 0.85rem !important;
+    }
+
+    .lightbox-nav {
+        top: 38% !important;
+    }
+
+    .close-lightbox {
+        width: 32px !important;
+        height: 32px !important;
+        top: 12px !important;
+        right: 12px !important;
+    }
+}
+
+/* ---------- INSTAGRAM SECTION ---------- */
+@media (max-width: 1024px) {
+    iframe {
+        height: 600px !important;
+    }
+}
+
+@media (max-width: 768px) {
+    iframe {
+        height: 550px !important;
+    }
+
+    .section-header h2 {
+        font-size: 2.2rem !important;
+    }
+
+    .section-header p {
+        font-size: 1rem !important;
+    }
+}
+
+@media (max-width: 480px) {
+    iframe {
+        height: 480px !important;
+    }
+}
+
+/* ---------- FOLLOW BUTTON ---------- */
+@media (max-width: 768px) {
+    a[href*="travaa_wellness"] {
+        padding: 14px 30px !important;
+        font-size: 1rem !important;
+    }
+}
+
+/* ---------- BOOK NOW CTA ---------- */
+@media (max-width: 768px) {
+    .btn.btn-primary {
+        width: 100% !important;
+        text-align: center;
+        padding: 1rem !important;
+        font-size: 1rem !important;
+        border-radius: 10px !important;
+    }
+}
 
 </style>
 {% endblock %}

@@ -4,39 +4,39 @@
 
 {% block extra_css %}
 <style>
+    /* ============================================================
+   HERO SECTION
+============================================================ */
 .services-hero {
     position: relative;
     width: 100%;
-    height: 75vh;  /* OR whatever size you want */
+    height: 75vh;
     overflow: hidden;
     display: flex;
     justify-content: center;
     align-items: center;
 }
+
 .hero-video {
     position: absolute;
     top: 50%;
     left: 50%;
     width: 100%;
     height: 100%;
-    object-fit: cover;       /* THIS is the main fix */
+    object-fit: cover;
     transform: translate(-50%, -50%);
     z-index: 1;
 }
 
-
-
-/* Clean text over video without any background */
 .hero-content {
     position: relative;
     z-index: 2;
     text-align: center;
-    color: #ffffff; /* pure white text for clarity on video */
+    color: #ffffff;
     max-width: 800px;
     padding: 0 20px;
 }
 
-/* Typography */
 .services-hero h1 {
     font-size: 3rem;
     font-weight: 700;
@@ -54,42 +54,304 @@
     margin: 0 auto 20px auto;
 }
 
-/* Clean music button */
 .hero-music-btn {
     padding: 10px 22px;
     border-radius: 30px;
-    background: #500060; 
+    background: rgba(255,255,255,0.2);
     color: #fff;
-    border: none;
+    border: 1px solid rgba(255,255,255,0.3);
     cursor: pointer;
     font-size: 15px;
     font-weight: 600;
-    transition: 0.3s ease;
+    backdrop-filter: blur(10px);
+    transition: 0.3s;
 }
 
 .hero-music-btn:hover {
-    background: #6c007c;
-    transform: scale(1.06);
+    background: rgba(255,255,255,0.35);
+    transform: scale(1.08);
 }
 
-/* Mobile responsive */
+/* ============================================================
+   CATEGORY NAVIGATION
+============================================================ */
+.services-categories {
+    position: sticky;
+    top: 80px;
+    z-index: 100;
+    background: var(--white);
+    padding: 1rem 0;
+    border-bottom: 1px solid rgba(0,0,0,0.1);
+    margin-bottom: 3rem;
+}
+
+.category-nav {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    overflow-x: auto;
+    padding: 1rem 0;
+}
+
+.category-btn {
+    padding: 0.75rem 2rem;
+    border: 2px solid transparent;
+    background: transparent;
+    color: var(--black);
+    font-weight: 600;
+    cursor: pointer;
+    border-radius: 50px;
+    transition: 0.3s;
+    white-space: nowrap;
+}
+
+.category-btn.active,
+.category-btn:hover {
+    background: var(--black);
+    border-color: var(--black);
+    color: var(--white);
+}
+
+/* ============================================================
+   SERVICES SECTION
+============================================================ */
+.service-category {
+    padding: 80px 0;
+    scroll-margin-top: 120px;
+}
+
+.service-category:nth-child(even) {
+    background: var(--light-gray);
+}
+
+.service-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px,1fr));
+    gap: 2rem;
+    margin-top: 3rem;
+}
+
+/* ============================================================
+   RESPONSIVE SERVICE IMAGE FIX — UNIFORM & MOBILE PERFECT
+============================================================ */
+.service-image {
+    width: 100%;
+    aspect-ratio: 16 / 11;
+    overflow: hidden;
+    border-radius: 14px;
+    background: #f2f2f2;
+    position: relative;
+    opacity: 0;
+    transform: translateY(30px);
+    transition: all 0.8s ease;
+}
+
+.service-image.active {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.service-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+    display: block;
+}
+
+/* ============================================================
+   SERVICE CARDS
+============================================================ */
+.service-item {
+    background: var(--white);
+    padding: 2rem;
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow);
+    transition: 0.3s;
+    opacity: 0;
+    transform: translateY(30px);
+}
+
+.service-item.active {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.service-item:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+}
+
+.service-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+
+.service-name {
+    font-size: 1.5rem;
+}
+
+.service-duration {
+    color: var(--gray);
+    font-size: 0.9rem;
+    margin-bottom: 0.2rem;
+}
+
+.service-price {
+    color: #500060;
+    font-weight: 600;
+    font-size: 1.1rem;
+}
+
+.service-features {
+    list-style: none;
+    margin: 1rem 0 1.5rem 0;
+}
+
+.service-features li {
+    padding: 0.5rem 0;
+    color: var(--gray);
+    border-bottom: 1px solid rgba(0,0,0,0.05);
+}
+
+.service-features li:before {
+    content: "✓";
+    color: #500060;
+    margin-right: 8px;
+}
+
+/* ============================================================
+   DOWNLOAD PRICE SECTION
+============================================================ */
+.download-price-section {
+    padding: 60px 20px;
+    display: flex;
+    justify-content: center;
+}
+
+.download-card {
+    background: rgba(255,255,255,0.1);
+    border-radius: 16px;
+    padding: 30px;
+    text-align: center;
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(255,255,255,0.2);
+}
+
+.download-btn {
+    background: #500060;
+    color: white;
+    padding: 12px 24px;
+    border-radius: 30px;
+    text-decoration: none;
+    font-weight: 600;
+    transition: 0.3s;
+}
+
+.download-btn:hover {
+    background: #6a0080;
+    transform: translateY(-3px);
+}
+
+/* ============================================================
+   PACKAGES SECTION
+============================================================ */
+.packages-section {
+    padding: 100px 0;
+    background: var(--black);
+    color: var(--white);
+}
+
+.packages-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px,1fr));
+    gap: 2rem;
+}
+
+.package-card {
+    background: rgba(255,255,255,0.05);
+    padding: 3rem 2rem;
+    border-radius: var(--border-radius);
+    border: 1px solid rgba(255,255,255,0.1);
+    text-align: center;
+    transition: 0.3s;
+}
+
+.package-card:hover {
+    transform: translateY(-10px);
+}
+
+/* ============================================================
+   MOBILE RESPONSIVE
+============================================================ */
 @media (max-width: 768px) {
     .services-hero {
-        height: 65vh;
+        height: 55vh;
+        padding: 100px 20px 60px;
     }
+
     .services-hero h1 {
-        font-size: 2.2rem;
+        font-size: 2rem;
+    }
+
+    .hero-video {
+        width: 180%;
+    }
+
+    .category-nav {
+        gap: 0.5rem;
+        padding: 0.5rem 1rem;
+    }
+
+    .category-btn {
+        padding: 0.6rem 1.3rem;
+        font-size: 0.85rem;
+    }
+
+    .service-list {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+    }
+
+    .service-item {
+        padding: 1.5rem;
+    }
+
+    .service-image {
+        aspect-ratio: 16 / 12;
+    }
+}
+
+@media (max-width: 480px) {
+    .services-hero {
+        height: 50vh;
+    }
+
+    .service-image {
+        aspect-ratio: 4 / 3;
+    }
+
+    .service-cta {
+        flex-direction: column;
+        gap: 0.8rem;
+    }
+
+    .book-btn {
+        width: 100%;
     }
 }
 
 
-    .download-price-section {
+/* Download section */
+.download-price-section {
     padding: 60px 20px;
     display: flex;
     justify-content: center;
     align-items: center;
 }
-
 .download-card {
     background: rgba(255, 255, 255, 0.1);
     backdrop-filter: blur(12px);
@@ -98,28 +360,12 @@
     max-width: 600px;
     text-align: center;
     border: 1px solid rgba(255, 255, 255, 0.2);
-    box-shadow: 0px 8px 24px rgba(0, 0, 0, 0.12);
+    box-shadow: 0px 8px 24px rgba(0,0,0,0.12);
     animation: fadeUp 1s ease;
 }
-
-.download-icon {
-    font-size: 48px;
-    margin-bottom: 10px;
-}
-
-.download-card h3 {
-    font-size: 24px;
-    margin-bottom: 10px;
-    color: #500060;
-    font-weight: 600;
-}
-
-.download-card p {
-    font-size: 16px;
-    margin-bottom: 20px;
-    color: #555;
-}
-
+.download-icon { font-size: 48px; margin-bottom: 10px; }
+.download-card h3 { font-size: 24px; margin-bottom: 10px; color: #500060; font-weight: 600; }
+.download-card p { font-size: 16px; margin-bottom: 20px; color: #555; }
 .download-btn {
     display: inline-block;
     padding: 12px 24px;
@@ -130,303 +376,99 @@
     font-weight: 600;
     transition: 0.3s ease;
 }
-
 .download-btn:hover {
     background: #6a0080;
     transform: translateY(-3px);
 }
 
-/* Smooth scroll animation for the card */
+/* Smooth animation */
 @keyframes fadeUp {
     from { opacity: 0; transform: translateY(30px); }
     to { opacity: 1; transform: translateY(0); }
 }
 
-    .services-hero {
-        background: linear-gradient(rgba(53, 53, 53, 0.8), rgba(66, 66, 66, 0.8)),
-                    url('/static/images/services-bg.jpg') center/cover no-repeat;
-        padding: 150px 0 100px;
-        text-align: center;
-        color: white;
-    }
+/* Packages section */
+.packages-section {
+    padding: 100px 0;
+    background: var(--black);
+    color: var(--white);
+}
+.packages-section h2 { text-align: center; }
 
-    .services-categories {
-        position: sticky;
-        top: 80px;
-        z-index: 100;
-        background: var(--white);
-        padding: 1rem 0;
-        border-bottom: 1px solid rgba(0, 0, 0, 0.1);
-        margin-bottom: 3rem;
-    }
-    .service-image {
-    width: 100%;
-    height: 180px; /* fixed height so every image area becomes same size */
+.packages-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px,1fr));
+    gap: 2rem;
+    margin-top: 3rem;
+}
+.package-card {
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: var(--border-radius);
+    padding: 3rem 2rem;
+    text-align: center;
+    transition: var(--transition);
+    position: relative;
     overflow: hidden;
-    border-radius: 12px; /* matches premium theme */
+}
+.package-card.popular { border-color: #500060; transform: scale(1.05); }
+.package-card.popular:before {
+    content: "MOST POPULAR";
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    background: #500060;
+    color: var(--black);
+    padding: 0.5rem;
+    font-size: 0.8rem;
+    font-weight: 600;
+    letter-spacing: 1px;
+}
+.package-card:hover {
+    transform: translateY(-10px);
+    border-color: var(--gold);
+}
+.package-card.popular:hover {
+    transform: scale(1.05) translateY(-10px);
+}
+.package-name { font-size: 1.5rem; margin-bottom: 1rem; }
+.package-price {
+    font-size: 3rem;
+    color: var(--gold);
+    margin: 1.5rem 0;
+    font-family: 'Playfair Display', serif;
+}
+.package-features { list-style: none; margin: 2rem 0; }
+.package-features li {
+    padding: 0.75rem 0;
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+    color: var(--gray);
+}
+.package-features li:before {
+    content: "✓";
+    color: var(--gold);
+    margin-right: 0.5rem;
 }
 
-.service-image img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover; /* image fills the section without stretching */
-    display: block;
+/* Download price responsive */
+@media (max-width: 768px) {
+    .download-card {
+        padding: 25px !important;
+        max-width: 90% !important;
+        margin: 0 auto !important;
+    }
+    .download-card h3 { font-size: 20px !important; }
+    .download-card p { font-size: 14px !important; }
+    .download-btn { padding: 10px 20px !important; font-size: 14px !important; }
 }
 
-    .category-nav {
-        display: flex;
-        justify-content: center;
-        gap: 1rem;
-        overflow-x: auto;
-        padding: 1rem 0;
-    }
-
-    .category-btn {
-        padding: 0.75rem 2rem;
-        border: 2px solid transparent;
-        background: transparent;
-        color: var(--black);
-        font-weight: 600;
-        cursor: pointer;
-        border-radius: 50px;
-        transition: var(--transition);
-        white-space: nowrap;
-    }
-
-    .category-btn.active,
-    .category-btn:hover {
-        border-color: var(--black);
-        background: var(--black);
-        color: var(--white);
-    }
-
-    .service-category {
-        padding: 80px 0;
-        scroll-margin-top: 120px;
-    }
-
-    .service-category:nth-child(even) {
-        background: var(--light-gray);
-    }
-
-    .service-list {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-        gap: 2rem;
-        margin-top: 3rem;
-    }
-
-    .service-item {
-        background: var(--white);
-        padding: 2rem;
-        border-radius: var(--border-radius);
-        box-shadow: var(--shadow);
-        transition: var(--transition);
-    }
-
-    .service-item:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
-    }
-
-    .service-header {
-        display: flex;
-        justify-content: space-between;
-        align-items: flex-start;
-        margin-bottom: 1rem;
-        gap: 1rem;
-    }
-
-    .service-name {
-        font-size: 1.5rem;
-        margin-bottom: 0.5rem;
-    }
-
-    .service-price {
-        color: #500060;
-        font-weight: 600;
-        font-size: 1.1rem;
-        text-align: left;
-    }
-
-    .service-price small {
-        display: block;
-        font-size: 0.8rem;
-        color: var(--gray);
-    }
-
-    .service-duration {
-        color: var(--gray);
-        font-size: 0.9rem;
-        margin-bottom: 1rem;
-    }
-
-    .service-description {
-        color: var(--gray);
-        margin-bottom: 1.5rem;
-    }
-
-    .service-features {
-        list-style: none;
-        margin-bottom: 1.5rem;
-    }
-
-    .service-features li {
-        padding: 0.5rem 0;
-        color: var(--gray);
-        border-bottom: 1px solid rgba(0, 0, 0, 0.05);
-    }
-
-    .service-features li:before {
-        content: "✓";
-        color: #500060;
-        margin-right: 0.5rem;
-        font-weight: bold;
-    }
-
-    .service-cta {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-top: 2rem;
-    }
-
-    .service-note {
-        margin-top: 2rem;
-        font-size: 0.9rem;
-        color: var(--gray);
-        text-align: center;
-    }
-
-    /* Packages Section */
-    .packages-section {
-        padding: 100px 0;
-        background: var(--black);
-        color: var(--white);
-    }
-
-    .packages-section h2 {
-        color: var(--white);
-        text-align: center;
-    }
-
-    .packages-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-        gap: 2rem;
-        margin-top: 3rem;
-    }
-
-    .package-card {
-        background: rgba(255, 255, 255, 0.05);
-        border: 1px solid rgba(255, 255, 255, 0.1);
-        border-radius: var(--border-radius);
-        padding: 3rem 2rem;
-        text-align: center;
-        transition: var(--transition);
-        position: relative;
-        overflow: hidden;
-    }
-
-    .package-card.popular {
-        border-color: #500060;
-        transform: scale(1.05);
-    }
-
-    .package-card.popular:before {
-        content: "MOST POPULAR";
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        background: #500060;
-        color: var(--black);
-        padding: 0.5rem;
-        font-size: 0.8rem;
-        font-weight: 600;
-        letter-spacing: 1px;
-    }
-
-    .package-card:hover {
-        transform: translateY(-10px);
-        border-color: var(--gold);
-    }
-
-    .package-card.popular:hover {
-        transform: scale(1.05) translateY(-10px);
-    }
-
-    .package-name {
-        font-size: 1.5rem;
-        margin-bottom: 1rem;
-        color: var(--white);
-    }
-
-    .package-price {
-        font-size: 3rem;
-        color: var(--gold);
-        margin: 1.5rem 0;
-        font-family: 'Playfair Display', serif;
-    }
-
-    .package-price span {
-        font-size: 1rem;
-        color: var(--gray);
-    }
-
-    .package-features {
-        list-style: none;
-        margin: 2rem 0;
-    }
-
-    .package-features li {
-        padding: 0.75rem 0;
-        border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-        color: var(--gray);
-    }
-
-    .package-features li:before {
-        content: "✓";
-        color: var(--gold);
-        margin-right: 0.5rem;
-    }
-    /* Default hidden state for scroll animation */
-.service-item, 
-.service-image {
-    opacity: 0;
-    transform: translateY(30px);
-    transition: all 0.8s ease;
+/* Packages responsive */
+@media (max-width: 992px) {
+    .packages-grid { grid-template-columns: 1fr !important; gap: 1.5rem !important; }
+    .package-card { padding: 2rem 1.5rem !important; transform: none !important; }
+    .package-card.popular { transform: none !important; }
+    .package-name { font-size: 1.3rem !important; }
+    .package-price { font-size: 2.3rem !important; }
 }
-
-/* Active animation when visible */
-.service-item.active,
-.service-image.active {
-    opacity: 1;
-    transform: translateY(0);
-}
-
-.hero-music-control {
-    margin-top: 20px;
-}
-
-.hero-music-btn {
-    padding: 10px 22px;
-    background: rgba(255, 255, 255, 0.2);
-    color: #fff;
-    border: 1px solid rgba(255, 255, 255, 0.4);
-    border-radius: 30px;
-    font-size: 15px;
-    cursor: pointer;
-    backdrop-filter: blur(12px);
-    transition: 0.3s ease;
-}
-
-.hero-music-btn:hover {
-    background: rgba(255, 255, 255, 0.35);
-    transform: scale(1.08);
-}
-
-
 </style>
 {% endblock %}
 

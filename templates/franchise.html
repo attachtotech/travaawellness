@@ -130,6 +130,150 @@
             width: 100%;
         }
     }
+
+    /* ============================================================
+   RESPONSIVE UPGRADE — FRANCHISE OPPORTUNITIES PAGE
+============================================================ */
+
+/* ---------- TABLET (≤1024px) ---------- */
+@media (max-width: 1024px) {
+
+    .franchise-right {
+        padding: 60px 40px;
+    }
+
+    .franchise-right h1 {
+        font-size: 42px;
+    }
+
+    .collab-section {
+        padding: 60px 40px;
+    }
+
+    .collab-right h2 {
+        font-size: 36px;
+    }
+}
+
+/* ---------- MOBILE (≤850px) – stacked layout already exists ---------- */
+@media (max-width: 850px) {
+
+    .franchise-container {
+        flex-direction: column;
+        min-height: auto;
+    }
+
+    .franchise-left {
+        width: 100%;
+        height: 280px;
+        filter: grayscale(70%);
+    }
+
+    .franchise-right {
+        width: 100%;
+        padding: 40px 20px;
+        text-align: left;
+    }
+
+    .franchise-right h1 {
+        font-size: 36px;
+        line-height: 1.2;
+    }
+
+    .franchise-right p {
+        font-size: 16px;
+        margin-bottom: 20px;
+    }
+
+    .franchise-form input,
+    .franchise-form select,
+    .franchise-form textarea {
+        font-size: 15px;
+        padding: 12px;
+    }
+
+    .btn-purple {
+        width: 100%;
+        padding: 14px;
+        font-size: 17px;
+        margin-top: 10px;
+    }
+
+    /* Gym Collab Section */
+    .collab-flex {
+        flex-direction: column-reverse;
+        gap: 30px;
+    }
+
+    .collab-left img {
+        border-radius: 10px;
+        height: auto;
+    }
+
+    .collab-right {
+        width: 100%;
+        text-align: left;
+    }
+
+    .collab-right h2 {
+        font-size: 32px;
+        line-height: 1.25;
+    }
+
+    .collab-right p {
+        font-size: 16px;
+    }
+
+    .collab-section {
+        padding: 50px 20px;
+    }
+}
+
+/* ---------- SMALL MOBILE (≤480px) ---------- */
+@media (max-width: 480px) {
+
+    .franchise-left {
+        height: 220px;
+    }
+
+    .franchise-right h1 {
+        font-size: 30px;
+    }
+
+    .franchise-right p {
+        font-size: 14.5px;
+        line-height: 1.55;
+    }
+
+    .franchise-form input,
+    .franchise-form select,
+    .franchise-form textarea {
+        font-size: 14px;
+        padding: 10px;
+        margin-bottom: 18px;
+    }
+
+    .btn-purple {
+        font-size: 16px;
+        padding: 12px;
+    }
+
+    .collab-right h2 {
+        font-size: 28px;
+    }
+
+    .collab-right p {
+        font-size: 14.5px;
+    }
+}
+
+/* ---------- FIX OVERFLOW ON ALL SMALL DEVICES ---------- */
+@media (max-width: 768px) {
+    body, html {
+        overflow-x: hidden !important;
+    }
+}
+
 </style>
 <br><br>
 <!-- Franchise Main Section -->
